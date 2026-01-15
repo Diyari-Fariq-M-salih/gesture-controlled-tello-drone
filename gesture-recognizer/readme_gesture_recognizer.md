@@ -1,8 +1,9 @@
-# Gesture Recognition Mini‑Project (MediaPipe + PyTorch)
+# Gesture Recognition (MediaPipe + PyTorch)
 
 This project is a **standalone, desktop gesture recognition system** built in Python.
 
 It uses:
+
 - **MediaPipe** → fast, real‑time hand landmark detection
 - **PyTorch** → machine‑learning classifier for static hand gestures (frame‑by‑frame)
 
@@ -58,6 +59,7 @@ Gesture label + confidence
 ```
 
 Key idea:
+
 > **MediaPipe finds the hand. PyTorch decides what it means.**
 
 ---
@@ -118,6 +120,7 @@ python -c "import mediapipe as mp, torch; print(hasattr(mp,'solutions'), torch._
 **Final feature vector: 64 dimensions**
 
 This allows the model to learn:
+
 - hand orientation
 - finger configuration
 - left/right differences
@@ -131,6 +134,7 @@ This allows the model to learn:
 - Dropout used during training for robustness
 
 This is intentionally simple:
+
 - fast inference
 - easy debugging
 - good performance for static gestures
@@ -146,11 +150,13 @@ python collect_data.py
 ```
 
 Controls:
+
 - `1..8` → select gesture class
 - `S` → save a sample
 - `Q` → quit
 
 Recommendations:
+
 - Collect **300–800 samples per gesture**
 - Vary:
   - distance from camera
@@ -167,6 +173,7 @@ python train.py
 ```
 
 Output:
+
 - Training + validation accuracy per epoch
 - Best model saved to:
 
@@ -185,6 +192,7 @@ python infer.py
 ```
 
 Features:
+
 - Real‑time webcam prediction
 - Confidence thresholding
 - Terminal output **only when prediction changes**
@@ -199,15 +207,19 @@ Press `Q` to quit.
 Even though this is a desktop project, the following best practices are already applied:
 
 ### ✔ Confidence threshold
+
 Low‑confidence predictions are ignored (`UNSURE`).
 
 ### ✔ Cooldown
+
 Prevents rapid flickering / spam output.
 
 ### ✔ Architecture consistency
+
 Training and inference models **must match exactly**.
 
 ### ✔ Explicit gesture set
+
 No hidden magic labels.
 
 ---
@@ -229,6 +241,7 @@ This project cleanly separates:
 - **Decision logic** → your code
 
 This makes it easy to:
+
 - add gesture smoothing
 - add temporal models (LSTM / Transformer)
 - replace terminal output with:
@@ -257,6 +270,7 @@ This mini‑project is a **complete, real‑world gesture recognition pipeline**
 - extensible
 
 It is suitable as:
+
 - a learning project
 - a research prototype
 - the perception layer of a robotics or drone system
@@ -264,4 +278,3 @@ It is suitable as:
 ---
 
 Happy hacking ✋🚀
-
