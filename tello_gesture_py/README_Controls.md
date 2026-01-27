@@ -1,24 +1,5 @@
 # Tello Gesture Control (Python)
 
-This project controls a **DJI / Ryze Tello** drone using **hand gestures** and/or **keyboard input**.
-It is a Python reimplementation of a C++ UDP SDK controller using **MediaPipe**.
-
----
-
-## Requirements
-
-- Python **3.9+**
-- Windows 10 or Ubuntu
-- DJI / Ryze **Tello** drone
-- Webcam (only required for training)
-
-Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
----
-
 ## 1. Connect to the Tello
 
 1. Power on the Tello
@@ -36,6 +17,7 @@ python -m tello_gesture.main
 ```
 
 ### What happens
+
 - Uses the **Tello camera** for gesture detection
 - Opens a video window
 - Sends RC commands at ~10 Hz
@@ -49,25 +31,28 @@ python -m tello_gesture.main
 > The OpenCV window must be focused.
 
 ### Flight
-| Key | Action |
-|----|-------|
-| `t` | Takeoff |
-| `l` | Land |
-| `e` | Emergency stop |
-| `q` | Quit (lands first) |
-| `SPACE` | Stop movement |
+
+| Key     | Action             |
+| ------- | ------------------ |
+| `t`     | Takeoff            |
+| `l`     | Land               |
+| `e`     | Emergency stop     |
+| `q`     | Quit (lands first) |
+| `SPACE` | Stop movement      |
 
 ### Modes
-| Key | Action |
-|----|-------|
+
+| Key | Action                         |
+| --- | ------------------------------ |
 | `m` | Toggle gesture / keyboard mode |
 
 ### Keyboard mode
-| Key | Action |
-|----|-------|
-| `w / s` | Forward / Back |
-| `a / d` | Left / Right |
-| `r / f` | Up / Down |
+
+| Key     | Action           |
+| ------- | ---------------- |
+| `w / s` | Forward / Back   |
+| `a / d` | Left / Right     |
+| `r / f` | Up / Down        |
 | `j / k` | Yaw Left / Right |
 
 ---
@@ -75,6 +60,7 @@ python -m tello_gesture.main
 ## Gesture Control (No Model)
 
 Default rule-based logic:
+
 - **LEFT / RIGHT / UP / DOWN** → index finger direction
 - **FORWARD / BACK** → hand size change (closer / farther)
 
@@ -99,6 +85,7 @@ python -m tello_gesture.gestures.collect_dataset   --labels tello_gesture/gestur
 - Press `q` to quit
 
 Example labels:
+
 ```json
 {
   "1": "LEFT",
@@ -119,6 +106,7 @@ python -m tello_gesture.gestures.train_model   --dataset dataset.csv   --labels 
 ```
 
 Output:
+
 - Accuracy report
 - Confusion matrix
 - Trained model file: `model.joblib`
@@ -156,9 +144,9 @@ python -m tello_gesture.main   --model model.joblib   --labels tello_gesture/ges
 
 ## Summary
 
-| Mode | Camera Used | Purpose |
-|----|------------|--------|
-| Control (no model) | Tello | Quick testing |
-| Control (trained) | Tello | Stable gesture flight |
-| Dataset collection | Webcam | Safe training |
-| Keyboard mode | None | Debug & safety |
+| Mode               | Camera Used | Purpose               |
+| ------------------ | ----------- | --------------------- |
+| Control (no model) | Tello       | Quick testing         |
+| Control (trained)  | Tello       | Stable gesture flight |
+| Dataset collection | Webcam      | Safe training         |
+| Keyboard mode      | None        | Debug & safety        |
