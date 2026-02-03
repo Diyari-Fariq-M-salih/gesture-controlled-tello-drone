@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import Optional
 import numpy as np
 
+from .rc_command import RCCommand as RC
+
 @dataclass
 class GestureResult:
     name: str
@@ -67,3 +69,35 @@ class RuleBasedGesture:
 
         conf = min(1.0, 0.5 + 2.0 * max(abs(dx), abs(dy)))
         return GestureResult("-".join(parts), conf)
+
+
+def rc_from_gesture_name(gesture: str, speed: int) -> RC:
+    """
+    Convert gesture label like:
+      LEFT / RIGHT / UP / DOWN / FORWARD / BACK
+      or combos like UP-LEFT, etc.
+    into an RC command.
+
+    Note: yaw is kept 0 for gesture mode (you can add yaw gestures later).
+    """
+    parts = gesture.split("-")
+    lr = fb = ud = yaw = 0
+
+    if "LEFT" in parts:
+        lr = -speed
+    if "RIGHT" in parts:
+        lr = speed
+    if "UP" in parts:
+        ud = speed
+    if "DOWN" in parts:
+        ud = -speed
+    if "FORWARD" in parts:
+        fb = speed
+    if "BACK" in parts:
+        fb = -speed
+
+    # CENTER -> hover
+    if gesture == "CENTER" or (lr == fb == ud == yaw == 0):
+        return RC(0, 0, 0, 0, active=True)
+
+    return RC(lr=lr, fb=fb, ud=ud, yaw=yaw, active=True)
