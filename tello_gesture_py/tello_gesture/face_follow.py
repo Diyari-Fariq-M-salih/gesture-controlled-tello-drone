@@ -15,12 +15,12 @@ class FaceFollowConfig:
     # P gains (keep gentle, especially forward/back)
     kp_yaw: float = 0.12
     kp_ud: float = 0.12
-    kp_fb: float = 0.20              # gentler than before
+    kp_fb: float = 0.30              # gentler than before
 
     # Max speeds
     max_yaw: int = 55
     max_ud: int = 40
-    max_fb: int = 30
+    max_fb: int = 40
 
     # Deadbands
     deadband_px: int = 18
