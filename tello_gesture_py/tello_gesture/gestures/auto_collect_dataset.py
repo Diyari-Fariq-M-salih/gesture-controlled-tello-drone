@@ -66,7 +66,12 @@ def countdown(cap, seconds, label_name, collected, total, window="DATASET"):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--labels", required=True, help="Path to labels JSON")
+    ap.add_argument(
+        "--labels",
+        default="tello_gesture/gestures/labels_example.json",
+        help="Path to labels JSON"
+    )
+
     ap.add_argument("--out_dir", default="dataset_images", help="Where to save images")
     ap.add_argument("--out_csv", default="dataset.csv", help="CSV output file")
     ap.add_argument("--cam", type=int, default=0, help="Webcam index (0 is default)")
@@ -81,6 +86,15 @@ def main():
     ap.add_argument("--capture_interval_ms", type=int, default=120, help="Time between captures")
 
     args = ap.parse_args()
+    args.images_per_class = 400
+    args.batch_size = 400
+    args.ready_delay = 10
+    args.between_batch_delay = 10
+    args.capture_interval_ms = 200
+
+    args.labels = "tello_gesture/gestures/labels_example.json"
+    args.out_dir = "dataset_images"
+    args.out_csv = "dataset.csv"
 
     labels = load_labels(args.labels)
     os.makedirs(args.out_dir, exist_ok=True)
