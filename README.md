@@ -1,5 +1,24 @@
 # Gesture-Based Drone Control Project
 
+## Installation
+**Install dependencies**        
+Python libraries versions should be compatible. It is recommended to create a virtual environment and install the libraries. Versions in `requirements.txt` might be old. 
+```sh
+cd gesture-controlled-tello-drone
+python3 -m venv .venv
+source .venv/bin/activate   # macOS/Linux
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+```
+For `Windows`:
+```sh
+dir gesture-controlled-tello-drone
+python3 -m venv .venv
+.venv\Scripts\activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
 ## Project Description
 
 ### Overview
