@@ -1,55 +1,28 @@
-t,mode_before,mode_after,gesture,gesture_conf,face_detected,time_since_face_s,hand_detected,time_since_hand_s,key,battery,altitude_cm,reason
-1770319059.1383948,hover,hover,NOHAND,0.0,False,1000000000.0,False,13.141209840774536,,29.0,60.0,"LLM error -> hover (ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=3.5))"
-1770319060.563741,hover,hover,NOHAND,0.0,False,1000000000.0,False,16.77974557876587,,29.0,60.0,"The drone needs to land, so choosing 'hover' as the next mode."
-1770319060.9985018,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319062.725388,gesture,hover,CENTER,0.5,False,1000000000.0,True,0.0,,29.0,60.0,the drone is in the process of landing due to no hand or face detection.
-1770319062.7402565,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319063.7018316,gesture,hover,NOHAND,0.0,False,1000000000.0,False,0.4187593460083008,,29.0,70.0,LLM: no reason
-1770319063.9599414,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319067.4333038,gesture,hover,UP,0.7476483583450317,True,0.10994076728820801,True,0.0,,29.0,70.0,"The drone detected the user's hand gesture, but it needs to determine if they are using the face or the search 360 mode."
-1770319070.974398,hover,hover,NOHAND,0.0,False,2.3741190433502197,False,2.250988483428955,,29.0,110.0,"LLM error -> hover (ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=11434): Read timed out. (read timeout=3.5))"
-1770319073.528723,hover,hover,NOHAND,0.0,False,5.908791542053223,False,5.801650524139404,,29.0,120.0,"current mode is 'hover' and no hand detected, so face is preferred if hand is detected but time since hands detected is less than 5 seconds."
-1770319073.5726905,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319075.3574286,gesture,hover,BACK,0.533195436000824,False,8.491246223449707,True,0.0,,29.0,120.0,hand_detected but face detected and time after hand detection is longer than expected.
-1770319075.3761215,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319077.9448528,gesture,hover,DOWN,0.8635424375534058,True,0.07768130302429199,True,0.0,,29.0,120.0,"The drone detected a gesture (DOWN), but the user is not facing it or detecting any face features in the image, so 'hover' mode remains as it is."
-1770319077.951023,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319078.4680169,gesture,hover,DOWN,0.8647494316101074,False,2.4352214336395264,True,0.0,,29.0,80.0,LLM: no reason
-1770319079.0721817,hover,face,,,,,,,,,,Hard rule: face detected -> FACE
-1770319082.4283874,face,hover,BACK,0.5965976119041443,False,0.9048683643341064,True,0.0,,29.0,80.0,The drone is currently facing forward and has not detected a hand or face. The battery level and altitude are normal.
-1770319082.436803,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319084.2839997,gesture,hover,FORWARD,0.5749174058437347,False,3.367650270462036,True,0.0,,29.0,80.0,"The drone is currently moving forward (FORWARD), which aligns with the gesture mode preference."
-1770319085.9308493,hover,hover,NOHAND,0.0,False,5.3992156982421875,False,2.0126750469207764,,29.0,80.0,Both hand and face not detected. The drone is flying with the given parameters.
-1770319085.9977996,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319086.9640396,gesture,hover,UP,0.8640226125717163,False,7.419657230377197,True,0.0,,29.0,80.0,LLM: no reason
-1770319086.9805238,hover,gesture,,,,,,,,,,Hard rule: hand detected -> GESTURE
-1770319090.4956846,gesture,search_360,NOHAND,0.0,True,0.07903385162353516,False,0.014605522155761719,,29.0,110.0,"The drone is currently searching in the sky, hence 'search_360' mode is a safer choice."
-1770319092.5013628,face,face,BACK,0.5719814300537109,False,2.111467123031616,True,0.0,,28.0,120.0,The mode is switched to 'face' because it meets the safety requirements (no hand detection required).
-1770319093.0945735,face,hover,NOHAND,0.0,True,0.056792259216308594,False,0.015899658203125,,27.0,110.0,LLM: no reason
-1770319093.1044846,hover,face,,,,,,,,,,Hard rule: face detected -> FACE
-1770319095.841367,face,hover,NOHAND,0.0,False,1.2356491088867188,False,1.3347234725952148,,26.0,120.0,The drone is flying and there are no hand gestures detected.
-1770319099.0694582,hover,hover,NOHAND,0.0,False,3.263079881668091,False,3.3392295837402344,,25.0,120.0,"During the flight, time since hand detection is close to 3 seconds, which indicates a possible gesture error or the user's presence."
-1770319101.446841,hover,hover,NOHAND,0.0,False,5.754970550537109,False,5.8540449142456055,,24.0,120.0,"The drone is flying, but no hand or face has been detected yet. Therefore, it prefers to hover at the current altitude."
-1770319103.6589835,hover,hover,NOHAND,0.0,False,8.154857635498047,False,8.23182725906372,,23.0,110.0,"current mode is 'gesture' and time_since_hand_s > 8 seconds. Prefer gesture if hand_detected, else hover."
-1770319106.6810982,hover,hover,NOHAND,0.0,False,10.35011911392212,False,10.449193477630615,,23.0,120.0,The drone is in 'hover' mode and has not detected any hand gesture or face. It's currently flying at an altitude of 120 cm with a battery level of 23%.
-1770319109.2416463,hover,hover,NOHAND,0.0,False,13.391798257827759,False,13.470256805419922,,22.0,110.0,"The drone is not detecting any hand or face, but the current mode is 'hover' and the time_since_hand_s is greater than 13 seconds."
-1770319112.2577245,hover,hover,NOHAND,0.0,False,15.930836915969849,False,16.027114152908325,,21.0,110.0,"The user switched to 'hover', and the previous mode was 'gesture'. The current time is approximately 16 seconds after the gesture started, which exceeds the 2.5-second timeout. We need a new mode without a timeout."
-1770319114.3090527,hover,hover,NOHAND,0.0,False,18.961546659469604,False,19.038005113601685,,20.0,120.0,"The drone is flying and does not have a hand or face detected, making 'hover' the safest mode."
-1770319116.651843,hover,hover,NOHAND,0.0,False,20.991085052490234,False,21.09015941619873,,20.0,120.0,The drone is in hovering mode and has no hand detected or face captured. It will switch to the 'hover' mode as requested.
-1770319119.4702432,hover,hover,NOHAND,0.0,False,23.35772204399109,False,23.435856342315674,,19.0,120.0,"current mode is 'hover', time_since_face_s is > 23.435856342315674, and hand_detected is false, so choose 'hover' as the next mode."
-1770319122.1102593,hover,hover,NOHAND,0.0,False,26.161161422729492,False,26.26023578643799,,19.0,120.0,"Current mode is 'hover' (no hand detected), and time_since_hand_s exceeds 5 seconds. We should choose 'face' as it's the face detection mode."
-1770319124.3145833,hover,hover,NOHAND,0.0,False,28.820454835891724,False,28.891760110855103,,18.0,120.0,The drone is not in the 'hand' mode because it detected no hand gestures and has been flying for a while.
-1770319126.4659226,hover,hover,NOHAND,0.0,False,30.995975494384766,False,31.09504985809326,,17.0,120.0,"The user's current mode is 'hover', and there are no relevant sensors indicating hand or face, so it prefers the 'search_360' mode."
-1770319127.8768585,hover,face,NOHAND,0.0,False,33.16617774963379,False,33.24304008483887,,17.0,120.0,"user detected no hand, prefer face mode for safety"
-1770319127.8826647,face,search_360,NOHAND,0.0,False,34.55624485015869,False,34.65531921386719,,17.0,110.0,Hard rule: face lost >= 10s -> SEARCH_360
-1770319129.9047582,face,hover,NOHAND,0.0,True,0.04751420021057129,False,35.27661752700806,,17.0,120.0,The drone is currently not detected or in flight.
-1770319130.0013983,hover,face,,,,,,,,,,Hard rule: face detected -> FACE
-1770319131.0157952,face,hover,NOHAND,0.0,True,0.4346644878387451,False,37.276342153549194,,16.0,130.0,LLM: no reason
-1770319131.079707,hover,face,,,,,,,,,,Hard rule: face detected -> FACE
-1770319134.2162192,face,hover,NOHAND,0.0,True,0.054540395736694336,False,39.302152156829834,,16.0,130.0,Only choose 'hover' if neither face_detected nor hand_detected.
-1770319134.2915492,hover,face,,,,,,,,,,Hard rule: face detected -> FACE
-1770319135.148024,face,hover,NOHAND,0.0,True,0.24095845222473145,False,41.30271291732788,,16.0,10.0,LLM: no reason
-1770319138.258212,hover,hover,NOHAND,0.0,False,2.2653512954711914,False,43.306018590927124,,16.0,10.0,user is in the air and prefers to fly with 'search_360' mode
-1770319140.699111,hover,hover,NOHAND,0.0,False,4.2957775592803955,False,45.33561158180237,,16.0,10.0,The drone is in flight and the user prefers 'hover' as it aligns with the current mode being 'hover'.
-1770319141.9465468,hover,hover,NOHAND,0.0,False,6.426997423171997,False,47.48875188827515,,16.0,10.0,user has not detected or controlled the drone
-1770319145.5341876,hover,hover,NOHAND,0.0,False,8.434254884719849,False,49.47303915023804,,16.0,10.0,The drone is in a state where it can't determine the next mode due to 'hand_detected' being false and 'time_since_hand_s' > 2.5 seconds.
+t,mode_before,mode_after,gesture,gesture_conf,face_detected,time_since_face_s,hand_detected,time_since_hand_s,key,battery,altitude_cm,reason,face,hand,t_any
+1770326738.9777153,hover,hover,,,,,,,,48.0,60.0,The device is currently flying and needs to land.,False,False,15.266100645065308
+1770326741.3140168,hover,search_360,,,,,,,,48.0,70.0,The user is trying to track their movements and location on a specific device.,False,False,17.60834288597107
+1770326744.6419346,search_360,face,,,,,,,,48.0,70.0,Constraint: face_detected -> face,True,False,0.0
+1770326745.5186334,face,gesture,,,,,,,,48.0,70.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326749.165224,gesture,search_360,,,,,,,,48.0,50.0,The phone is flying and the battery is low.,False,False,1.7669868469238281
+1770326750.6028757,search_360,gesture,,,,,,,,48.0,50.0,Constraint: hand_detected -> gesture,False,True,0.0
+1770326754.5594375,gesture,search_360,,,,,,,,48.0,90.0,The battery is low and I am currently flying.,False,False,1.8337390422821045
+1770326755.0839238,search_360,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
+1770326755.0906572,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326755.1228,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
+1770326755.262931,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326755.3896246,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
+1770326756.6002874,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326756.6317399,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
+1770326762.854744,face,search_360,,,,,,,,47.0,90.0,Time since hand detected is less than or equal to 15 seconds and battery is at 48%,False,False,2.900498628616333
+1770326763.3372738,search_360,face,,,,,,,,47.0,90.0,Constraint: face_detected -> face,True,False,0.0
+1770326772.6163318,face,face,,,,,,,,45.0,80.0,LLM error (ReadTimeout),False,False,4.070884943008423
+1770326776.2577484,face,search_360,,,,,,,,44.0,80.0,"Time has passed for us to detect the user without hand, and our battery level is low.",False,False,7.690669298171997
+1770326779.1313968,search_360,search_360,,,,,,,,43.0,80.0,The battery level is low and the system detects a hand or face which requires searching in 360° view.,False,False,10.563932657241821
+1770326781.6877866,search_360,search_360,,,,,,,,43.0,80.0,The device is in a flight mode.,False,False,13.142339706420898
+1770326784.4478974,search_360,search_360,,,,,,,,42.0,80.0,The battery is low and the device is flying.,False,False,15.881570816040039
+1770326786.392082,search_360,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
+1770326787.0177724,face,gesture,,,,,,,,42.0,80.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326787.052683,gesture,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
+1770326787.126456,face,gesture,,,,,,,,42.0,80.0,Constraint: hand_detected -> gesture,True,True,0.0
+1770326787.2073002,gesture,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
+1770326792.2056332,face,face,,,,,,,,41.0,0.0,LLM error (ReadTimeout),False,False,4.411435604095459
