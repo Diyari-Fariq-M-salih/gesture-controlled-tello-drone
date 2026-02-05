@@ -13,48 +13,153 @@ def _norm(m: str) -> str:
     return (m or "").strip().lower()
 
 
+# -------------------------
+# Deterministic Mode Manager
+# -------------------------
+
 @dataclass
-class LLMConfig:
+class DeterministicConfig:
+    battery_land_pct: int = 15
+
+    # Search behavior
+    nohuman_search_s: float = 10.0
+    search_duration_s: float = 5.0  # one "quick 360" window
+    search_cooldown_s: float = 10.0  # wait before spinning again if still nothing
+
+    # Perception hysteresis (prevents face<->gesture flapping)
+    mode_hold_s: float = 1.2
+    hand_release_s: float = 0.8
+    face_release_s: float = 0.8
+
+
+class DeterministicModeManager:
+    """
+    Deterministic control policy:
+      - battery <= threshold -> land
+      - gesture > face (with hysteresis)
+      - if no hand/face for >= nohuman_search_s -> search_360 for search_duration_s
+      - else hover
+    """
+
+    def __init__(self, cfg: Optional[DeterministicConfig] = None):
+        self.cfg = cfg or DeterministicConfig()
+        self.mode: str = "hover"
+        self.reason: str = ""
+
+        self._mode_enter_ts: float = time.time()
+        self._search_enter_ts: float = 0.0
+        self._next_search_allowed_ts: float = 0.0
+
+    def _set_mode(self, mode: str, reason: str):
+        m = _norm(mode)
+        if m not in MODES:
+            m = "hover"
+            reason = f"Invalid mode -> hover (got '{mode}')"
+        if m != self.mode:
+            self._mode_enter_ts = time.time()
+        self.mode = m
+        self.reason = reason
+
+        if m == "search_360":
+            self._search_enter_ts = self._mode_enter_ts
+
+    def tick(self, state: Dict[str, Any]) -> Tuple[str, str]:
+        now = time.time()
+
+        # Read signals
+        hand = bool(state.get("hand_detected", False))
+        face = bool(state.get("face_detected", False))
+
+        t_hand = float(state.get("time_since_hand_s", 999.0))
+        t_face = float(state.get("time_since_face_s", 999.0))
+        t_any = float(state.get("time_since_any_seen_s", 999.0))
+
+        # Battery safety
+        bat = state.get("battery", None)
+        try:
+            if bat is not None and float(bat) <= float(self.cfg.battery_land_pct):
+                self._set_mode("land", f"Safety: battery {bat}% <= {self.cfg.battery_land_pct}% -> land")
+                return self.mode, self.reason
+        except Exception:
+            pass
+
+        # Search_360 timing / exit condition
+        if self.mode == "search_360":
+            if (now - self._search_enter_ts) >= float(self.cfg.search_duration_s):
+                # stop spinning after 5s
+                self._set_mode("hover", f"Autonomy: search done ({self.cfg.search_duration_s:.0f}s) -> hover")
+                # prevent immediate re-entry
+                self._next_search_allowed_ts = now + float(self.cfg.search_cooldown_s)
+            return self.mode, self.reason
+
+        time_in_mode = now - self._mode_enter_ts
+
+        # Hysteresis: hold gesture mode unless hand truly gone
+        if self.mode == "gesture":
+            if time_in_mode < self.cfg.mode_hold_s:
+                return self.mode, self.reason
+            if t_hand <= self.cfg.hand_release_s:
+                return self.mode, self.reason
+            # else: allow switching
+
+        # Hysteresis: hold face mode unless face truly gone
+        if self.mode == "face":
+            if time_in_mode < self.cfg.mode_hold_s:
+                return self.mode, self.reason
+            if t_face <= self.cfg.face_release_s:
+                return self.mode, self.reason
+            # else: allow switching
+
+        # Priority: gesture > face
+        if hand:
+            self._set_mode("gesture", "Perception: hand_detected -> gesture (priority)")
+            return self.mode, self.reason
+
+        if face:
+            self._set_mode("face", "Perception: face_detected -> face")
+            return self.mode, self.reason
+
+        # No human: search trigger
+        if t_any >= float(self.cfg.nohuman_search_s) and now >= self._next_search_allowed_ts:
+            self._set_mode("search_360", f"Autonomy: no human for {t_any:.1f}s -> search_360")
+            return self.mode, self.reason
+
+        # Default: hover
+        self._set_mode("hover", "Autonomy: no intent -> hover")
+        return self.mode, self.reason
+
+
+# -------------------------
+# LLM Reasoner (Reason Only)
+# -------------------------
+
+@dataclass
+class LLMReasonConfig:
     enabled: bool = True
     model: str = "qwen2.5:0.5b-instruct"
     url: str = "http://127.0.0.1:11434/api/chat"
-
-    # Decision cadence
-    decision_hz: float = 1.0
+    decision_hz: float = 1.0  # one reason per second max
     timeout_s: float = 4.0
 
-    # Safety
-    battery_land_pct: int = 15
 
-    # Mode stability
-    mode_lock_s: float = 0.4  # shorter, more reactive
-
-    # HARD CONSTRAINTS IN CODE (robotics-style):
-    # If hand/face is detected, we force those modes immediately.
-    enforce_perception_priority: bool = True
-
-
-class LLMModeManager:
+class LLMReasoner:
     """
-    Non-blocking LLM controller with hard constraints:
-      - tick(state) is cheap, never blocks
-      - worker thread calls Ollama occasionally
-      - OPTIONAL: hard force gesture/face when hand/face detected (recommended)
+    Reason-only LLM:
+      - never controls the drone
+      - runs in a worker thread (non-blocking)
+      - stores last_reason string
     """
 
-    def __init__(self, cfg: Optional[LLMConfig] = None):
-        self.cfg = cfg or LLMConfig()
-        self.mode: str = "hover"
+    def __init__(self, cfg: Optional[LLMReasonConfig] = None):
+        self.cfg = cfg or LLMReasonConfig()
         self._last_reason: str = ""
-        self._last_decision_ts: float = 0.0
+        self._last_tick_ts: float = 0.0
 
-        self._lock_until: float = 0.0
+        self._lock = threading.Lock()
+        self._latest_payload: Optional[Dict[str, Any]] = None
 
-        self._state_lock = threading.Lock()
-        self._latest_state: Optional[Dict[str, Any]] = None
         self._request_event = threading.Event()
         self._stop_event = threading.Event()
-
         self._worker = threading.Thread(target=self._worker_loop, daemon=True)
         self._worker.start()
 
@@ -63,62 +168,28 @@ class LLMModeManager:
         self._request_event.set()
         self._worker.join(timeout=1.0)
 
-    def get(self) -> Tuple[str, str]:
-        return self.mode, self._last_reason
+    def get_reason(self) -> str:
+        return self._last_reason
 
-    def _set_mode(self, new_mode: str, reason: str):
-        nm = _norm(new_mode)
-        if nm not in MODES:
-            nm = "hover"
-            reason = f"Invalid mode -> hover (got '{new_mode}')"
-        self.mode = nm
-        self._last_reason = reason
-        self._lock_until = time.time() + float(self.cfg.mode_lock_s)
-
-    def tick(self, state: Dict[str, Any]) -> Tuple[str, str]:
+    def tick(self, payload: Dict[str, Any]) -> str:
         """
-        Main-thread tick. Applies hard constraints first (optional), then schedules LLM.
-        Returns current (mode, reason) immediately.
+        Called from main loop. Schedules LLM at decision_hz.
+        payload should include: mode, command, key signals, safety context.
         """
         if not self.cfg.enabled:
-            return self.mode, self._last_reason
+            self._last_reason = ""
+            return self._last_reason
 
         now = time.time()
-
-        # --- Hard safety: battery (instant, cannot be overridden) ---
-        bat = state.get("battery", None)
-        try:
-            if bat is not None and float(bat) <= float(self.cfg.battery_land_pct):
-                if self.mode != "land":
-                    self._set_mode("land", f"Hard safety: battery {bat}% <= {self.cfg.battery_land_pct}%")
-                return self.mode, self._last_reason
-        except Exception:
-            pass
-
-        # --- Hard perception constraints (robotics constraint layer) ---
-        if self.cfg.enforce_perception_priority:
-            # These are hard, because your demo expects it.
-            if bool(state.get("hand_detected", False)):
-                if self.mode != "gesture":
-                    self._set_mode("gesture", "Constraint: hand_detected -> gesture")
-                return self.mode, self._last_reason
-
-            if bool(state.get("face_detected", False)):
-                if self.mode != "face":
-                    self._set_mode("face", "Constraint: face_detected -> face")
-                return self.mode, self._last_reason
-
-        # Push latest state for worker (LLM decides only when nothing is detected)
-        with self._state_lock:
-            self._latest_state = dict(state)
-
-        # Schedule LLM call
         min_dt = 1.0 / max(float(self.cfg.decision_hz), 0.05)
-        if (now - self._last_decision_ts) >= min_dt:
-            self._last_decision_ts = now
-            self._request_event.set()
+        if (now - self._last_tick_ts) < min_dt:
+            return self._last_reason
 
-        return self.mode, self._last_reason
+        self._last_tick_ts = now
+        with self._lock:
+            self._latest_payload = dict(payload)
+        self._request_event.set()
+        return self._last_reason
 
     def _worker_loop(self):
         while not self._stop_event.is_set():
@@ -127,37 +198,27 @@ class LLMModeManager:
             if self._stop_event.is_set():
                 break
 
-            with self._state_lock:
-                st = dict(self._latest_state) if self._latest_state else None
+            with self._lock:
+                st = dict(self._latest_payload) if self._latest_payload else None
             if not st:
                 continue
 
-            # Respect lock
-            if time.time() < self._lock_until:
-                continue
+            self._last_reason = self._call_llm(st)
 
-            mode, reason = self._call_llm(st)
-            self._set_mode(mode, reason)
-
-    def _call_llm(self, state: Dict[str, Any]) -> Tuple[str, str]:
+    def _call_llm(self, payload: Dict[str, Any]) -> str:
         system = (
-            "Return ONLY JSON: {\"next_mode\": str, \"reason\": str}\n"
-            f"next_mode must be one of {list(MODES)}.\n\n"
-            "Decision context:\n"
-            "- hand_detected and face_detected may be false here.\n"
-            "- Decide between hover vs search_360 vs land.\n\n"
-            "Hard rules:\n"
-            "- If battery <= 15: next_mode MUST be \"land\".\n"
-            "- Else if time_since_any_seen_s >= 10: next_mode SHOULD be \"search_360\".\n"
-            "- Else: next_mode SHOULD be \"hover\".\n"
-            "Reason must be short.\n"
+            "You are generating a SHORT explanation for a drone action.\n"
+            "You do NOT control the drone.\n"
+            "Return ONLY JSON: {\"reason\": \"...\"}\n"
+            "The reason must be 1 short sentence and must match the given command/mode.\n"
+            "Do not invent battery warnings unless battery <= 15.\n"
         )
 
-        payload = {
+        body = {
             "model": self.cfg.model,
             "messages": [
                 {"role": "system", "content": system},
-                {"role": "user", "content": json.dumps(state)},
+                {"role": "user", "content": json.dumps(payload)},
             ],
             "stream": False,
             "format": "json",
@@ -166,17 +227,11 @@ class LLMModeManager:
         try:
             import requests
 
-            r = requests.post(self.cfg.url, json=payload, timeout=self.cfg.timeout_s)
+            r = requests.post(self.cfg.url, json=body, timeout=self.cfg.timeout_s)
             r.raise_for_status()
             msg = r.json().get("message", {}).get("content", "")
             data = json.loads(msg) if isinstance(msg, str) else msg
-
-            nm = _norm(data.get("next_mode", "hover"))
-            reason = str(data.get("reason", "")).strip() or "LLM: no reason"
-
-            if nm not in MODES:
-                return "hover", f"LLM invalid '{nm}' -> hover"
-            return nm, reason
-
+            reason = str(data.get("reason", "")).strip()
+            return reason or "LLM: (no reason)"
         except Exception as e:
-            return self.mode, f"LLM error ({type(e).__name__})"
+            return f"LLM error ({type(e).__name__})"

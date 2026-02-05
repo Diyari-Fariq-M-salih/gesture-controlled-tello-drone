@@ -1,28 +1,163 @@
-t,mode_before,mode_after,gesture,gesture_conf,face_detected,time_since_face_s,hand_detected,time_since_hand_s,key,battery,altitude_cm,reason,face,hand,t_any
-1770326738.9777153,hover,hover,,,,,,,,48.0,60.0,The device is currently flying and needs to land.,False,False,15.266100645065308
-1770326741.3140168,hover,search_360,,,,,,,,48.0,70.0,The user is trying to track their movements and location on a specific device.,False,False,17.60834288597107
-1770326744.6419346,search_360,face,,,,,,,,48.0,70.0,Constraint: face_detected -> face,True,False,0.0
-1770326745.5186334,face,gesture,,,,,,,,48.0,70.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326749.165224,gesture,search_360,,,,,,,,48.0,50.0,The phone is flying and the battery is low.,False,False,1.7669868469238281
-1770326750.6028757,search_360,gesture,,,,,,,,48.0,50.0,Constraint: hand_detected -> gesture,False,True,0.0
-1770326754.5594375,gesture,search_360,,,,,,,,48.0,90.0,The battery is low and I am currently flying.,False,False,1.8337390422821045
-1770326755.0839238,search_360,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
-1770326755.0906572,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326755.1228,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
-1770326755.262931,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326755.3896246,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
-1770326756.6002874,face,gesture,,,,,,,,48.0,90.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326756.6317399,gesture,face,,,,,,,,48.0,90.0,Constraint: face_detected -> face,True,False,0.0
-1770326762.854744,face,search_360,,,,,,,,47.0,90.0,Time since hand detected is less than or equal to 15 seconds and battery is at 48%,False,False,2.900498628616333
-1770326763.3372738,search_360,face,,,,,,,,47.0,90.0,Constraint: face_detected -> face,True,False,0.0
-1770326772.6163318,face,face,,,,,,,,45.0,80.0,LLM error (ReadTimeout),False,False,4.070884943008423
-1770326776.2577484,face,search_360,,,,,,,,44.0,80.0,"Time has passed for us to detect the user without hand, and our battery level is low.",False,False,7.690669298171997
-1770326779.1313968,search_360,search_360,,,,,,,,43.0,80.0,The battery level is low and the system detects a hand or face which requires searching in 360° view.,False,False,10.563932657241821
-1770326781.6877866,search_360,search_360,,,,,,,,43.0,80.0,The device is in a flight mode.,False,False,13.142339706420898
-1770326784.4478974,search_360,search_360,,,,,,,,42.0,80.0,The battery is low and the device is flying.,False,False,15.881570816040039
-1770326786.392082,search_360,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
-1770326787.0177724,face,gesture,,,,,,,,42.0,80.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326787.052683,gesture,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
-1770326787.126456,face,gesture,,,,,,,,42.0,80.0,Constraint: hand_detected -> gesture,True,True,0.0
-1770326787.2073002,gesture,face,,,,,,,,42.0,80.0,Constraint: face_detected -> face,True,False,0.0
-1770326792.2056332,face,face,,,,,,,,41.0,0.0,LLM error (ReadTimeout),False,False,4.411435604095459
+t;battery;altitude_cm;reason;command;det_reason;face;hand;llm_reason;mode;t_any
+1770334541.4781306;67.0;0.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;;hover;6.933023452758789
+1770334542.5183227;67.0;0.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;;hover;7.947958707809448
+1770334549.4538662;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;FALSE;FALSE;The drone is not flying at the specified altitude and hovering.;search_360;14.908759117126465
+1770334550.4644005;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;FALSE;FALSE;The drone is not flying at the specified altitude and hovering.;search_360;15.919293403625488
+1770334551.3104525;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;TRUE;FALSE;The drone is flying at an altitude of 60 cm and is not detected by the human observer.;search_360;0.0
+1770334552.2931306;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;TRUE;FALSE;The drone is flying at an altitude of 60 cm and is not detected by the human observer.;search_360;0.0
+1770334553.3186443;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;FALSE;FALSE;The drone is flying at an altitude of 60 cm and is not detected by the human observer.;search_360;0.41895294189453125
+1770334553.3593035;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;TRUE;FALSE;The drone is searching without being manually guided by the user;search_360;0.0
+1770334554.3642378;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 14.9s -> search_360;TRUE;FALSE;The drone is searching without being manually guided by the user;search_360;0.0
+1770334554.4565074;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: search done (5s) -> hover;TRUE;FALSE;The drone is searching without being manually guided by the user;hover;0.0
+1770334554.4664822;66.0;60.0;;rc lr=0 fb=-29 ud=21 yaw=9;Perception: face_detected -> face;TRUE;FALSE;The drone is searching without being manually guided by the user;face;0.0
+1770334554.6437688;66.0;60.0;;rc lr=0 fb=-29 ud=21 yaw=9;Perception: face_detected -> face;TRUE;FALSE;"Battery level <= 15, drone not powered down";face;0.0
+1770334555.3880548;66.0;60.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;"Battery level <= 15, drone not powered down";face;0.014877080917358398
+1770334556.1555486;66.0;70.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;"Battery level <= 15, drone not powered down";hover;0.8045129776000977
+1770334557.1748362;66.0;70.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;"Battery level <= 15, drone not powered down";hover;1.8247640132904053
+1770334558.181517;66.0;70.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;"Battery level <= 15, drone not powered down";hover;2.83144474029541
+1770334558.4293158;66.0;70.0;;rc lr=0 fb=0 ud=-30 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;"Battery level <= 15, drone not powered down";gesture;0.0
+1770334558.6505919;66.0;70.0;;rc lr=0 fb=0 ud=-30 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;LLM error (ReadTimeout);gesture;0.0
+1770334559.642861;66.0;60.0;;rc lr=0 fb=0 ud=-30 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;LLM error (ReadTimeout);gesture;0.0
+1770334560.0932555;66.0;50.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;LLM error (ReadTimeout);gesture;0.0
+1770334560.109334;66.0;50.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;LLM error (ReadTimeout);gesture;0.0
+1770334560.1543145;66.0;50.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is hovering due to no intent and low battery level.;gesture;0.0
+1770334560.2800941;66.0;50.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;FALSE;The drone is hovering due to no intent and low battery level.;gesture;0.015923023223876953
+1770334561.0757887;66.0;40.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;The drone is hovering due to no intent and low battery level.;hover;0.8055253028869629
+1770334561.4252725;66.0;40.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is hovering due to no intent and low battery level.;gesture;0.0
+1770334561.4713147;66.0;40.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is hovering due to no intent and low battery level.;gesture;0.0
+1770334562.2014275;66.0;40.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334562.433248;66.0;40.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334562.4472106;66.0;40.0;;rc lr=0 fb=30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334562.478925;66.0;40.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334562.4927576;66.0;40.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334563.5144079;65.0;40.0;;rc lr=0 fb=-30 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334563.6425436;65.0;40.0;;rc lr=0 fb=0 ud=30 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334564.6420596;65.0;50.0;;rc lr=0 fb=0 ud=30 yaw=0;Perception: hand_detected -> gesture (priority);FALSE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334565.6677656;64.0;70.0;;rc lr=0 fb=0 ud=30 yaw=0;Perception: hand_detected -> gesture (priority);TRUE;TRUE;The drone is performing a left turn;gesture;0.0
+1770334566.2227707;64.0;70.0;;rc lr=0 fb=0 ud=30 yaw=0;Perception: hand_detected -> gesture (priority);TRUE;TRUE;LLM error (ReadTimeout);gesture;0.0
+1770334567.2353969;64.0;90.0;;rc lr=0 fb=0 ud=30 yaw=0;Perception: hand_detected -> gesture (priority);TRUE;TRUE;Allow drone to hover when hand detected;gesture;0.0
+1770334567.4193704;64.0;100.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: hand_detected -> gesture (priority);TRUE;FALSE;Allow drone to hover when hand detected;gesture;0.0
+1770334568.1956925;64.0;110.0;;rc lr=0 fb=0 ud=13 yaw=-16;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334568.2866313;63.0;110.0;;rc lr=0 fb=0 ud=11 yaw=-15;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334568.5951345;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=-10;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334568.6861084;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=-9;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334568.7806118;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=-8;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334568.877793;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=-7;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334569.123706;63.0;110.0;;rc lr=0 fb=0 ud=14 yaw=-5;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334569.7416255;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=3;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334569.829121;63.0;110.0;;rc lr=0 fb=0 ud=13 yaw=4;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334569.9297786;63.0;110.0;;rc lr=0 fb=0 ud=12 yaw=8;Perception: face_detected -> face;TRUE;FALSE;Allow drone to hover when hand detected;face;0.0
+1770334570.0488865;63.0;110.0;;rc lr=0 fb=0 ud=12 yaw=8;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334570.458534;62.0;110.0;;rc lr=0 fb=0 ud=9 yaw=25;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334570.5611577;62.0;120.0;;rc lr=0 fb=-2 ud=8 yaw=28;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334571.5662918;62.0;120.0;;rc lr=0 fb=-2 ud=8 yaw=28;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334571.603544;62.0;120.0;;rc lr=0 fb=0 ud=7 yaw=45;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334571.7077067;62.0;120.0;;rc lr=0 fb=0 ud=8 yaw=44;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334571.7977695;62.0;120.0;;rc lr=0 fb=-2 ud=8 yaw=43;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334571.893926;62.0;120.0;;rc lr=0 fb=-3 ud=7 yaw=43;Perception: face_detected -> face;TRUE;FALSE;Check the drone's battery level and altitude to determine if it is safe to proceed with the gesture (rc lr=0 fb=0 ud=30 yaw=0).;face;0.0
+1770334572.6938753;62.0;120.0;;rc lr=0 fb=-3 ud=7 yaw=43;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334573.5938852;61.0;120.0;;rc lr=0 fb=-4 ud=27 yaw=-2;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334573.6843019;61.0;120.0;;rc lr=0 fb=-4 ud=27 yaw=-3;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334573.7796154;61.0;120.0;;rc lr=0 fb=-9 ud=24 yaw=-5;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334573.8715253;61.0;120.0;;rc lr=0 fb=-9 ud=26 yaw=-8;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334573.9652255;61.0;120.0;;rc lr=0 fb=-7 ud=28 yaw=-9;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334574.0629447;61.0;120.0;;rc lr=0 fb=-9 ud=25 yaw=-8;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334575.058726;61.0;130.0;;rc lr=0 fb=-9 ud=25 yaw=-8;Perception: face_detected -> face;TRUE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.0
+1770334576.088667;61.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.015671491622924805
+1770334576.3463442;60.0;150.0;;rc lr=0 fb=-7 ud=5 yaw=-32;Perception: face_detected -> face;FALSE;FALSE;"Drone is moving forward at the determined speed of 25 km/h, with a battery reading of 63% and an altitude of 110 cm.";face;0.26462364196777344
+1770334576.7483604;60.0;150.0;;rc lr=0 fb=-7 ud=5 yaw=-32;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334577.7316885;60.0;150.0;;rc lr=0 fb=-7 ud=5 yaw=-32;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334577.8192182;60.0;150.0;;rc lr=0 fb=-7 ud=5 yaw=-32;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334578.3902576;60.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.049016714096069336
+1770334579.1380198;60.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Ensure the drone stays within safe distances from obstacles.;hover;0.8196821212768555
+1770334580.1628258;60.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Ensure the drone stays within safe distances from obstacles.;hover;1.844520092010498
+1770334580.2989085;59.0;150.0;;rc lr=0 fb=-5 ud=-4 yaw=-44;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.3929324;59.0;150.0;;rc lr=0 fb=-4 ud=-4 yaw=-43;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.561358;59.0;150.0;;rc lr=0 fb=-3 ud=-2 yaw=-37;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.6528006;59.0;150.0;;rc lr=0 fb=-2 ud=-2 yaw=-30;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.7467139;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-28;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.814696;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-26;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334580.9039984;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-23;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.0108385;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-21;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.0974774;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-19;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.198341;59.0;150.0;;rc lr=0 fb=0 ud=0 yaw=-11;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.292968;59.0;150.0;;rc lr=0 fb=0 ud=-2 yaw=-9;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.3971379;59.0;150.0;;rc lr=0 fb=0 ud=0 yaw=-3;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.5042791;59.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;TRUE;FALSE;Ensure the drone stays within safe distances from obstacles.;face;0.0
+1770334581.860112;59.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.0454872;59.0;150.0;;rc lr=0 fb=2 ud=0 yaw=0;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.2073302;59.0;150.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.2974102;59.0;150.0;;rc lr=0 fb=2 ud=0 yaw=2;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.4228802;59.0;150.0;;rc lr=0 fb=2 ud=2 yaw=5;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.5288403;59.0;150.0;;rc lr=0 fb=2 ud=2 yaw=6;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.7317317;59.0;150.0;;rc lr=0 fb=3 ud=2 yaw=6;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.8378825;59.0;150.0;;rc lr=0 fb=4 ud=2 yaw=4;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334582.9302166;59.0;150.0;;rc lr=0 fb=5 ud=4 yaw=4;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.0223756;59.0;150.0;;rc lr=0 fb=6 ud=5 yaw=4;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.117071;59.0;150.0;;rc lr=0 fb=7 ud=5 yaw=5;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.225797;59.0;150.0;;rc lr=0 fb=8 ud=5 yaw=6;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.3199987;59.0;150.0;;rc lr=0 fb=8 ud=6 yaw=6;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.4791403;59.0;150.0;;rc lr=0 fb=9 ud=6 yaw=8;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.6937475;59.0;150.0;;rc lr=0 fb=10 ud=6 yaw=9;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334583.9389424;59.0;150.0;;rc lr=0 fb=11 ud=5 yaw=8;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334584.183755;59.0;150.0;;rc lr=0 fb=11 ud=5 yaw=7;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334584.2768397;59.0;150.0;;rc lr=0 fb=12 ud=5 yaw=6;Perception: face_detected -> face;TRUE;FALSE;LLM error (ReadTimeout);face;0.0
+1770334584.3273983;59.0;150.0;;rc lr=0 fb=12 ud=5 yaw=6;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.3460803;59.0;150.0;;rc lr=0 fb=12 ud=4 yaw=5;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.4360628;59.0;150.0;;rc lr=0 fb=12 ud=4 yaw=4;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.5403433;59.0;150.0;;rc lr=0 fb=12 ud=2 yaw=3;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.6233368;59.0;150.0;;rc lr=0 fb=11 ud=3 yaw=3;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.7274122;59.0;150.0;;rc lr=0 fb=11 ud=0 yaw=3;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334584.833869;59.0;150.0;;rc lr=0 fb=12 ud=0 yaw=3;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.0803587;59.0;150.0;;rc lr=0 fb=12 ud=3 yaw=4;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.1728005;59.0;150.0;;rc lr=0 fb=12 ud=4 yaw=5;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.264818;59.0;150.0;;rc lr=0 fb=12 ud=4 yaw=4;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.3583174;58.0;150.0;;rc lr=0 fb=11 ud=4 yaw=5;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.4585207;58.0;150.0;;rc lr=0 fb=11 ud=4 yaw=4;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.5593545;58.0;150.0;;rc lr=0 fb=11 ud=3 yaw=4;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.6300654;58.0;150.0;;rc lr=0 fb=11 ud=3 yaw=5;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.7192397;58.0;150.0;;rc lr=0 fb=10 ud=3 yaw=6;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.8276262;58.0;150.0;;rc lr=0 fb=10 ud=4 yaw=8;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334585.921865;58.0;150.0;;rc lr=0 fb=11 ud=3 yaw=9;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.0437398;58.0;150.0;;rc lr=0 fb=11 ud=3 yaw=11;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.1374445;58.0;150.0;;rc lr=0 fb=11 ud=4 yaw=12;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.2198732;58.0;150.0;;rc lr=0 fb=11 ud=4 yaw=14;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.3597355;58.0;150.0;;rc lr=0 fb=11 ud=4 yaw=16;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.4456015;58.0;150.0;;rc lr=0 fb=11 ud=3 yaw=19;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.5388336;58.0;150.0;;rc lr=0 fb=11 ud=-6 yaw=28;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.634774;58.0;150.0;;rc lr=0 fb=11 ud=-17 yaw=34;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334586.7865343;58.0;150.0;;rc lr=0 fb=11 ud=-32 yaw=43;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334587.7987018;58.0;140.0;;rc lr=0 fb=11 ud=-32 yaw=43;Perception: face_detected -> face;TRUE;FALSE;"The drone is flying at an altitude of 150 cm with a battery level of 59%, and it has detected the user's face without any obstacles in its range.";face;0.0
+1770334587.985724;58.0;140.0;;rc lr=0 fb=11 ud=-32 yaw=43;Perception: face_detected -> face;TRUE;FALSE;The drone is flying at an altitude of 150 cm and the battery level is 59.0%.;face;0.0
+1770334588.776365;58.0;130.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;The drone is flying at an altitude of 150 cm and the battery level is 59.0%.;face;0.015433311462402344
+1770334589.0990276;58.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;Check battery level and set flying to true if necessary;face;0.3416454792022705
+1770334589.541413;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Check battery level and set flying to true if necessary;hover;0.8073720932006836
+1770334590.5636983;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Check battery level and set flying to true if necessary;hover;1.8296573162078857
+1770334591.5870554;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Check battery level and set flying to true if necessary;hover;2.8530144691467285
+1770334592.6102562;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Check battery level and set flying to true if necessary;hover;3.876020669937134
+1770334593.1206422;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;LLM error (ReadTimeout);hover;4.386601209640503
+1770334594.1456082;57.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;LLM error (ReadTimeout);hover;5.4105706214904785
+1770334595.1513765;57.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;LLM error (ReadTimeout);hover;6.417335510253906
+1770334596.184629;57.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;LLM error (ReadTimeout);hover;7.426568269729614
+1770334596.2828686;56.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Autonomy: no intent -> hover;hover;7.548827648162842
+1770334597.3061924;56.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Autonomy: no intent -> hover;hover;8.57215142250061
+1770334597.6218085;56.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;The drone is already hovering at the specified altitude and facing east.;hover;8.865346193313599
+1770334598.6397889;56.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;The drone is already hovering at the specified altitude and facing east.;hover;9.905747890472412
+1770334598.7732995;56.0;110.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;FALSE;FALSE;The drone is already hovering at the specified altitude and facing east.;search_360;10.015763521194458
+1770334599.7002487;56.0;110.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;FALSE;FALSE;Autonomy: no intent -> hover;search_360;10.945114850997925
+1770334600.6842308;56.0;120.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;TRUE;TRUE;Autonomy: no intent -> hover;search_360;0.0
+1770334601.7159224;55.0;120.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;TRUE;FALSE;Autonomy: no intent -> hover;search_360;0.0
+1770334601.993396;55.0;120.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;TRUE;FALSE;The drone has been flying at a low altitude of 110 cm for approximately 15 minutes without any human interaction or visual observations.;search_360;0.0
+1770334602.9766946;55.0;110.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;TRUE;FALSE;The drone has been flying at a low altitude of 110 cm for approximately 15 minutes without any human interaction or visual observations.;search_360;0.0
+1770334603.605051;55.0;120.0;;rc lr=0 fb=0 ud=0 yaw=80;Autonomy: no human for 10.0s -> search_360;TRUE;FALSE;Autonomy: no human for 10.0s -> search_360;search_360;0.0
+1770334603.7884915;55.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: search done (5s) -> hover;TRUE;FALSE;Autonomy: no human for 10.0s -> search_360;hover;0.0
+1770334603.7984962;55.0;120.0;;rc lr=0 fb=-6 ud=17 yaw=-12;Perception: face_detected -> face;TRUE;FALSE;Autonomy: no human for 10.0s -> search_360;face;0.0
+1770334604.1625988;55.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Perception: face_detected -> face;FALSE;FALSE;Autonomy: no human for 10.0s -> search_360;face;0.06451654434204102
+1770334605.002621;55.0;120.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Autonomy: no human for 10.0s -> search_360;hover;0.9015965461730957
+1770334605.9843495;55.0;110.0;;rc lr=0 fb=0 ud=0 yaw=0;Autonomy: no intent -> hover;FALSE;FALSE;Autonomy: no human for 10.0s -> search_360;hover;1.9082632064819336
+1770334611.0287197;54.0;0.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;No battery warning as battery <= 15;hover;6.952633380889893
+1770334612.0546792;54.0;0.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;No battery warning as battery <= 15;hover;7.978592872619629
+1770334612.6982987;54.0;0.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;"The drone is hovering and has no active flight mode, which indicates it may be performing a ground-based action.";hover;8.598423480987549
+1770334613.4813135;54.0;20.0;;ground;Autonomy: no intent -> hover;FALSE;FALSE;Set the drone to hover mode;hover;9.371495008468628
+1770334613.9548295;54.0;60.0;;ground;Perception: face_detected -> face;TRUE;FALSE;Set the drone to hover mode;face;0.0
+1770334614.5752096;54.0;0.0;;ground;Perception: face_detected -> face;TRUE;FALSE;The drone is flying and does not need to hover;face;0.0
