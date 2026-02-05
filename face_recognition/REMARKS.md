@@ -27,3 +27,8 @@ cd ~/gesture-controlled-tello-drone/follow_me_mode
 The `face_detector_csrt` Uses OpenCV CSRT tracker by first defining the object in the bounding box (face), then track it using correlation. -> not robust.
 
 ### Idea 2
+
+
+InsightFace splits the work between two distinct types of models:       
+1. **Detection Models:** (e.g., `SCRFD` or `RetinaFace`) These scan the whole image to find where faces are and return bounding boxes and landmarks.
+2. **Recognition Models:** (e.g., `ArcFace`) These take a *normalized* crop of a face and turn it into a 128 or 512-dimensional vector (embedding).
