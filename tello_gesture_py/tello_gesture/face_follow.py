@@ -1,0 +1,198 @@
+import cv2
+import time
+from dataclasses import dataclass
+import mediapipe as mp
+from .rc_command import RCCommand
+
+def _clamp(v, lo, hi):
+    return int(max(lo, min(hi, v)))
+
+@dataclass
+class FaceFollowConfig:
+    # Distance target (smaller = farther away)
+    target_area_frac: float = 0.075   # was 0.10 (too close). 0.04 is safer (~1m-ish)
+
+    # P gains (keep gentle, especially forward/back)
+    kp_yaw: float = 0.12
+    kp_ud: float = 0.12
+    kp_fb: float = 0.30              # gentler than before
+
+    # Max speeds
+    max_yaw: int = 55
+    max_ud: int = 40
+    max_fb: int = 40
+
+    # Deadbands
+    deadband_px: int = 18
+    deadband_area: float = 0.008
+
+    # Lost-face behavior
+    lost_timeout_s: float = 0.7
+
+    # Performance knobs
+    detect_w: int = 320
+    detect_h: int = 240
+    detect_every_n: int = 3          # run detector every N frames
+    control_hz: float = 15.0         # update command at ~15Hz max
+
+    # Smoothing (distance jitter fix)
+    area_ema_alpha: float = 0.25     # 0..1 higher = more responsive, lower = smoother
+
+
+class FaceFollower:
+    def __init__(self, cfg: FaceFollowConfig | None = None):
+        self.cfg = cfg or FaceFollowConfig()
+
+        mp_face = mp.solutions.face_detection
+        self.detector = mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.6)
+
+        self._frame_count = 0
+        self._last_face_time = 0.0
+
+        self._last_cmd = RCCommand(0, 0, 0, 0, active=True)  # hover default
+        self._last_bbox = None  # (x,y,w,h) in ORIGINAL coords
+        self._last_area_frac = None
+        self._area_ema = None
+
+        self._last_control_ts = 0.0
+
+    def update(self, frame_bgr):
+        """
+        Returns (RCCommand, debug_frame_bgr)
+        - Runs detection on a small frame for speed
+        - Draws bbox/text on the original frame for clean overlay
+        """
+        cfg = self.cfg
+        self._frame_count += 1
+        now = time.time()
+
+        # Throttle command updates (keeps loop stable)
+        min_dt = 1.0 / max(cfg.control_hz, 1e-6)
+        if (now - self._last_control_ts) < min_dt:
+            # still return last command, just draw overlay
+            dbg = frame_bgr
+            self._draw_overlay(dbg)
+            return self._last_cmd, dbg
+
+        self._last_control_ts = now
+
+        H, W = frame_bgr.shape[:2]
+        dbg = frame_bgr
+
+        run_det = (self._frame_count % max(cfg.detect_every_n, 1) == 0) or (self._last_bbox is None)
+
+        if run_det:
+            small = cv2.resize(frame_bgr, (cfg.detect_w, cfg.detect_h), interpolation=cv2.INTER_LINEAR)
+            rgb = cv2.cvtColor(small, cv2.COLOR_BGR2RGB)
+            res = self.detector.process(rgb)
+
+            if res.detections:
+                # Pick the largest face in SMALL frame
+                best = None
+                best_area = 0.0
+                for det in res.detections:
+                    bbox = det.location_data.relative_bounding_box
+                    bw = bbox.width * cfg.detect_w
+                    bh = bbox.height * cfg.detect_h
+                    a = bw * bh
+                    if a > best_area:
+                        best_area = a
+                        best = det
+
+                bbox = best.location_data.relative_bounding_box
+                sx = int(bbox.xmin * cfg.detect_w)
+                sy = int(bbox.ymin * cfg.detect_h)
+                sw = int(bbox.width * cfg.detect_w)
+                sh = int(bbox.height * cfg.detect_h)
+
+                # Scale bbox to ORIGINAL frame coords
+                scale_x = W / float(cfg.detect_w)
+                scale_y = H / float(cfg.detect_h)
+                x = int(sx * scale_x)
+                y = int(sy * scale_y)
+                w = int(sw * scale_x)
+                h = int(sh * scale_y)
+
+                # Clamp bbox to frame bounds
+                x = max(0, min(W - 1, x))
+                y = max(0, min(H - 1, y))
+                w = max(1, min(W - x, w))
+                h = max(1, min(H - y, h))
+
+                self._last_bbox = (x, y, w, h)
+                self._last_face_time = now
+
+                # Area fraction (ORIGINAL frame)
+                area_frac = (w * h) / float(W * H)
+
+                # EMA smooth for distance stability
+                if self._area_ema is None:
+                    self._area_ema = area_frac
+                else:
+                    a = cfg.area_ema_alpha
+                    self._area_ema = a * area_frac + (1.0 - a) * self._area_ema
+                self._last_area_frac = self._area_ema
+
+            else:
+                # No detection this round
+                pass
+
+        # If we have a bbox, compute command from it
+        cmd = RCCommand(0, 0, 0, 0, active=True)
+
+        if self._last_bbox is not None and (now - self._last_face_time) <= cfg.lost_timeout_s:
+            x, y, w, h = self._last_bbox
+            cx = x + w // 2
+            cy = y + h // 2
+
+            ex = cx - (W // 2)
+            ey = cy - (H // 2)
+
+            area_frac = self._last_area_frac if self._last_area_frac is not None else (w * h) / float(W * H)
+            ez = cfg.target_area_frac - area_frac  # ✅ this fixes your NameError issue
+
+            yaw = _clamp(cfg.kp_yaw * ex, -cfg.max_yaw, cfg.max_yaw)
+            ud  = _clamp(-cfg.kp_ud * ey, -cfg.max_ud, cfg.max_ud)
+            fb  = _clamp(cfg.kp_fb * (ez * 1000.0), -cfg.max_fb, cfg.max_fb)
+
+            if abs(ex) < cfg.deadband_px:
+                yaw = 0
+            if abs(ey) < cfg.deadband_px:
+                ud = 0
+            if abs(ez) < cfg.deadband_area:
+                fb = 0
+
+            cmd = RCCommand(lr=0, fb=fb, ud=ud, yaw=yaw, active=True)
+
+        else:
+            # Lost face -> hover
+            cmd = RCCommand(0, 0, 0, 0, active=True)
+
+        self._last_cmd = cmd
+        self._draw_overlay(dbg)
+        return cmd, dbg
+
+    def _draw_overlay(self, frame_bgr):
+        """Draw bbox + debug text on ORIGINAL frame (clean text)."""
+        cfg = self.cfg
+        H, W = frame_bgr.shape[:2]
+
+        if self._last_bbox is not None:
+            x, y, w, h = self._last_bbox
+            if (time.time() - self._last_face_time) <= cfg.lost_timeout_s:
+                cv2.rectangle(frame_bgr, (x, y), (x + w, y + h), (0, 255, 0), 2, lineType=cv2.LINE_AA)
+                cx = x + w // 2
+                cy = y + h // 2
+                cv2.circle(frame_bgr, (cx, cy), 4, (0, 255, 0), -1, lineType=cv2.LINE_AA)
+
+        area = self._last_area_frac if self._last_area_frac is not None else 0.0
+        cv2.putText(
+            frame_bgr,
+            f"FaceFollow area:{area:.3f} target:{cfg.target_area_frac:.3f}",
+            (10, 145),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.65,
+            (255, 255, 255),
+            2,
+            lineType=cv2.LINE_AA,
+        )

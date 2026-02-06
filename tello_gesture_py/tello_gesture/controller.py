@@ -8,9 +8,13 @@ from .state_listener import StateListener
 from .latest_frame import LatestFrame
 from .video_stream import VideoStream
 from .hand_gesture import HandGesture
-from .gesture_logic import RuleBasedGesture
+from .gesture_logic import RuleBasedGesture, rc_from_gesture_name
 from .telemetry_logger import TelemetryLogger
 from .keyboard import rc_from_key, RC
+
+from .mode_manager import ModeManager, MODES
+from .face_follow import FaceFollower
+
 
 class Controller:
     def __init__(self, cfg: ControllerConfig, model_path: Optional[str] = None, labels_path: Optional[str] = None):
@@ -23,8 +27,12 @@ class Controller:
 
         self.rule = RuleBasedGesture(cfg.dir_thr, cfg.scale_thr, cfg.ema_alpha)
 
-        self.keyboard_mode = False
+        # modes: keyboard / gesture / face
+        self.modes = ModeManager(mode="gesture")  # keep your old default behavior (gesture) feel free to change
         self.flying = False
+
+        # face follower
+        self.face = FaceFollower()
 
         self.logger = TelemetryLogger(
             fields=["bat", "h", "tof", "yaw", "vgx", "vgy", "vgz"],
@@ -47,6 +55,11 @@ class Controller:
         self.tello.send_cmd("streamon", timeout_ms=6000)
         return True
 
+    def _cycle_mode(self):
+        cur = self.modes.mode
+        idx = MODES.index(cur)
+        self.modes.set_mode(MODES[(idx + 1) % len(MODES)])
+
     def run(self) -> int:
         if not self._sdk_init():
             return 1
@@ -57,93 +70,183 @@ class Controller:
 
         cv2.namedWindow("TELLO", cv2.WINDOW_NORMAL)
 
-        rc = RC()
+        rc = RC(active=False)
         last_rc_send = time.time()
+        gesture_name = "NOHAND"
 
         try:
             while True:
                 ok, frame, seq, ts = self.latest.get(copy=True)
 
                 if ok and frame is not None:
-                    det = self.hand.detect(frame)
+                    debug_frame = frame
 
-                    gesture_name = "NOHAND"
-                    if det.has_hand and det.landmarks is not None:
-                        if self._trained is not None:
-                            gr = self._trained.predict(det.landmarks)
+                    # --- Mode-specific perception & command generation ---
+                    now = time.time()
+
+                    if self.modes.is_mode("gesture"):
+                        det = self.hand.detect(frame)
+                        gesture_name = "NOHAND"
+
+                        if det.has_hand and det.landmarks is not None:
+                            if self._trained is not None:
+                                gr = self._trained.predict(det.landmarks)
+                            else:
+                                gr = self.rule.predict(det.landmarks)
+
+                            gesture_name = gr.name
+                            self._last_hand_ts = now
+
+                            if self.flying:
+                                rc = rc_from_gesture_name(gesture_name, self.cfg.rc_speed)
+
                         else:
-                            gr = self.rule.predict(det.landmarks)
+                            # if hand is gone for long enough -> hover (only in gesture mode)
+                            if (now - self._last_hand_ts) > self.cfg.gesture_hold_s:
+                                rc = RC(active=True)  # hover
 
-                        gesture_name = gr.name
-                        self._last_hand_ts = time.time()
+                    elif self.modes.is_mode("face"):
+                        # Face mode uses the face follower (ignore gestures)
+                        cmd, debug_frame = self.face.update(frame)
 
-                        if not self.keyboard_mode and self.flying:
-                            rc = self._rc_from_gesture(gesture_name, self.cfg.rc_speed)
+                        if self.flying:
+                            # face follower already returns active hover when appropriate
+                            rc = cmd
+                        else:
+                            rc = RC(active=False)
+
+                        gesture_name = "FACE"
 
                     else:
-                        if (time.time() - self._last_hand_ts) > self.cfg.gesture_hold_s:
-                            if not self.keyboard_mode:
-                                rc = RC()
+                        # keyboard mode: only changes RC on keypress (handled below)
+                        gesture_name = "KEY"
 
+                    # --- Overlay ---
                     st = self.state.snapshot()
-                    cv2.putText(frame, f"mode={'KEY' if self.keyboard_mode else 'GEST'} fly={'Y' if self.flying else 'N'}",
-                                (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
-                    cv2.putText(frame, f"gesture={gesture_name}", (10, 55),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+                    cv2.putText(
+                        debug_frame,
+                        f"mode={self.modes.mode.upper()} fly={'Y' if self.flying else 'N'}",
+                        (10, 25),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (255, 255, 255),
+                        2,
+                    )
+                    cv2.putText(
+                        debug_frame,
+                        f"gesture={gesture_name}",
+                        (10, 55),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (255, 255, 255),
+                        2,
+                    )
 
                     bat = st.get("bat", None)
                     h = st.get("h", None)
                     if bat is not None:
-                        cv2.putText(frame, f"bat={bat:.0f}%", (10, 85),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+                        cv2.putText(
+                            debug_frame,
+                            f"bat={bat:.0f}%",
+                            (10, 85),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.7,
+                            (255, 255, 255),
+                            2,
+                        )
                     if h is not None:
-                        cv2.putText(frame, f"h={h:.0f}cm", (10, 115),
-                                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255,255,255), 2)
+                        cv2.putText(
+                            debug_frame,
+                            f"h={h:.0f}cm",
+                            (10, 115),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.7,
+                            (255, 255, 255),
+                            2,
+                        )
 
-                    cv2.imshow("TELLO", frame)
+                    cv2.imshow("TELLO", debug_frame)
                 else:
                     blank = 255 * (cv2.UMat(240, 320, cv2.CV_8UC3).get())
-                    cv2.putText(blank, "Waiting for video...", (10, 50),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,0,0), 2)
+                    cv2.putText(
+                        blank,
+                        "Waiting for video...",
+                        (10, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (0, 0, 0),
+                        2,
+                    )
                     cv2.imshow("TELLO", blank)
 
+                # --- Keyboard controls / mode switching ---
                 key = cv2.waitKey(1) & 0xFF
                 if key != 255:
                     if key == ord("q"):
                         break
+
+                    # Mode switching:
+                    if key == ord("1"):
+                        self.modes.set_mode("keyboard")
+                        rc = RC(active=True)  # hover
+                    if key == ord("2"):
+                        self.modes.set_mode("gesture")
+                        rc = RC(active=True)  # hover
+                    if key == ord("3"):
+                        self.modes.set_mode("face")
+                        rc = RC(active=True)  # hover
                     if key == ord("m"):
-                        self.keyboard_mode = not self.keyboard_mode
-                        rc = RC()
+                        self._cycle_mode()
+                        rc = RC(active=True)  # hover
+
                     if key == ord("t"):
                         ok, resp = self.tello.send_cmd("takeoff", timeout_ms=8000)
                         print("takeoff:", ok, resp)
                         self.flying = ok and resp.lower() == "ok"
+                        rc = RC(active=True)  # hover after takeoff
+
                     if key == ord("l"):
                         ok, resp = self.tello.send_cmd("land", timeout_ms=8000)
                         print("land:", ok, resp)
                         self.flying = False
-                        rc = RC()
+                        rc = RC(active=False)
+
                     if key == ord("e"):
                         ok, resp = self.tello.send_cmd("emergency", timeout_ms=3000)
                         print("emergency:", ok, resp)
                         self.flying = False
-                        rc = RC()
-                    if key == 32:  # space
-                        rc = RC()
+                        rc = RC(active=False)
 
-                    if self.keyboard_mode and self.flying:
+                    if key == 32:  # space -> hover/stop
+                        rc = RC(active=True)
+
+                    # Keyboard control only applies when mode is keyboard
+                    if self.modes.is_mode("keyboard") and self.flying:
                         krc = rc_from_key(key, self.cfg.rc_speed)
-                        if krc != RC():
+                        if krc.active:
                             rc = krc
 
+                # --- Send RC at fixed rate (single sender -> no fighting) ---
                 now = time.time()
                 if now - last_rc_send >= self.cfg.rc_dt:
                     if self.flying:
-                        self.tello.send_rc(rc.lr, rc.fb, rc.ud, rc.yaw,
-                                           limit=self.cfg.rc_limit,
-                                           deadband=self.cfg.rc_deadband)
+                        # If no active command this tick, hover
+                        if not getattr(rc, "active", False):
+                            send_rc = RC(0, 0, 0, 0, active=True)
+                        else:
+                            send_rc = rc
+
+                        self.tello.send_rc(
+                            send_rc.lr,
+                            send_rc.fb,
+                            send_rc.ud,
+                            send_rc.yaw,
+                            limit=self.cfg.rc_limit,
+                            deadband=self.cfg.rc_deadband,
+                        )
                     last_rc_send = now
 
+                # --- Telemetry logging ---
                 if now - self._last_log >= (1.0 / self.cfg.log_hz):
                     self.logger.add(self.state.snapshot())
                     self._last_log = now
@@ -171,14 +274,3 @@ class Controller:
                 print("Telemetry export failed:", e)
 
         return 0
-
-    def _rc_from_gesture(self, gesture: str, speed: int) -> RC:
-        parts = gesture.split("-")
-        lr = fb = ud = yaw = 0
-        if "LEFT" in parts: lr = -speed
-        if "RIGHT" in parts: lr = speed
-        if "UP" in parts: ud = speed
-        if "DOWN" in parts: ud = -speed
-        if "FORWARD" in parts: fb = speed
-        if "BACK" in parts: fb = -speed
-        return RC(lr=lr, fb=fb, ud=ud, yaw=yaw)
