@@ -14,7 +14,7 @@ FONT_THICKNESS = 1
 TEXT_COLOR = (255, 0, 0)  # red
 
 
-class FaceDetector:
+class FaceDetectorMediaPipe:
     """MediaPipe Face Detection wrapper."""
     
     def __init__(self, model_selection=0, min_detection_confidence=0.5):
@@ -25,7 +25,8 @@ class FaceDetector:
             min_detection_confidence: Minimum confidence threshold
         """
         # Select model based on model_selection parameter
-        model_path = os.path.join(os.path.dirname(__file__), 'blaze_face_short_range.tflite')
+        model_dir = 'face_recognition/models'
+        model_path = os.path.join(model_dir, 'blaze_face_short_range.tflite')
         # Create base options with the model path
         base_options = python.BaseOptions(model_asset_path=model_path)
         options = vision.FaceDetectorOptions(
@@ -34,8 +35,8 @@ class FaceDetector:
         # Create the face detector instance
         self._detector = vision.FaceDetector.create_from_options(options)
 
-    def detect(self, bgr: np.ndarray) -> vision.FaceDetectorResult:
-        """Detect faces in the input image."""
+    def detect(self, bgr: np.ndarray):
+        """Detect faces in the input image. Returns list of detections."""
         rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
         image = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb)
         detection_result = self._detector.detect(image)
@@ -60,7 +61,16 @@ class FaceDetector:
         bbox = detection.bounding_box
         return (bbox.origin_x, bbox.origin_y, bbox.width, bbox.height)
     
-    def draw_detections_on_image(self, rgb_image: np.ndarray, detection_result: vision.FaceDetectorResult) -> np.ndarray:
+    def resize_face_image(self, image: np.ndarray, detection) -> np.ndarray:
+        """resize to 160x160 for face recognition model input (InsightFace)"""
+        bbox = self.get_bounding_box_from_detection(detection)
+        x, y, w, h = bbox
+        cropped_img = image[y:y+h, x:x+w]
+        resized_img = cv2.resize(cropped_img, (160, 160))
+        return resized_img
+
+    # optional for display
+    def draw_detections_on_image(self, rgb_image: np.ndarray, detection_result) -> np.ndarray:
         """Draws bounding boxes and keypoints on the input image."""
         annotated_image = rgb_image.copy()
         height, width, _ = rgb_image.shape
@@ -91,32 +101,10 @@ class FaceDetector:
 
         return annotated_image
 
-class FaceTrackerCSRT:
-    """Face Tracker using OpenCV's CSRT tracker."""
-    
-    def __init__(self, frame: np.ndarray = None, bbox: Tuple[int, int, int, int] = None):
-        self.tracker = cv2.TrackerCSRT_create()
-        if frame is not None and bbox is not None:
-            self.tracker.init(frame, bbox) 
-            self.initialized = True
-            print("Tracker initialized with bounding box:", bbox)
-        else:
-            self.initialized = False
-            cv2.error("Tracker not initialized. Call 'init_tracker' with frame and bbox.")
-
-    def update_tracker(self, frame: np.ndarray) -> Tuple[bool, Tuple[int, int, int, int]]:
-        """Update the tracker and return the new bounding box."""
-        if not self.initialized:
-            raise ValueError("Tracker has not been initialized with a bounding box.")
-        success, bbox = self.tracker.update(frame)
-        return success, bbox
-    
-
 
 if __name__ == "__main__":
     # Test the FaceDetector class
-    chosen_face = False
-    detector = FaceDetector()
+    detector = FaceDetectorMediaPipe()
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Cannot open webcam")
@@ -127,32 +115,23 @@ if __name__ == "__main__":
         if not ret:
             print("Failed to grab frame")
             break
+    
+        # Optimize performance
+        frame.flags.writeable = False
+        detection_result = detector.detect(frame)
+        frame.flags.writeable = True
         
-        if chosen_face:
-            # If a face is already chosen, we could implement tracking logic here
-            success, bbox = face_tracker.update_tracker(frame)
-            if not success:
-                print("Tracking failure detected")
-                chosen_face = False
-            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), 
-                (int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])), (0, 255, 0), 2)
-            cv2.imshow("Face Detection", frame)
-        else:
-            # Optimize performance
-            frame.flags.writeable = False
-            detection_result = detector.detect(frame)
-            if detection_result.detections:
-                chosen_face = True
-                print("Face detected and chosen.")
-                bbox = detector.get_bounding_box_from_detection(detection_result.detections[0])
-                face_tracker = FaceTrackerCSRT(frame, bbox)
-            frame.flags.writeable = True
-            
-            rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            annotated_image = detector.draw_detections_on_image(rgb_frame, detection_result)
-            cv2.imshow("Face Detection", cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
-            
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        annotated_image = detector.draw_detections_on_image(rgb_frame, detection_result)
+        cv2.imshow("Face Detection", cv2.cvtColor(annotated_image, cv2.COLOR_RGB2BGR))
 
+        # new window displaying the cropped and resized image
+        if detection_result.detections:
+            # Get the first detection (or you could get the largest one)
+            first_detection = detection_result.detections[0]
+            resized_face = detector.resize_face_image(rgb_frame, first_detection)
+            cv2.imshow("Resized Face", cv2.cvtColor(resized_face, cv2.COLOR_RGB2BGR))
+        
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     
