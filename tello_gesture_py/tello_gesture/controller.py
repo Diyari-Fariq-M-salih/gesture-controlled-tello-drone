@@ -14,7 +14,7 @@ from .keyboard import rc_from_key, RC
 
 from .mode_manager import ModeManager, MODES
 from .face_follow import FaceFollower
-
+from face_recognition.face_recognizer_hybrid import FaceRecognizer
 
 class Controller:
     def __init__(self, cfg: ControllerConfig, model_path: Optional[str] = None, labels_path: Optional[str] = None):
@@ -23,17 +23,21 @@ class Controller:
         self.state = StateListener(cfg.state_port)
         self.latest = LatestFrame()
         self.video = VideoStream(self.latest, f"udp://0.0.0.0:{cfg.video_port}")
-        self.hand = HandGesture(max_num_hands=1)
+        self.hand = HandGesture(max_num_hands=2)  # Changed from 1 to 2 to detect both hands
 
         self.rule = RuleBasedGesture(cfg.dir_thr, cfg.scale_thr, cfg.ema_alpha)
 
         # modes: keyboard / gesture / face
-        self.modes = ModeManager(mode="gesture")  # keep your old default behavior (gesture) feel free to change
+        self.modes = ModeManager(mode=cfg.mode)  # keep your old default behavior (gesture) feel free to change
+        print(f"Starting in mode: {self.modes.mode.upper()}")
         self.flying = False
 
         # face follower
         self.face = FaceFollower()
 
+        # face recognizer (optional)
+        self.recognizer = FaceRecognizer() if cfg.recognize_faces else None
+    
         self.logger = TelemetryLogger(
             fields=["bat", "h", "tof", "yaw", "vgx", "vgy", "vgz"],
             path=cfg.log_path,
@@ -59,6 +63,7 @@ class Controller:
         cur = self.modes.mode
         idx = MODES.index(cur)
         self.modes.set_mode(MODES[(idx + 1) % len(MODES)])
+        print(f"Switched mode: {self.modes.mode.upper()}")
 
     def run(self) -> int:
         if not self._sdk_init():
@@ -73,22 +78,66 @@ class Controller:
         rc = RC(active=False)
         last_rc_send = time.time()
         gesture_name = "NOHAND"
-
+        # flag to indicate if face recognition is enabled (used multiple times in the loop)
+        recognition_enabled = self.cfg.recognize_faces and self.recognizer is not None
+        auth_bbox = None
+        # init frame dimensions for face follower (will be captured from first frame)
+        ok, frame, _, _ = self.latest.get(copy=True)
+        if ok and frame is not None:
+            self.face.img_shape = frame.shape[:2]
+        else:
+            print("Error reading first frame, using default size for face follower.")
+            self.face.img_shape = [720, 960] # H, W
+        
+        ## MAIN LOOP ##
         try:
             while True:
                 ok, frame, seq, ts = self.latest.get(copy=True)
-
+                
                 if ok and frame is not None:
+                    # Initialize face follower dimensions on first valid frame
+                    if self.face.img_shape is None:
+                        self.face.img_shape = frame.shape[:2]
+                    
+                    # Initialize debug_frame to the original frame
                     debug_frame = frame
+                    
+                    # if face recognition enabled, run it first on the raw frame (before any annotations)
+                    if recognition_enabled:
+                        # Main recognition logic
+                        auth_bbox = self.recognizer.recognize(frame)
+                        # Validate that auth_bbox is a proper tuple/list with 4 elements
+                        if auth_bbox and len(auth_bbox) == 4:
+                            # Get annotated image with all faces (authorized and intruders) marked for debug display
+                            debug_frame = self.recognizer.get_annotated_image()
+                        else:
+                            # No valid authorized face detected
+                            auth_bbox = None
 
                     # --- Mode-specific perception & command generation ---
                     now = time.time()
 
+                    # MODE 1: Hand gesture control
                     if self.modes.is_mode("gesture"):
-                        det = self.hand.detect(frame)
+                        # Case 1: Face recognition enabled -> use auth_bbox to select which hand to follow (if multiple detected)
+                        if recognition_enabled and auth_bbox:
+                            det = self.hand.detect_auth(frame, auth_bbox)
+                            # detect_auth already returns HandDetection with a list containing the selected hand
+                            # Just extract the single hand array from the list
+                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
+                                det.landmarks = det.landmarks[0]
+
+                        # Case 2: No face recognition -> just use the first detected hand (if any)
+                        else:
+                            # get all detected hands as a list of HandDetection objects
+                            det = self.hand.detect(frame) 
+                            # keep only the first hand for compatibility with existing logic (and to avoid breaking the gesture classifier which expects one hand)
+                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
+                                det.landmarks = det.landmarks[0]
+                        
                         gesture_name = "NOHAND"
 
-                        if det.has_hand and det.landmarks is not None:
+                        if det.has_hand and det.landmarks is not None and auth_bbox is not None:
                             if self._trained is not None:
                                 gr = self._trained.predict(det.landmarks)
                             else:
@@ -105,9 +154,14 @@ class Controller:
                             if (now - self._last_hand_ts) > self.cfg.gesture_hold_s:
                                 rc = RC(active=True)  # hover
 
+                    # MODE 2: Face following
                     elif self.modes.is_mode("face"):
-                        # Face mode uses the face follower (ignore gestures)
-                        cmd, debug_frame = self.face.update(frame)
+                        # Case 1: Face recognition enabled -> use auth_bbox of the authorized face for control
+                        if recognition_enabled and auth_bbox:
+                            cmd = self.face.update_from_bbox(auth_bbox)
+                        # Case 2: No face recognition -> just use the largest detected face
+                        else:
+                            cmd, debug_frame = self.face.update(frame)
 
                         if self.flying:
                             # face follower already returns active hover when appropriate
@@ -120,7 +174,7 @@ class Controller:
                     else:
                         # keyboard mode: only changes RC on keypress (handled below)
                         gesture_name = "KEY"
-
+                    # debug_frame.flags.writeable = True 
                     # --- Overlay ---
                     st = self.state.snapshot()
                     cv2.putText(

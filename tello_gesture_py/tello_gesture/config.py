@@ -2,6 +2,11 @@ from dataclasses import dataclass
 
 @dataclass
 class ControllerConfig:
+    # mode
+
+    mode: str = "gesture"         # "gesture", "face", or "keyboard"
+    recognize_faces: bool = True  # if True, use face_recognition to identify known faces in follow mode
+
     # timing
     ui_dt: float = 1.0 / 30.0      # ~30 Hz UI loop
     rc_dt: float = 1.0 / 10.0      # ~10 Hz RC send loop

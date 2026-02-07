@@ -53,7 +53,7 @@ class FaceFollower:
         self._last_bbox = None  # (x,y,w,h) in ORIGINAL coords
         self._last_area_frac = None
         self._area_ema = None
-
+        self.img_shape = None  # to be set from first frame (H, W) for scaling
         self._last_control_ts = 0.0
 
     def update(self, frame_bgr):
@@ -76,7 +76,11 @@ class FaceFollower:
 
         self._last_control_ts = now
 
-        H, W = frame_bgr.shape[:2]
+        if self.img_shape is None:
+            self.img_shape = frame_bgr.shape[:2]
+        else:
+            H, W = self.img_shape
+            
         dbg = frame_bgr
 
         run_det = (self._frame_count % max(cfg.detect_every_n, 1) == 0) or (self._last_bbox is None)
@@ -172,6 +176,44 @@ class FaceFollower:
         self._draw_overlay(dbg)
         return cmd, dbg
 
+    def update_from_bbox(self, bbox):
+        # If we have a bbox, compute command from it
+        H, W = self.img_shape
+
+        cmd = RCCommand(0, 0, 0, 0, active=True)
+    
+        if bbox is not None: 
+            self._last_bbox = bbox
+            x, y, w, h = bbox
+            cx = x + w // 2
+            cy = y + h // 2
+
+            ex = cx - (W // 2)
+            ey = cy - (H // 2)
+
+            area_frac = self._last_area_frac if self._last_area_frac is not None else (w * h) / float(W * H)
+            ez = self.cfg.target_area_frac - area_frac  
+
+            yaw = _clamp(self.cfg.kp_yaw * ex, -self.cfg.max_yaw, self.cfg.max_yaw)
+            ud  = _clamp(-self.cfg.kp_ud * ey, -self.cfg.max_ud, self.cfg.max_ud)
+            fb  = _clamp(self.cfg.kp_fb * (ez * 1000.0), -self.cfg.max_fb, self.cfg.max_fb)
+
+            if abs(ex) < self.cfg.deadband_px:
+                yaw = 0
+            if abs(ey) < self.cfg.deadband_px:
+                ud = 0
+            if abs(ez) < self.cfg.deadband_area:
+                fb = 0
+
+            cmd = RCCommand(lr=0, fb=fb, ud=ud, yaw=yaw, active=True)
+
+        else:
+            # Lost face -> hover
+            cmd = RCCommand(0, 0, 0, 0, active=True)
+
+        self._last_cmd = cmd
+        return cmd
+    
     def _draw_overlay(self, frame_bgr):
         """Draw bbox + debug text on ORIGINAL frame (clean text)."""
         cfg = self.cfg

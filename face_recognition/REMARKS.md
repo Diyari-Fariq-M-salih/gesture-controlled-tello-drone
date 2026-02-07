@@ -5,6 +5,9 @@
 before use, download models using the script `download_models.py`.
 
 
+## TODO:
+**Face Movement Continuity**: When using face recognition, do not allow quick switch of the detected quthorized face -> Track its movement and when its speed is suddenly high, correct the recognizer by selecting the closest face to the previously detected face.
+
 ## Test Face recognition
 Activate your `.venv` then run in the **root directory**:       
 - **Fast approach**:    

@@ -80,8 +80,7 @@ class FaceRecognizer:
             bbox = self.get_bounding_box_from_detection(first_detection)
             self.auth_face_bbox = bbox
             
-            print("Authorized face embedding stored successfully.")
-            return [0]
+            return bbox
         elif len(detection_result.detections) > 1:
             print("Multiple faces detected. Cannot store as authorized. Please ensure only one face is in the frame.")
             return []
@@ -91,8 +90,12 @@ class FaceRecognizer:
     def recognize(self, image: np.ndarray) -> list:
         """
         Detect faces and compare with authorized face.
-        Returns the index of the authorized face if found, empty list otherwise.
+        Returns the bbox of the authorized face if found, empty list otherwise.
         """
+        # Validate input frame
+        if image is None or image.size == 0:
+            return []
+        
         self.frame = image
         rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         
@@ -123,7 +126,6 @@ class FaceRecognizer:
                 
                 return self.auth_face_bbox
             else:
-                print("No faces detected in the image.")
                 return []
         
         return []
