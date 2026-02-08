@@ -6,6 +6,9 @@ numpy>=1.23,<2.0
 insightface>=0.7.3
 # Inference backend (CPU)
 onnxruntime>=1.16
+# # for Windows
+# onnxruntime==1.23.2
+
 # Utilities (pulled implicitly but safe to pin)
 scipy>=1.9
 scikit-image>=0.19

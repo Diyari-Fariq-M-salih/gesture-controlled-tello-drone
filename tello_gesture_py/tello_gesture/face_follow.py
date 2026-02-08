@@ -181,10 +181,19 @@ class FaceFollower:
         H, W = self.img_shape
 
         cmd = RCCommand(0, 0, 0, 0, active=True)
+        now = time.time()
     
-        if bbox is not None: 
-            self._last_bbox = bbox
+        if bbox is not None and (now - self._last_face_time) <= self.cfg.lost_timeout_s: 
             x, y, w, h = bbox
+
+            # Clamp bbox to frame bounds
+            x = max(0, min(W - 1, x))
+            y = max(0, min(H - 1, y))
+            w = max(1, min(W - x, w))
+            h = max(1, min(H - y, h))
+
+            self._last_bbox = (x, y, w, h)
+
             cx = x + w // 2
             cy = y + h // 2
 
@@ -214,6 +223,92 @@ class FaceFollower:
         self._last_cmd = cmd
         return cmd
     
+
+    def update_from_bbox_dbg(self, bbox, frame_bgr):
+            # If we have a bbox, compute command from it
+            
+        self._frame_count += 1
+        now = time.time()
+
+        # Throttle command updates (keeps loop stable)
+        min_dt = 1.0 / max(self.cfg.control_hz, 1e-6)
+        if (now - self._last_control_ts) < min_dt:
+            # still return last command, just draw overlay
+            dbg = frame_bgr
+            self._draw_overlay(dbg)
+            return self._last_cmd, dbg
+
+        self._last_control_ts = now
+
+        if self.img_shape is None:
+            self.img_shape = frame_bgr.shape[:2]
+        else:
+            H, W = self.img_shape
+
+        now = time.time()
+        cmd = RCCommand(0, 0, 0, 0, active=True)
+        dbg = frame_bgr
+
+        # Only update bbox and timestamp when a valid face is detected
+        if bbox is not None:
+            self._last_face_time = now
+            
+            x, y, w, h = bbox
+
+            # Clamp bbox to frame bounds
+            x = max(0, min(W - 1, x))
+            y = max(0, min(H - 1, y))
+            w = max(1, min(W - x, w))
+            h = max(1, min(H - y, h))
+
+            # Update the last bbox with the clamped values
+            self._last_bbox = (x, y, w, h)
+
+            # Area fraction
+            area_frac = (w * h) / float(W * H)
+
+            # EMA smooth for distance stability
+            if self._area_ema is None:
+                self._area_ema = area_frac
+            else:
+                a = self.cfg.area_ema_alpha
+                self._area_ema = a * area_frac + (1.0 - a) * self._area_ema
+            self._last_area_frac = self._area_ema
+
+        # Use last valid bbox for command generation (even if current detection failed)
+        if self._last_bbox is not None and (now - self._last_face_time) <= self.cfg.lost_timeout_s: 
+            
+            x, y, w, h = self._last_bbox
+            cx = x + w // 2
+            cy = y + h // 2
+
+            ex = cx - (W // 2)
+            ey = cy - (H // 2)
+
+            area_frac = self._last_area_frac if self._last_area_frac is not None else (w * h) / float(W * H)
+            ez = self.cfg.target_area_frac - area_frac  
+
+            yaw = _clamp(self.cfg.kp_yaw * ex, -self.cfg.max_yaw, self.cfg.max_yaw)
+            ud  = _clamp(-self.cfg.kp_ud * ey, -self.cfg.max_ud, self.cfg.max_ud)
+            fb  = _clamp(self.cfg.kp_fb * (ez * 1000.0), -self.cfg.max_fb, self.cfg.max_fb)
+
+            if abs(ex) < self.cfg.deadband_px:
+                yaw = 0
+            if abs(ey) < self.cfg.deadband_px:
+                ud = 0
+            if abs(ez) < self.cfg.deadband_area:
+                fb = 0
+
+            cmd = RCCommand(lr=0, fb=fb, ud=ud, yaw=yaw, active=True)
+
+        else:
+            # Lost face -> hover
+            cmd = RCCommand(0, 0, 0, 0, active=True)
+
+        self._last_cmd = cmd
+        self._draw_overlay(dbg)
+        return cmd, dbg
+
     def _draw_overlay(self, frame_bgr):
         """Draw bbox + debug text on ORIGINAL frame (clean text)."""
         cfg = self.cfg

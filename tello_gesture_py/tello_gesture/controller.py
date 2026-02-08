@@ -26,7 +26,7 @@ class Controller:
         self.hand = HandGesture(max_num_hands=2)  # Changed from 1 to 2 to detect both hands
 
         self.rule = RuleBasedGesture(cfg.dir_thr, cfg.scale_thr, cfg.ema_alpha)
-
+        self.RED = (0, 0, 255) # BGR for OpenCV
         # modes: keyboard / gesture / face
         self.modes = ModeManager(mode=cfg.mode)  # keep your old default behavior (gesture) feel free to change
         print(f"Starting in mode: {self.modes.mode.upper()}")
@@ -36,7 +36,13 @@ class Controller:
         self.face = FaceFollower()
 
         # face recognizer (optional)
-        self.recognizer = FaceRecognizer() if cfg.recognize_faces else None
+        # thresholds:
+        # - det_thresh: higher -> fewer detections but more reliable; lower -> more detections but more false positives
+        # - simil_thresh: higher -> stricter matching to the authorized face (fewer false positives but more false negatives); lower -> looser matching
+        # typical values:
+        # - during day/afternoon: det_thresh=0.75, simil_thresh=0.6
+        # - at night: det_thresh=0.6, simil_thresh=0.45
+        self.recognizer = FaceRecognizer(det_thresh=0.6, simil_thresh=0.45) if cfg.recognize_faces else None
     
         self.logger = TelemetryLogger(
             fields=["bat", "h", "tof", "yaw", "vgx", "vgy", "vgz"],
@@ -106,13 +112,11 @@ class Controller:
                     if recognition_enabled:
                         # Main recognition logic
                         auth_bbox = self.recognizer.recognize(frame)
-                        # Validate that auth_bbox is a proper tuple/list with 4 elements
-                        if auth_bbox and len(auth_bbox) == 4:
-                            # Get annotated image with all faces (authorized and intruders) marked for debug display
-                            debug_frame = self.recognizer.get_annotated_image()
-                        else:
-                            # No valid authorized face detected
-                            auth_bbox = None
+                        # Get annotated image with all faces (authorized and intruders) marked for debug display
+                        annotated = self.recognizer.get_annotated_image()
+                        if annotated is not None:
+                            debug_frame = annotated
+                        # If no annotated image, keep using original frame
 
                     # --- Mode-specific perception & command generation ---
                     now = time.time()
@@ -120,7 +124,7 @@ class Controller:
                     # MODE 1: Hand gesture control
                     if self.modes.is_mode("gesture"):
                         # Case 1: Face recognition enabled -> use auth_bbox to select which hand to follow (if multiple detected)
-                        if recognition_enabled and auth_bbox:
+                        if recognition_enabled and auth_bbox is not None:
                             det = self.hand.detect_auth(frame, auth_bbox)
                             # detect_auth already returns HandDetection with a list containing the selected hand
                             # Just extract the single hand array from the list
@@ -157,8 +161,9 @@ class Controller:
                     # MODE 2: Face following
                     elif self.modes.is_mode("face"):
                         # Case 1: Face recognition enabled -> use auth_bbox of the authorized face for control
-                        if recognition_enabled and auth_bbox:
-                            cmd = self.face.update_from_bbox(auth_bbox)
+                        if recognition_enabled:
+                            cmd, _ = self.face.update_from_bbox_dbg(auth_bbox, frame)
+                            # print('cmd: left/right: ', cmd.lr, ' forward/back: ', cmd.fb, ' up/down: ', cmd.ud, ' yaw: ', cmd.yaw)
                         # Case 2: No face recognition -> just use the largest detected face
                         else:
                             cmd, debug_frame = self.face.update(frame)
@@ -183,7 +188,7 @@ class Controller:
                         (10, 25),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.7,
-                        (255, 255, 255),
+                        self.RED,
                         2,
                     )
                     cv2.putText(
@@ -192,7 +197,7 @@ class Controller:
                         (10, 55),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         0.7,
-                        (255, 255, 255),
+                        self.RED,
                         2,
                     )
 
@@ -205,7 +210,7 @@ class Controller:
                             (10, 85),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             0.7,
-                            (255, 255, 255),
+                            self.RED,
                             2,
                         )
                     if h is not None:
@@ -215,7 +220,7 @@ class Controller:
                             (10, 115),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             0.7,
-                            (255, 255, 255),
+                            self.RED,
                             2,
                         )
 

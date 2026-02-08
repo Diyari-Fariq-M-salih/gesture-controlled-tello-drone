@@ -68,7 +68,7 @@ class FaceRecognizer:
         self.frame = None
 
 
-    def init_auth_face(self, rgb_frame: np.ndarray, detection_result) -> list:
+    def init_auth_face(self, rgb_frame: np.ndarray, detection_result):
         """Initialize the authorized face from the first detection."""
         if len(detection_result.detections) == 1:
             print('Detected one face, storing as authorized face.')
@@ -83,18 +83,18 @@ class FaceRecognizer:
             return bbox
         elif len(detection_result.detections) > 1:
             print("Multiple faces detected. Cannot store as authorized. Please ensure only one face is in the frame.")
-            return []
+            return None
         else:
-            return []
+            return None
         
-    def recognize(self, image: np.ndarray) -> list:
+    def recognize(self, image: np.ndarray):
         """
         Detect faces and compare with authorized face.
         Returns the bbox of the authorized face if found, empty list otherwise.
         """
         # Validate input frame
         if image is None or image.size == 0:
-            return []
+            return None
         
         self.frame = image
         rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -123,12 +123,14 @@ class FaceRecognizer:
                     if is_same:
                         self.auth_face_idx = idx
                         self.auth_face_bbox = bbox
+                        return self.auth_face_bbox  # Only return if match found
                 
-                return self.auth_face_bbox
+                # No match found among detected faces
+                return None
             else:
-                return []
+                return None
         
-        return []
+        return None
 
     def detect(self, bgr: np.ndarray):
         """Detect faces in the input image. Returns list of detections."""
@@ -142,12 +144,12 @@ class FaceRecognizer:
         similarity = np.dot(emb1, emb2) / (np.linalg.norm(emb1) * np.linalg.norm(emb2))
         return similarity, similarity > self.simil_thresh
 
-    def get_annotated_image(self) -> np.ndarray:
+    def get_annotated_image(self):
         """Draws bounding boxes on the input image."""
         if self.frame is None:
-            return np.array([])
+            return None
         
-        annotated_image = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+        annotated_image = self.frame.copy()
         
         if not self.bboxes:
             return annotated_image
