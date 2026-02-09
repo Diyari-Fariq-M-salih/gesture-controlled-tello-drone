@@ -13,11 +13,11 @@ def _clamp(v, lo, hi):
 class FaceFollowConfig:
     target_area_frac: float = 0.075
 
-    kp_yaw: float = 0.12
+    kp_yaw: float = 0.05
     kp_ud: float = 0.12
     kp_fb: float = 0.30
 
-    max_yaw: int = 55
+    max_yaw: int = 2
     max_ud: int = 40
     max_fb: int = 40
 
@@ -40,7 +40,7 @@ class FaceFollower:
         self.cfg = cfg or FaceFollowConfig()
 
         mp_face = mp.solutions.face_detection
-        self.detector = mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.6)
+        self.detector = mp_face.FaceDetection(model_selection=0, min_detection_confidence=0.7)
 
         self._frame_count = 0
         self._last_face_time = 0.0

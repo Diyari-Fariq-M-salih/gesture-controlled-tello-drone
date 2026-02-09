@@ -103,12 +103,18 @@ class DeterministicModeManager:
             # else: allow switching
 
         # Hysteresis: hold face mode unless face truly gone
+        # BUT allow gesture to preempt face immediately
         if self.mode == "face":
+            if hand:
+                self._set_mode("gesture", "Perception: hand_detected -> gesture (preempts face)")
+                return self.mode, self.reason
+
             if time_in_mode < self.cfg.mode_hold_s:
                 return self.mode, self.reason
             if t_face <= self.cfg.face_release_s:
                 return self.mode, self.reason
             # else: allow switching
+
 
         # Priority: gesture > face
         if hand:
