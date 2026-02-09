@@ -57,14 +57,14 @@ class FaceRecognizer:
         self.auth_face_embedding = None
         self.auth_face_bbox = None
         self.initialized_auth_face = False
-        self.auth_face_idx = 0
+        self.auth_face_idx = -1  # Initialize to -1 to indicate no authorized face detected
         self.bboxes = []
         
         # Visualization parameters
         self.FONT_SIZE = 1
         self.FONT_THICKNESS = 1
-        self.RED = (255, 0, 0)
-        self.GREEN = (0, 255, 0)
+        self.RED = (0, 0, 255) # BGR
+        self.GREEN = (0, 255, 0) # BGR
         self.frame = None
 
 
@@ -73,7 +73,7 @@ class FaceRecognizer:
         if len(detection_result.detections) == 1:
             print('Detected one face, storing as authorized face.')
             self.initialized_auth_face = True
-            self.auth_face_idx = 0
+            self.auth_face_idx = 0  # Set to 0 when initializing authorized face
             
             first_detection = detection_result.detections[0]
             self.auth_face_embedding = self.get_aligned_embedding(rgb_frame, first_detection)
@@ -126,8 +126,12 @@ class FaceRecognizer:
                         return self.auth_face_bbox  # Only return if match found
                 
                 # No match found among detected faces
+                self.auth_face_idx = -1  # Reset to -1 since no authorized face detected
+                self.auth_face_bbox = None
                 return None
             else:
+                self.auth_face_idx = -1  # Reset to -1 when no faces detected
+                self.auth_face_bbox = None
                 return None
         
         return None
@@ -158,7 +162,7 @@ class FaceRecognizer:
             start_point = bbox[0], bbox[1]
             end_point = bbox[2], bbox[3]
             
-            if idx == self.auth_face_idx:
+            if idx == self.auth_face_idx and self.auth_face_idx != -1:
                 caption = f'Authorized: {self.auth_face_idx}'
                 text_color = self.GREEN
             else:

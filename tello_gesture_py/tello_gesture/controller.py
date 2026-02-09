@@ -42,7 +42,7 @@ class Controller:
         # typical values:
         # - during day/afternoon: det_thresh=0.75, simil_thresh=0.6
         # - at night: det_thresh=0.6, simil_thresh=0.45
-        self.recognizer = FaceRecognizer(det_thresh=0.6, simil_thresh=0.45) if cfg.recognize_faces else None
+        self.recognizer = FaceRecognizer(det_thresh=0.65, simil_thresh=0.5) if cfg.recognize_faces else None
     
         self.logger = TelemetryLogger(
             fields=["bat", "h", "tof", "yaw", "vgx", "vgy", "vgz"],
