@@ -23,6 +23,15 @@ class RuleBasedGesture:
         self._ema: Optional[np.ndarray] = None
         self._last_scale: Optional[float] = None
 
+
+    def reset(self):
+        """Reset temporal state (EMA + scale history).
+
+        Call this when the hand is lost, otherwise FORWARD/BACK can trigger from stale scale.
+        """
+        self._ema = None
+        self._last_scale = None
+
     def _smooth(self, lm: np.ndarray) -> np.ndarray:
         if self._ema is None:
             self._ema = lm.copy()

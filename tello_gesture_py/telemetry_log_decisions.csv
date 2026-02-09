@@ -1,0 +1,115 @@
+t,mode_before,mode_after,gesture,gesture_conf,face_detected,time_since_face_s,hand_detected,time_since_hand_s,key,battery,altitude_cm,reason,command,det_reason,face,hand,llm_reason,mode,t_any
+1770656643.8571339,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,False,,hover,6.9011993408203125
+1770656644.8629985,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,False,,hover,7.907063961029053
+1770656645.8780098,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,False,,hover,8.922075271606445
+1770656646.9138284,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,False,,hover,9.935543060302734
+1770656646.9817984,,,,,,,,,,49.0,0.0,,ground,Autonomy: no human for 10.0s -> search_360,False,False,,search_360,10.025863885879517
+1770656652.716133,,,,,,,,,,48.0,70.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: search done (5s) -> hover,False,False,"The drone is hovering due to a low battery, which requires immediate attention and safety measures",hover,15.712328433990479
+1770656652.79006,,,,,,,,,,48.0,70.0,,rc lr=0 fb=10 ud=17 yaw=2,Perception: face_detected -> face,True,False,"The drone is hovering due to a low battery, which requires immediate attention and safety measures",face,0.0
+1770656653.7443125,,,,,,,,,,48.0,60.0,,rc lr=0 fb=10 ud=17 yaw=2,Perception: face_detected -> face,True,False,"The drone is hovering due to a low battery, which requires immediate attention and safety measures",face,0.0
+1770656654.352833,,,,,,,,,,48.0,60.0,,rc lr=0 fb=10 ud=17 yaw=2,Perception: face_detected -> face,True,False,The drone will hover for a moment to check the battery level.,face,0.0
+1770656654.5194728,,,,,,,,,,48.0,70.0,,rc lr=0 fb=10 ud=14 yaw=2,Perception: face_detected -> face,True,False,The drone will hover for a moment to check the battery level.,face,0.0
+1770656654.8703554,,,,,,,,,,48.0,70.0,,rc lr=0 fb=11 ud=23 yaw=2,Perception: face_detected -> face,True,False,The drone will hover for a moment to check the battery level.,face,0.0
+1770656655.8775902,,,,,,,,,,48.0,80.0,,rc lr=0 fb=11 ud=23 yaw=2,Perception: face_detected -> face,True,False,The drone will hover for a moment to check the battery level.,face,0.0
+1770656655.9636998,,,,,,,,,,48.0,80.0,,rc lr=0 fb=11 ud=23 yaw=2,Perception: face_detected -> face,True,False,The drone detected a hand while flying. We need to ensure the camera is not obstructed.,face,0.0
+1770656656.431779,,,,,,,,,,48.0,80.0,,rc lr=0 fb=11 ud=18 yaw=4,Perception: face_detected -> face,True,False,The drone detected a hand while flying. We need to ensure the camera is not obstructed.,face,0.0
+1770656657.4398599,,,,,,,,,,48.0,100.0,,rc lr=0 fb=11 ud=18 yaw=4,Perception: face_detected -> face,True,False,The drone detected a hand while flying. We need to ensure the camera is not obstructed.,face,0.0
+1770656657.5198343,,,,,,,,,,48.0,100.0,,rc lr=0 fb=12 ud=7 yaw=2,Perception: face_detected -> face,True,False,The drone detected a hand while flying. We need to ensure the camera is not obstructed.,face,0.0
+1770656657.7636406,,,,,,,,,,48.0,100.0,,rc lr=0 fb=12 ud=5 yaw=0,Perception: face_detected -> face,True,False,The drone detected a hand while flying. We need to ensure the camera is not obstructed.,face,0.0
+1770656657.860099,,,,,,,,,,48.0,100.0,,rc lr=0 fb=12 ud=5 yaw=0,Perception: face_detected -> face,True,False,"The drone senses that its own battery level is below 15%, triggering a warning for potential issues with the battery.",face,0.0
+1770656658.7122703,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=4 yaw=5,Perception: face_detected -> face,True,False,"The drone senses that its own battery level is below 15%, triggering a warning for potential issues with the battery.",face,0.0
+1770656659.2100055,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=4 yaw=5,Perception: face_detected -> face,True,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.0
+1770656659.2821796,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=4 yaw=2,Perception: face_detected -> face,True,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.0
+1770656659.9381738,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=0 yaw=0,Perception: face_detected -> face,True,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.0
+1770656660.9362328,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=0 yaw=0,Perception: face_detected -> face,True,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.0
+1770656661.9512403,,,,,,,,,,48.0,100.0,,rc lr=0 fb=13 ud=0 yaw=0,Perception: face_detected -> face,False,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.04730844497680664
+1770656661.9803414,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: face_detected -> face,False,False,"To avoid drone collision, increase altitude by 20 meters.",face,0.05138516426086426
+1770656662.7077456,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"To avoid drone collision, increase altitude by 20 meters.",hover,0.8038492202758789
+1770656663.2228203,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,1.2962393760681152
+1770656664.1151402,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,2.1893649101257324
+1770656665.1334622,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,3.2305643558502197
+1770656666.1712744,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,4.243443012237549
+1770656667.146526,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,5.243628263473511
+1770656667.6687708,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone has not detected any objects in the vicinity within a specified time frame. It is flying at an altitude of 100 cm.,hover,5.765872955322266
+1770656668.705379,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone has not detected any objects in the vicinity within a specified time frame. It is flying at an altitude of 100 cm.,hover,6.776861190795898
+1770656668.9644084,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"The drone is not flying, hovering while remaining in the air.",hover,7.03797173500061
+1770656669.9700563,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"The drone is not flying, hovering while remaining in the air.",hover,8.067158460617065
+1770656670.9721775,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"The drone is not flying, hovering while remaining in the air.",hover,9.069279670715332
+1770656671.3774061,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"The drone is currently hovering at a height of 100 cm with no detected faces or batteries, and it has been flying for approximately 6 seconds.",hover,9.452064752578735
+1770656671.9241052,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,False,False,"The drone is currently hovering at a height of 100 cm with no detected faces or batteries, and it has been flying for approximately 6 seconds.",search_360,10.021207332611084
+1770656672.9375577,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,False,False,"The drone is currently hovering at a height of 100 cm with no detected faces or batteries, and it has been flying for approximately 6 seconds.",search_360,11.03465986251831
+1770656673.9491472,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,False,False,"The drone is currently hovering at a height of 100 cm with no detected faces or batteries, and it has been flying for approximately 6 seconds.",search_360,12.046249389648438
+1770656674.2383306,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,False,False,Autonomy: no intent -> hover,search_360,12.309962034225464
+1770656675.215042,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,False,False,Autonomy: no intent -> hover,search_360,13.312106609344482
+1770656676.2490635,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=80,Autonomy: no human for 10.0s -> search_360,True,False,Autonomy: no intent -> hover,search_360,0.0
+1770656676.9400518,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: search done (5s) -> hover,True,False,Autonomy: no intent -> hover,hover,0.0
+1770656676.988992,,,,,,,,,,48.0,100.0,,rc lr=0 fb=11 ud=0 yaw=-10,Perception: face_detected -> face,True,False,Autonomy: no intent -> hover,face,0.0
+1770656677.7876914,,,,,,,,,,48.0,100.0,,rc lr=30 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),True,True,Autonomy: no intent -> hover,gesture,0.0
+1770656678.2713275,,,,,,,,,,48.0,100.0,,rc lr=30 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656679.2673037,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,LLM error (ReadTimeout),gesture,0.014961719512939453
+1770656679.3550649,,,,,,,,,,48.0,100.0,,rc lr=30 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656679.6797645,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,LLM error (ReadTimeout),gesture,0.015189170837402344
+1770656679.766598,,,,,,,,,,48.0,100.0,,rc lr=30 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656679.8455265,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,LLM error (ReadTimeout),gesture,0.014517784118652344
+1770656679.9531837,,,,,,,,,,48.0,100.0,,rc lr=0 fb=-30 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656680.0013075,,,,,,,,,,48.0,100.0,,rc lr=30 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656680.045459,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656680.0576217,,,,,,,,,,48.0,100.0,,rc lr=0 fb=-30 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,LLM error (ReadTimeout),gesture,0.0
+1770656680.1836107,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,LLM error (ReadTimeout),gesture,0.014858007431030273
+1770656680.194571,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,The drone is performing a specific action without taking any battery readings or visuals.,gesture,0.04363250732421875
+1770656680.2896936,,,,,,,,,,48.0,100.0,,rc lr=0 fb=-30 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,True,The drone is performing a specific action without taking any battery readings or visuals.,gesture,0.0
+1770656680.7032967,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,The drone is performing a specific action without taking any battery readings or visuals.,gesture,0.016965150833129883
+1770656681.4012532,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Perception: hand_detected -> gesture (preempts face),False,False,The drone stopped for a moment due to low battery level.,gesture,0.709660530090332
+1770656681.494759,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone stopped for a moment due to low battery level.,hover,0.8003039360046387
+1770656682.5032072,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone stopped for a moment due to low battery level.,hover,1.8100190162658691
+1770656683.4909298,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone stopped for a moment due to low battery level.,hover,2.822403907775879
+1770656684.5255346,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone stopped for a moment due to low battery level.,hover,3.8333349227905273
+1770656685.3975272,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,4.72900128364563
+1770656686.4274638,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,5.734493732452393
+1770656687.045439,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone is hovering in the air with a battery level of 48%.,hover,6.346640110015869
+1770656688.0617945,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,The drone is hovering in the air with a battery level of 48%.,hover,7.392756938934326
+1770656688.6243887,,,,,,,,,,48.0,100.0,,rc lr=0 fb=0 ud=0 yaw=0,Autonomy: no intent -> hover,False,False,"The drone is currently at a predetermined altitude and flying, which matches the command to hover.",hover,7.921653747558594
+1770656694.3534923,,,,,,,,,,47.0,-70.0,,ground,Autonomy: no human for 13.7s -> search_360,False,False,"The drone is hovering, with a battery of 48.0 units and an altitude of 100 cm.",search_360,13.659027338027954
+1770656695.3547347,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 13.7s -> search_360,False,False,"The drone is hovering, with a battery of 48.0 units and an altitude of 100 cm.",search_360,14.661184072494507
+1770656696.345807,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 13.7s -> search_360,False,False,"The drone is hovering, with a battery of 48.0 units and an altitude of 100 cm.",search_360,15.677281141281128
+1770656697.3846455,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 13.7s -> search_360,False,False,"The drone is hovering, with a battery of 48.0 units and an altitude of 100 cm.",search_360,16.690458059310913
+1770656698.385378,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 13.7s -> search_360,False,False,LLM error (ReadTimeout),search_360,17.692063331604004
+1770656699.3567383,,,,,,,,,,47.0,0.0,,ground,Autonomy: search done (5s) -> hover,False,False,LLM error (ReadTimeout),hover,18.66427779197693
+1770656700.3633792,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,19.69485330581665
+1770656701.3925002,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,20.723974227905273
+1770656702.3932745,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,21.724748611450195
+1770656703.4207447,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,22.75221872329712
+1770656704.4179983,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,"Set the drone to ground mode, ensuring it stays stable and avoids flying without any contact.",hover,23.721736907958984
+1770656705.4000924,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,"Set the drone to ground mode, ensuring it stays stable and avoids flying without any contact.",hover,24.731566429138184
+1770656705.4397585,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,24.74794316291809
+1770656706.4540627,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,25.760602951049805
+1770656706.5534132,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover due to low battery,hover,25.884887218475342
+1770656707.4533615,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Maintain stable flight position and altitude,hover,26.761287927627563
+1770656708.442664,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Maintain stable flight position and altitude,hover,27.7741379737854
+1770656708.6301713,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is now flying low and resting,hover,27.960654258728027
+1770656709.3729012,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is now flying low and resting,search_360,28.666478633880615
+1770656710.3618023,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is now flying low and resting,search_360,29.693276405334473
+1770656710.590426,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is hovering due to lack of any detected landmarks or objects in its vicinity.,search_360,29.89200758934021
+1770656711.5716856,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is hovering due to lack of any detected landmarks or objects in its vicinity.,search_360,30.903159618377686
+1770656712.5876389,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is hovering due to lack of any detected landmarks or objects in its vicinity.,search_360,31.91911292076111
+1770656712.7106714,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is flying and has not detected anything that might indicate it's looking for the person to search_360,search_360,32.04214549064636
+1770656713.7411335,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 28.7s -> search_360,False,False,The drone is flying and has not detected anything that might indicate it's looking for the person to search_360,search_360,33.07260751724243
+1770656714.378069,,,,,,,,,,47.0,0.0,,ground,Autonomy: search done (5s) -> hover,False,False,The drone is flying and has not detected anything that might indicate it's looking for the person to search_360,hover,33.68734002113342
+1770656715.3559144,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is flying and has not detected anything that might indicate it's looking for the person to search_360,hover,34.68738842010498
+1770656716.382498,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is flying and has not detected anything that might indicate it's looking for the person to search_360,hover,35.713972091674805
+1770656716.7398882,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,36.035032510757446
+1770656717.7372952,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,LLM error (ReadTimeout),hover,37.040088415145874
+1770656718.2809544,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is hovering in the current environment with no clear indication of battery health.,hover,37.58047342300415
+1770656719.2792032,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is hovering in the current environment with no clear indication of battery health.,hover,38.61067724227905
+1770656720.0041907,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,39.33566474914551
+1770656721.0209186,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,40.35239267349243
+1770656721.5897808,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,The drone is hovering on the ground to continue its mission without any warnings or actions required,hover,40.92027401924133
+1770656722.62145,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Do not detect any obstacles or passengers,hover,41.91806077957153
+1770656723.5746312,,,,,,,,,,47.0,0.0,,ground,Autonomy: no intent -> hover,False,False,Autonomy: no intent -> hover,hover,42.87410545349121
+1770656724.3817697,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,Autonomy: no intent -> hover,search_360,43.686315059661865
+1770656725.3864572,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,Autonomy: no intent -> hover,search_360,44.71695876121521
+1770656725.5202143,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,The drone is hovering at an altitude of 0 meters (0 cm) without any visible targets or landmarks,search_360,44.82401394844055
+1770656726.5287929,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,The drone is hovering at an altitude of 0 meters (0 cm) without any visible targets or landmarks,search_360,45.836716413497925
+1770656726.620891,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,The drone is currently flying without being detected.,search_360,45.929248571395874
+1770656727.6284432,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,The drone is currently flying without being detected.,search_360,46.959917306900024
+1770656727.712701,,,,,,,,,,47.0,0.0,,ground,Autonomy: no human for 43.7s -> search_360,False,False,the drone is in flight and not detected,search_360,47.0206401348114
