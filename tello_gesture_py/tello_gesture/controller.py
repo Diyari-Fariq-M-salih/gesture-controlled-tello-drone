@@ -303,8 +303,8 @@ class Controller:
                         cv2.putText(frame, f"LLM: {llm_reason[:70]}",
                                     (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
 
-                    frame_small = cv2.resize(frame, (640, 480))
-                    cv2.imshow("TELLO", frame_small)
+                    # frame_small = cv2.resize(frame, (640, 480))
+                    cv2.imshow("TELLO", frame)
 
                 else:
                     blank = 255 * (cv2.UMat(240, 320, cv2.CV_8UC3).get())
