@@ -1,6 +1,7 @@
 import time
 import cv2
 from typing import Optional
+import textwrap
 
 from .config import ControllerConfig
 from .tello_udp import TelloUDP
@@ -21,6 +22,120 @@ from .mode_manager import (
     LLMReasoner,
     LLMReasonConfig,
 )
+
+
+def _put_text_box(
+    img,
+    text: str,
+    org,
+    *,
+    font=cv2.FONT_HERSHEY_SIMPLEX,
+    scale=0.55,
+    thickness=1,
+    text_color=(255, 255, 255),
+    bg_color=(0, 0, 0),
+    alpha=0.55,
+    pad=4,
+):
+    """Draw text with a translucent background box for readability."""
+    x, y = org
+    (tw, th), baseline = cv2.getTextSize(text, font, scale, thickness)
+
+    x1, y1 = x - pad, y - th - pad
+    x2, y2 = x + tw + pad, y + baseline + pad
+
+    h, w = img.shape[:2]
+    x1, y1 = max(0, x1), max(0, y1)
+    x2, y2 = min(w - 1, x2), min(h - 1, y2)
+
+    overlay = img.copy()
+    cv2.rectangle(overlay, (x1, y1), (x2, y2), bg_color, -1)
+    cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0, img)
+
+    cv2.putText(img, text, (x, y), font, scale, text_color, thickness, cv2.LINE_AA)
+
+
+def draw_hud(
+    frame,
+    *,
+    mode: str,
+    flying: bool,
+    hand_detected_raw: bool,
+    hand_detected: bool,
+    raw_face: bool,
+    face_detected: bool,
+    gesture_name: str,
+    face_id: FaceID,
+    llm_reason: Optional[str] = None,
+):
+    """Centralized overlay/HUD drawing (clean, non-overlapping, readable)."""
+    x = 10
+    y = 24
+    line_h = 24
+
+    # Line 1: status
+    _put_text_box(
+        frame,
+        f"MODE={mode.upper()}  fly={'Y' if flying else 'N'}",
+        (x, y),
+        scale=0.65,
+        thickness=2,
+        alpha=0.55,
+    )
+    y += line_h
+
+    # Line 2: detectors
+    _put_text_box(
+        frame,
+        f"hand raw/auth: {int(hand_detected_raw)}/{int(hand_detected)}   "
+        f"face raw/auth: {int(raw_face)}/{int(face_detected)}   "
+        f"g: {gesture_name}",
+        (x, y),
+        scale=0.55,
+        thickness=1,
+        alpha=0.55,
+    )
+    y += line_h
+
+    # Line 3: FaceID
+    n, N = face_id.enroll_progress()
+    _put_text_box(
+        frame,
+        f"FaceID enr:{'Y' if face_id.enrolled else 'N'} "
+        f"enrolling:{'Y' if face_id.enrolling else 'N'} "
+        f"({n}/{N}) score:{face_id.last_score:.3f} thr:{face_id.cfg.cosine_thr:.2f}",
+        (x, y),
+        scale=0.52,
+        thickness=1,
+        alpha=0.55,
+    )
+    y += line_h
+
+    # Line 4: keys
+    _put_text_box(
+        frame,
+        "Keys: t takeoff | l land | e emergency | q quit | p enrollFace | o clearFace",
+        (x, y),
+        scale=0.48,
+        thickness=1,
+        alpha=0.45,
+    )
+    y += line_h
+
+    # LLM reason: wrap to multiple lines, cap to avoid covering the whole frame
+    if llm_reason:
+        wrapped = textwrap.wrap(llm_reason.strip(), width=60)[:3]  # max 3 lines
+        for i, line in enumerate(wrapped):
+            prefix = "LLM:" if i == 0 else "    "
+            _put_text_box(
+                frame,
+                f"{prefix} {line}",
+                (x, y),
+                scale=0.52,
+                thickness=1,
+                alpha=0.55,
+            )
+            y += line_h
 
 
 class Controller:
@@ -340,29 +455,28 @@ class Controller:
                         self._prev_llm_reason = llm_reason
                         self._last_log_ts = now
 
-                    # --- Overlay (kept mostly as-is) ---
-                    cv2.putText(frame, f"MODE={mode.upper()} fly={'Y' if self.flying else 'N'}",
-                                (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-                    cv2.putText(frame, f"hand_raw={int(hand_detected_raw)} hand_auth={int(hand_detected)}  face_raw={int(raw_face)} face_auth={int(face_detected)} g={gesture_name}",
-                                (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
-                    n, N = self.face_id.enroll_progress()
-                    cv2.putText(frame, f"FaceID enrolled={'Y' if self.face_id.enrolled else 'N'} enrolling={'Y' if self.face_id.enrolling else 'N'} ({n}/{N}) score={self.face_id.last_score:.3f} thr={self.face_id.cfg.cosine_thr:.2f}",
-                                (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
-
-                    cv2.putText(frame, "Keys: t=takeoff l=land e=emergency q=quit  p=enrollFace o=clearFace",
-                                (10, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-
-                    if llm_reason:
-                        cv2.putText(frame, f"LLM: {llm_reason[:70]}",
-                                    (10, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+                    # --- Overlay (clean HUD) ---
+                    draw_hud(
+                        frame,
+                        mode=mode,
+                        flying=self.flying,
+                        hand_detected_raw=hand_detected_raw,
+                        hand_detected=hand_detected,
+                        raw_face=raw_face,
+                        face_detected=face_detected,
+                        gesture_name=gesture_name,
+                        face_id=self.face_id,
+                        llm_reason=llm_reason,
+                    )
 
                     cv2.imshow("TELLO", frame)
 
                 else:
-                    blank = 255 * (cv2.UMat(240, 320, cv2.CV_8UC3).get())
-                    cv2.putText(blank, "Waiting for video...", (10, 50),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+                    # Match your actual stream size if you know it; otherwise keep 240x320
+                    h, w = 240, 320
+                    blank = 255 * (cv2.UMat(h, w, cv2.CV_8UC3).get())
+                    cv2.putText(blank, "Waiting for video...", (10, 40),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2, cv2.LINE_AA)
                     cv2.imshow("TELLO", blank)
 
                 # --- Keyboard ---
