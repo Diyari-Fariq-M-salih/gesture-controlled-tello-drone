@@ -1,13 +1,27 @@
 opencv-python>=4.8
-mediapipe==0.10.9
+mediapipe==0.10.9  # Newer versions support protobuf 4.x
 numpy>=1.23,<2.0
 
+# CONFLICT with protobuf and onnxruntime, so we will not pin protobuf and onnxruntime for now
+# ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+# onnx 1.20.1 requires protobuf>=4.25.1, but you have protobuf 3.20.3 which is incompatible.
+# Install these versions to avoid conflicts, but be aware that newer versions of onnx may require protobuf 4.x, which may not be compatible with mediapipe. 
+# You may need to adjust these versions based on your specific needs and compatibility requirements.
+# ideally: protobuf==3.20.3
+protobuf >= 3.11, < 4
+# Inference backend (CPU). Use older version to be compatible with mediapipe
+# onnxruntime>=1.16
+# ideally: onnxruntime==1.23.2
+onnxruntime==1.23.2
+
+# NOTE: before installing insightface on Windows, ensure you have Visual Studio Build Tools installed and configured properly.
+# install all the following: desktop development with C++, MSVC v142 - VS 2019 C++ x64/x86 build tools, Windows 10 SDK (10.0.18362.0 or later), and CMake tools for Windows.
+# then if you have issues, exclude insightface from the requirements, and run:
+# pip install insightface --only-binary :all:
+# # OR: pip install insightface==0.7.3 --no-deps
+
 # Core face recognition (ArcFace + detector)
-insightface>=0.7.3
-# Inference backend (CPU)
-onnxruntime>=1.16
-# # for Windows
-# onnxruntime==1.23.2
+insightface==0.7.3
 
 # Utilities (pulled implicitly but safe to pin)
 scipy>=1.9

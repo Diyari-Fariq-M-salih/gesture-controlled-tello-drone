@@ -13,8 +13,8 @@ class FaceFollowConfig:
     target_area_frac: float = 0.075   # was 0.10 (too close). 0.04 is safer (~1m-ish)
 
     # P gains (keep gentle, especially forward/back)
-    kp_yaw: float = 0.1
-    kp_ud: float = 0.12
+    kp_yaw: float = 0.1 # tested 0.2 for more aggressive turning
+    kp_ud: float = 0.12 # tested 0.16 for more aggressive up/down
     kp_fb: float = 0.30              # gentler than before
 
     max_yaw: int = 60

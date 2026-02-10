@@ -1,8 +1,46 @@
-# Gesture-Based Drone Control Project
+# 
+
+## 🛰️ System Logic & Control Modes
+
+This project implements a multi-modal control system for the DJI Tello, utilizing real-time computer vision to toggle between user-specific authorization and general interaction.      
+
+Due to the use of optimized and small ML models, the project **CAN/CANNOT?** run in real-time on an onboard compute (like Raspberry Pi or Jetson Orin Nano). It has been successfully  tested with a Raspberry Pi 4 with 8GB of RAM.        
+ 
+With the tello drone, the PC (or onboard computer) runs all the algorithms and the drone only sends data and receives commands. However, the project can be used with any other drone by modifying the communication layer.     
+
+### 🔐 Face Recognition & Authorization
+
+The system's behavior is governed by the **Face Recognition** toggle.
+
+* **Enabled (Authorized Mode):** Upon startup, the drone scans the first face it encounters and stores its embedding as the **Authorized User**. All subsequent detections categorize individuals as "Authorized" or "Intruder."
+* **Disabled (Standard Mode):** The drone operates on a "first-come, first-served" basis, prioritizing the most prominent targets in the frame.
+
+---
+
+### 🕹️ Operational Modes
+
+| Mode | Face Recognition ON (Authorized) | Face Recognition OFF (Standard) |
+| --- | --- | --- |
+| **Gesture** | Only accepts gestures from the **Authorized User**. If multiple hands exist, it selects the one closest to the authorized face. | Accepts gestures from the first detected hand in the frame. |
+| **Face Follow** | Tracks **only** the Authorized User. If lost, the drone performs a 360° yaw search. Lands if the user isn't found after two rotations. | Tracks the "primary" face (the detection with the largest bounding box area). |
+| **Keyboard** | Full manual teleoperation. Authorized user detection remains active for logging/UI. | Full manual teleoperation. |
+---
+
+### 🛠️ Safety & Fail-safes
+
+* **Authorized Gesture Timeout:** In Gesture Mode (Recognition ON), if the authorized user is not detected within a specific window, the drone will enter a stationary hover before initiating an auto-landing sequence for safety.
+* **Search Protocol:** The 360° yaw rotation ensures the drone doesn't drift aimlessly if the subject moves out of the field of view (FOV).
+
+---
 
 ## Installation
 **Install dependencies**        
-Python libraries versions should be compatible. It is recommended to create a virtual environment and install the libraries. Versions in `requirements.txt` might be old. 
+Python libraries versions should be compatible. It is recommended to create a virtual environment and install the libraries. Versions in `requirements.txt` might be old.       
+
+```sh
+git clone https://github.com/Diyari-Fariq-M-salih/gesture-controlled-tello-drone.git
+```
+**For Linux/macOS:**
 ```sh
 cd gesture-controlled-tello-drone
 python3 -m venv .venv
@@ -10,95 +48,78 @@ source .venv/bin/activate   # macOS/Linux
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 ```
-For `Windows`:
+**For Windows:**
 ```sh
 dir gesture-controlled-tello-drone
-python3 -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
-
-## Project Description
-
-### Overview
-
-The objective of this project is to design and implement a **gesture-based control system for an indoor drone**.  
-The drone operates in a semi-autonomous mode, taking off, hovering, and executing predefined movement commands based on **visual gestures performed by a human operator**.
-
-The system relies on **image processing techniques** to detect and classify gestures, which are then mapped to drone commands such as ascending, descending, looping, or following a circular trajectory.  
-The drone maintains safe and stable behavior throughout operation, including fallback procedures when operator input is unavailable.
-
-The project is primarily developed in **MATLAB**, as recommended, using a **Tello mini-drone equipped with a camera**. In parallel, an exploratory implementation using **Python and ROS** may be evaluated to compare performance, modularity, and development complexity.
-
----
-
-## System Behavior
-
-1. The drone takes off and enters a **hovering state**
-2. The onboard camera continuously captures visual input
-3. The system waits for valid operator gestures
-4. Recognized gestures are translated into predefined commands
-5. The drone executes the selected mission
-6. If gestures are no longer detected, the system switches to a **safe fallback behavior**
-
----
-
-## Work Distribution
-
-The project is developed by **four team members**, divided into **two subgroups**:
-
-### Subgroup A — Localization & Movement
-- Drone localization and positioning
-- Motion primitives and trajectory execution
-- Control logic and safety handling
-
-### Subgroup B — Gesture-Based Control
-- Gesture vocabulary definition
-- Image processing and gesture recognition
-- Command mapping
-
----
-
-## Development Environments
-
-- **MATLAB** (exploratory)
-- **Python + ROS** 
-
----
-
-## Version Control Workflow
-
-- Feature-based Git branches
-- Independent development and documentation
-- Final merge and result comparison
-
----
-
-## Proposed Project Structure
-
-```
-project-root/
-├── README.md
-├── LICENSE
-├── docs/
-├── matlab/
-├── python_ros/
-├── tests/
-└── results/
+Then finally, download models required for face detection and recognition:
+```sh
+python -m face_recognition.download_models
 ```
 
----
 
-## Authors
 
-- **Author 1** — Localization and Movement Control Nguyen Viet Khanh 
-- **Author 2** — Localization and Movement Control ouchaouir khalid
-- **Author 3** — Gesture Recognition and Image Processing  Mohammed-salih Diyari
-- **Author 4** — Gesture Recognition and Image Processing  Ilyes Chaabeni
+## Run
+The drone uses UDP to communicate with your PC/laptop via Wifi. Note that all the algorithms are run on your PC, and the drone only sends data and receives commands.   
 
----
+The steps to run the project are as follows:  
+1. Power on drone
+2. Connect PC to Tello Wi-Fi (TELLO-XXXXXX)
+3. Run:
+```sh
+cd tello_gesture_py
+python -m tello_gesture.main --model model.joblib --labels tello_gesture/gestures/labels_example.json
+```
+If you have any connection issues (especialy on Windows), try disabling UDP firewall.       
 
-## License
+After a test is ended, logs for telemetry data are automatically saved to `telemetry_logs.csv` in the root directory:
 
-MIT License
+- Logged at 1 Hz
+- Includes battery, height, yaw, and velocities
+
+**Communication Layer and Saving Telemetry Data:**
+
+- UDP commands (8889)
+- Telemetry listener (8890)
+- Video stream (11111)
+- MediaPipe hands landmarks
+- Controller loop:
+  - Gesture-based XYZ translation (lr/fb/ud via RC)
+  - Keyboard fallback
+  - 1 Hz telemetry logging to CSV
+
+## Usage
+The face recognizer (authorization mode) can be enabled/disabled in the config file `config.py`:
+```py
+recognize_faces: bool = True
+```
+
+### Flight
+
+| Key     | Action             |
+| ------- | ------------------ |
+| `t`     | Takeoff            |
+| `l`     | Land               |
+| `e`     | Emergency stop     |
+| `q`     | Quit (lands first) |
+
+### Mode Selection
+The available modes are: `keyboard`, `gesture`, `face`, `search_360`, `hover` and `land`.   
+
+The mode selection is automatic. Keyboard mode (teleoperation) is not available in this branch, but will be included soon for safety.   
+The modes are selected as follows, if face recognition is enabled:
+- If battery level <= 15%, perform landing.   
+- If authorized face detected and hand detected -> gesture mode
+- If authorized face detected but no hand detected -> face following.     
+- If no authorized face was detected -> hover. If still no detection after some time (`nohuman_search_s=10s`) -> 360° search mode: inplace yaw rotation untill authorized face was detected.    
+
+## Safety Tips
+
+- Test function before sending takeoff command (moving the drone with hands)
+- Train gestures before flying
+- Use `l` to land after ending a test
+- Be ready to press `e` for emergency stop

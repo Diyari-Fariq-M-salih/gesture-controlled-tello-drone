@@ -49,7 +49,7 @@ class Controller:
         # typical values:
         # - during day/afternoon: det_thresh=0.75, simil_thresh=0.6
         # - at night: det_thresh=0.6, simil_thresh=0.45
-        self.recognizer = FaceRecognizer(det_thresh=0.5, simil_thresh=0.6) if cfg.recognize_faces else None
+        self.recognizer = FaceRecognizer(det_thresh=0.5, simil_thresh=0.55) if cfg.recognize_faces else None
     
         self._search_yaw_cmd = 30
         hold_d = 360.0 / self._search_yaw_cmd
@@ -120,7 +120,7 @@ class Controller:
             from .model_classifier import TrainedClassifier
             self._trained = TrainedClassifier(model_path, labels_path)
 
-        self.TEXT_COLOR = (0, 255, 0)  # Green text for better visibility
+        self.TEXT_COLOR = (255, 255, 255)  # White text for better visibility
 
     def _sdk_init(self) -> bool:
         ok, resp = self.tello.send_cmd("command", timeout_ms=6000)
