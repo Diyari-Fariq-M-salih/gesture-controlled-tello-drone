@@ -34,10 +34,11 @@ class DeterministicConfig:
 
 class DeterministicModeManager:
     """
-    Deterministic control policy:
+    Deterministic control policy (identity-gated upstream):
       - battery <= threshold -> land
       - gesture > face (with hysteresis)
-      - if no hand/face for >= nohuman_search_s -> search_360 for search_duration_s
+      - if no authorized face+hand for >= nohuman_search_s -> search_360 for search_duration_s
+      - while searching: if face/hand appears -> exit immediately
       - else hover
     """
 
@@ -66,7 +67,7 @@ class DeterministicModeManager:
     def tick(self, state: Dict[str, Any]) -> Tuple[str, str]:
         now = time.time()
 
-        # Read signals
+        # Read signals (these should already be identity-gated upstream)
         hand = bool(state.get("hand_detected", False))
         face = bool(state.get("face_detected", False))
 
@@ -83,12 +84,17 @@ class DeterministicModeManager:
         except Exception:
             pass
 
-        # Search_360 timing / exit condition
+        # Search_360: exit immediately if a signal appears
         if self.mode == "search_360":
+            if hand:
+                self._set_mode("gesture", "Search: hand_detected -> gesture (exit search)")
+                return self.mode, self.reason
+            if face:
+                self._set_mode("face", "Search: face_detected -> face (exit search)")
+                return self.mode, self.reason
+
             if (now - self._search_enter_ts) >= float(self.cfg.search_duration_s):
-                # stop spinning after 5s
                 self._set_mode("hover", f"Autonomy: search done ({self.cfg.search_duration_s:.0f}s) -> hover")
-                # prevent immediate re-entry
                 self._next_search_allowed_ts = now + float(self.cfg.search_cooldown_s)
             return self.mode, self.reason
 
@@ -114,7 +120,6 @@ class DeterministicModeManager:
             if t_face <= self.cfg.face_release_s:
                 return self.mode, self.reason
             # else: allow switching
-
 
         # Priority: gesture > face
         if hand:

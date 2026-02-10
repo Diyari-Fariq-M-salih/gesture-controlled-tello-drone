@@ -2,6 +2,8 @@ import cv2
 import time
 from dataclasses import dataclass
 import mediapipe as mp
+from typing import Optional, Tuple
+
 from .rc_command import RCCommand
 
 
@@ -34,6 +36,9 @@ class FaceFollowConfig:
 
     area_ema_alpha: float = 0.25
 
+    # Crop padding for FaceID (relative)
+    crop_pad: float = 0.15
+
 
 class FaceFollower:
     def __init__(self, cfg: FaceFollowConfig | None = None):
@@ -46,11 +51,13 @@ class FaceFollower:
         self._last_face_time = 0.0
 
         self._last_cmd = RCCommand(0, 0, 0, 0, active=True)
-        self._last_bbox = None
+        self._last_bbox: Optional[Tuple[int, int, int, int]] = None  # x,y,w,h
         self._last_area_frac = None
         self._area_ema = None
 
         self._last_control_ts = 0.0
+
+    # ---- public helpers ----
 
     def face_detected(self) -> bool:
         return (time.time() - self._last_face_time) <= self.cfg.lost_timeout_s
@@ -59,6 +66,41 @@ class FaceFollower:
         if self._last_face_time <= 0:
             return 1e9
         return max(0.0, time.time() - self._last_face_time)
+
+    def get_last_bbox(self) -> Optional[Tuple[int, int, int, int]]:
+        """Last detected bbox in FULL-RES frame coords: (x,y,w,h)"""
+        return self._last_bbox
+
+    def crop_face(self, frame_bgr) -> Optional[cv2.UMat]:
+        """
+        Returns a BGR crop suitable for face-ID embedding.
+        Uses last bbox + padding. Returns None if bbox stale.
+        """
+        if self._last_bbox is None:
+            return None
+        if not self.face_detected():
+            return None
+
+        H, W = frame_bgr.shape[:2]
+        x, y, w, h = self._last_bbox
+        pad = float(self.cfg.crop_pad)
+
+        cx = x + w / 2.0
+        cy = y + h / 2.0
+        ww = w * (1.0 + 2.0 * pad)
+        hh = h * (1.0 + 2.0 * pad)
+
+        x0 = int(max(0, cx - ww / 2.0))
+        y0 = int(max(0, cy - hh / 2.0))
+        x1 = int(min(W, cx + ww / 2.0))
+        y1 = int(min(H, cy + hh / 2.0))
+
+        if x1 - x0 < 10 or y1 - y0 < 10:
+            return None
+
+        return frame_bgr[y0:y1, x0:x1].copy()
+
+    # ---- detection update ----
 
     def observe(self, frame_bgr):
         """Update face detection state WITHOUT generating RC commands."""
