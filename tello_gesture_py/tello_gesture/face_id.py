@@ -18,13 +18,12 @@ def _l2norm(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
 @dataclass
 class FaceIDConfig:
     model_path: str = "models/arcface.onnx"
-
     input_size: int = 112
 
-    # Some ArcFace models expect BGR, some RGB. Your model is TF-ish, often RGB.
+    # Many TF-exported ArcFace models expect RGB. If your scores look wrong, flip this.
     rgb: bool = True
 
-    # ArcFace common normalization
+    # Common ArcFace normalization: (x - 127.5) / 128
     mean: float = 127.5
     std: float = 128.0
 
@@ -36,8 +35,8 @@ class FaceIDConfig:
 
 class FaceID:
     """
-    Face-ID lock = pretrained embedding model + enrollment template + cosine similarity.
-    Uses onnxruntime (works with NHWC models that OpenCV DNN fails on).
+    Identity lock using pretrained embedding model (ONNX) + enrollment template + cosine similarity.
+    Uses onnxruntime (works with NHWC models that OpenCV DNN often fails on).
     """
 
     def __init__(self, cfg: Optional[FaceIDConfig] = None):
@@ -53,7 +52,6 @@ class FaceID:
 
         self.last_score: float = -1.0
 
-        # onnxruntime session
         self._sess = None
         self._in_name: Optional[str] = None
         self._layout: str = "NCHW"  # or NHWC
@@ -63,24 +61,20 @@ class FaceID:
     def _load_onnx(self) -> None:
         mp = self.cfg.model_path
         if not mp or not os.path.exists(mp):
-            print(f"[FaceID] Model not found: '{mp}'")
+            print(f"[FaceID] Model not found: '{mp}' (FaceID disabled)")
             self.enabled = False
             return
 
         try:
             import onnxruntime as ort
 
-            # CPU provider
             self._sess = ort.InferenceSession(mp, providers=["CPUExecutionProvider"])
             self._in_name = self._sess.get_inputs()[0].name
             ishape = self._sess.get_inputs()[0].shape  # can include None
 
-            # Detect layout from input shape if possible
-            # Common: [1, 3, 112, 112] => NCHW
-            # TF-ish: [1, 112, 112, 3] => NHWC
-            # Some models have dynamic dims; we infer from last dim being 3.
             layout = "NCHW"
-            if len(ishape) == 4:
+            if isinstance(ishape, (list, tuple)) and len(ishape) == 4:
+                # Prefer explicit inference from known dims
                 if ishape[-1] == 3:
                     layout = "NHWC"
                 elif ishape[1] == 3:
@@ -137,6 +131,7 @@ class FaceID:
             self.enrolling = False
             self._samples = []
             self.last_score = -1.0
+            print("[FaceID] Enrollment complete -> enrolled=Y")
 
     def embed(self, face_bgr: np.ndarray) -> Optional[np.ndarray]:
         if not self.enabled or self._sess is None or self._in_name is None:
@@ -152,14 +147,12 @@ class FaceID:
         x = img.astype(np.float32)
         x = (x - cfg.mean) / cfg.std
 
-        # Build input tensor respecting layout
         if self._layout == "NHWC":
             inp = x[None, :, :, :]  # (1,112,112,3)
         else:
             inp = np.transpose(x, (2, 0, 1))[None, :, :, :]  # (1,3,112,112)
 
         inp = np.ascontiguousarray(inp, dtype=np.float32)
-
         out = self._sess.run(None, {self._in_name: inp})[0]
         feat = np.asarray(out).reshape(-1).astype(np.float32)
         return _l2norm(feat)

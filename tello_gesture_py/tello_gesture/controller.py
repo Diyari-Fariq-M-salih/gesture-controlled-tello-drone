@@ -12,6 +12,7 @@ from .gesture_logic import RuleBasedGesture, rc_from_gesture_name
 from .keyboard import rc_from_key, RC
 from .telemetry_logger import TelemetryLogger, DecisionLogger
 from .face_follow import FaceFollower
+
 from .face_id import FaceID, FaceIDConfig
 
 from .mode_manager import (
@@ -23,13 +24,6 @@ from .mode_manager import (
 
 
 class Controller:
-    """
-    Identity-locked controller:
-      - Face mode only runs if face matches enrolled FaceID template.
-      - Gesture mode only runs if (hand_detected AND authorized_face_present).
-      - Search_360 exits immediately when authorized face/hand is reacquired.
-    """
-
     def __init__(self, cfg: ControllerConfig, model_path: Optional[str] = None, labels_path: Optional[str] = None):
         self.cfg = cfg
         self.tello = TelloUDP(cfg.tello_ip, cfg.cmd_port, cfg.local_cmd_port)
@@ -48,26 +42,26 @@ class Controller:
         # keep face detections "fresh" longer on low FPS streams
         self.face.cfg.lost_timeout_s = 2.0
 
-        # Face-ID lock (pretrained CNN embedding ONNX + live enrollment)
-        # Provide a model file at: models/arcface.onnx
+        # FaceID (identity lock)
         self.face_id = FaceID(FaceIDConfig(
             model_path="models/arcface.onnx",
             cosine_thr=0.55,
             enroll_samples=20,
+            rgb=True,  # flip to False only if your scores are garbage
         ))
 
         # Deterministic mode manager
         self.mode_mgr = DeterministicModeManager(DeterministicConfig(
             battery_land_pct=15,
             nohuman_search_s=10.0,
-            search_duration_s=5.0,     # quick spin window
-            search_cooldown_s=10.0,    # prevent back-to-back spins
+            search_duration_s=5.0,
+            search_cooldown_s=10.0,
             mode_hold_s=1.2,
             hand_release_s=0.8,
             face_release_s=0.8,
         ))
 
-        # Faster spin: raise yaw rate for ~5s "full-ish" sweep
+        # Faster spin
         self._search_yaw_cmd = 80
 
         # LLM reasoner (reason-only)
@@ -105,7 +99,7 @@ class Controller:
         # Gesture stability gating
         self._gesture_stable_name = "CENTER"
         self._gesture_stable_count = 0
-        self._gesture_fb_streak_on = 2  # require N consecutive frames for FORWARD/BACK
+        self._gesture_fb_streak_on = 2
 
         # CSV logging control
         self._prev_mode = ""
@@ -136,18 +130,19 @@ class Controller:
         return f"rc lr={rc.lr} fb={rc.fb} ud={rc.ud} yaw={rc.yaw}"
 
     def _handle_faceid_keys(self, key: int):
-        # p = enroll/refresh
+        # p = start/stop enrollment
         if key == ord("p"):
             if not self.face_id.enrolling:
                 self.face_id.start_enroll()
-                print("[FaceID] Enrollment started (need 20 face crops).")
+                print("[FaceID] Enrollment started (need 20 crops).")
             else:
                 self.face_id.cancel_enroll()
                 print("[FaceID] Enrollment cancelled.")
-        # o = clear lock
+
+        # o = clear
         if key == ord("o"):
             self.face_id.clear()
-            print("[FaceID] Cleared enrolled face template.")
+            print("[FaceID] Cleared enrolled template.")
 
     def run(self) -> int:
         if not self._sdk_init():
@@ -187,22 +182,19 @@ class Controller:
 
                     raw_face = bool(self.face.face_detected())
 
-                    # --- Face-ID authorization ---
+                    # --- FaceID crop + enroll + authorize ---
                     face_crop = self.face.crop_face(frame) if raw_face else None
 
-                    # If enrolling: collect from ANY visible face crop
                     if self.face_id.enrolling and face_crop is not None:
                         self.face_id.add_sample(face_crop)
 
-                    authorized_face = False
-                    if face_crop is not None:
-                        authorized_face = bool(self.face_id.is_authorized(face_crop))
+                    authorized_face = bool(face_crop is not None and self.face_id.is_authorized(face_crop))
 
-                    # Streak gating on AUTHORIZED face only
+                    # streak gating on AUTHORIZED face
                     self._face_streak = min(self._face_streak + 1, 10) if authorized_face else 0
                     face_detected = self._face_streak >= self._face_streak_on
 
-                    # Gate hand: gestures only if authorized face present
+                    # HARD GATE: gesture only if authorized face present
                     hand_detected = bool(hand_detected_raw and face_detected)
 
                     # Update timers (AUTHORIZED only)
@@ -222,7 +214,7 @@ class Controller:
                     time_since_face = now - self._last_face_ts
                     time_since_any = now - self._last_any_seen_ts
 
-                    # If hand gone long enough, reset temporal gesture state.
+                    # Reset temporal gesture state when authorized hand is gone
                     if (now - self._last_hand_ts) > float(self.mode_mgr.cfg.hand_release_s):
                         try:
                             self.rule.reset()
@@ -315,7 +307,7 @@ class Controller:
                     self.reasoner.tick(llm_payload)
                     llm_reason = self.reasoner.get_reason()
 
-                    # --- Log CSV ---
+                    # --- Log decisions ---
                     should_log = False
                     if (now - self._last_log_ts) >= self._log_every_s:
                         should_log = True
@@ -325,6 +317,7 @@ class Controller:
                         should_log = True
 
                     if should_log:
+                        n, N = self.face_id.enroll_progress()
                         self.decisions.add({
                             "mode": mode,
                             "command": command_str,
@@ -338,6 +331,7 @@ class Controller:
                             "hand_auth": bool(hand_detected),
                             "faceid_enrolled": bool(self.face_id.enrolled),
                             "faceid_enrolling": bool(self.face_id.enrolling),
+                            "faceid_progress": f"{n}/{N}",
                             "faceid_score": float(self.face_id.last_score),
                             "t_any": float(time_since_any),
                         })
@@ -346,26 +340,22 @@ class Controller:
                         self._prev_llm_reason = llm_reason
                         self._last_log_ts = now
 
-                    # --- Overlay ---
+                    # --- Overlay (kept mostly as-is) ---
                     cv2.putText(frame, f"MODE={mode.upper()} fly={'Y' if self.flying else 'N'}",
                                 (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-                    cv2.putText(frame, f"hand_raw={int(hand_detected_raw)} hand_auth={int(hand_detected)}  "
-                                       f"face_raw={int(raw_face)} face_auth={int(face_detected)}  g={gesture_name}",
-                                (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+                    cv2.putText(frame, f"hand_raw={int(hand_detected_raw)} hand_auth={int(hand_detected)}  face_raw={int(raw_face)} face_auth={int(face_detected)} g={gesture_name}",
+                                (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
-                    enrolled = "Y" if self.face_id.enrolled else "N"
-                    enrolling = "Y" if self.face_id.enrolling else "N"
                     n, N = self.face_id.enroll_progress()
-                    score = self.face_id.last_score
-                    cv2.putText(frame, f"FaceID enrolled={enrolled} enrolling={enrolling} ({n}/{N}) score={score:.3f} thr={self.face_id.cfg.cosine_thr:.2f}",
-                                (10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+                    cv2.putText(frame, f"FaceID enrolled={'Y' if self.face_id.enrolled else 'N'} enrolling={'Y' if self.face_id.enrolling else 'N'} ({n}/{N}) score={self.face_id.last_score:.3f} thr={self.face_id.cfg.cosine_thr:.2f}",
+                                (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
 
                     cv2.putText(frame, "Keys: t=takeoff l=land e=emergency q=quit  p=enrollFace o=clearFace",
-                                (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                                (10, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
 
                     if llm_reason:
                         cv2.putText(frame, f"LLM: {llm_reason[:70]}",
-                                    (10, 135), cv2.FONT_HERSHEY_SIMPLEX, 0.50, (255, 255, 255), 2)
+                                    (10, 140), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
 
                     cv2.imshow("TELLO", frame)
 
@@ -380,7 +370,7 @@ class Controller:
                 if key == ord("q"):
                     break
 
-                # FaceID controls (ground or air)
+                # FaceID keys
                 self._handle_faceid_keys(key)
 
                 if key == ord("t"):
@@ -398,7 +388,7 @@ class Controller:
                     print("emergency:", ok2, resp2)
                     self.flying = False
 
-                # Manual RC override warning
+                # Manual RC override
                 if self.flying and (not self._warned_deadband):
                     try:
                         if int(self.cfg.rc_deadband) >= int(self.cfg.rc_speed):
@@ -424,7 +414,6 @@ class Controller:
                         )
                     last_rc_send = now2
 
-                # Telemetry
                 self.logger.add(self.state.snapshot())
 
         finally:

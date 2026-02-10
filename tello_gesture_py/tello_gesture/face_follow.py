@@ -3,7 +3,6 @@ import time
 from dataclasses import dataclass
 import mediapipe as mp
 from typing import Optional, Tuple
-
 from .rc_command import RCCommand
 
 
@@ -36,7 +35,7 @@ class FaceFollowConfig:
 
     area_ema_alpha: float = 0.25
 
-    # Crop padding for FaceID (relative)
+    # Face-ID crop padding (relative)
     crop_pad: float = 0.15
 
 
@@ -51,30 +50,21 @@ class FaceFollower:
         self._last_face_time = 0.0
 
         self._last_cmd = RCCommand(0, 0, 0, 0, active=True)
-        self._last_bbox: Optional[Tuple[int, int, int, int]] = None  # x,y,w,h
+        self._last_bbox: Optional[Tuple[int, int, int, int]] = None
         self._last_area_frac = None
         self._area_ema = None
 
         self._last_control_ts = 0.0
 
-    # ---- public helpers ----
-
-    def face_detected(self) -> bool:
-        return (time.time() - self._last_face_time) <= self.cfg.lost_timeout_s
-
-    def time_since_face_s(self) -> float:
-        if self._last_face_time <= 0:
-            return 1e9
-        return max(0.0, time.time() - self._last_face_time)
+    # ---- added helpers for FaceID ----
 
     def get_last_bbox(self) -> Optional[Tuple[int, int, int, int]]:
-        """Last detected bbox in FULL-RES frame coords: (x,y,w,h)"""
+        """Return last face bbox in full-res coords: (x,y,w,h) or None."""
         return self._last_bbox
 
-    def crop_face(self, frame_bgr) -> Optional[cv2.UMat]:
+    def crop_face(self, frame_bgr) -> Optional[object]:
         """
-        Returns a BGR crop suitable for face-ID embedding.
-        Uses last bbox + padding. Returns None if bbox stale.
+        Crop face from last bbox + padding. Returns BGR crop (numpy array) or None.
         """
         if self._last_bbox is None:
             return None
@@ -83,8 +73,8 @@ class FaceFollower:
 
         H, W = frame_bgr.shape[:2]
         x, y, w, h = self._last_bbox
-        pad = float(self.cfg.crop_pad)
 
+        pad = float(self.cfg.crop_pad)
         cx = x + w / 2.0
         cy = y + h / 2.0
         ww = w * (1.0 + 2.0 * pad)
@@ -95,12 +85,20 @@ class FaceFollower:
         x1 = int(min(W, cx + ww / 2.0))
         y1 = int(min(H, cy + hh / 2.0))
 
-        if x1 - x0 < 10 or y1 - y0 < 10:
+        if (x1 - x0) < 10 or (y1 - y0) < 10:
             return None
 
         return frame_bgr[y0:y1, x0:x1].copy()
 
-    # ---- detection update ----
+    # ---- existing API ----
+
+    def face_detected(self) -> bool:
+        return (time.time() - self._last_face_time) <= self.cfg.lost_timeout_s
+
+    def time_since_face_s(self) -> float:
+        if self._last_face_time <= 0:
+            return 1e9
+        return max(0.0, time.time() - self._last_face_time)
 
     def observe(self, frame_bgr):
         """Update face detection state WITHOUT generating RC commands."""

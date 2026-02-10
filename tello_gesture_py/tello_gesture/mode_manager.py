@@ -13,20 +13,14 @@ def _norm(m: str) -> str:
     return (m or "").strip().lower()
 
 
-# -------------------------
-# Deterministic Mode Manager
-# -------------------------
-
 @dataclass
 class DeterministicConfig:
     battery_land_pct: int = 15
 
-    # Search behavior
     nohuman_search_s: float = 10.0
-    search_duration_s: float = 5.0  # one "quick 360" window
-    search_cooldown_s: float = 10.0  # wait before spinning again if still nothing
+    search_duration_s: float = 5.0
+    search_cooldown_s: float = 10.0
 
-    # Perception hysteresis (prevents face<->gesture flapping)
     mode_hold_s: float = 1.2
     hand_release_s: float = 0.8
     face_release_s: float = 0.8
@@ -34,11 +28,15 @@ class DeterministicConfig:
 
 class DeterministicModeManager:
     """
-    Deterministic control policy (identity-gated upstream):
-      - battery <= threshold -> land
+    Inputs are expected to be identity-gated upstream:
+      hand_detected: TRUE only when authorized face is present AND hand is present (your gating)
+      face_detected: TRUE only when authorized face is present (your FaceID lock)
+
+    Behavior:
+      - battery low -> land
       - gesture > face (with hysteresis)
-      - if no authorized face+hand for >= nohuman_search_s -> search_360 for search_duration_s
-      - while searching: if face/hand appears -> exit immediately
+      - if no human for >= nohuman_search_s -> search_360
+      - search_360 exits immediately if hand/face reappears
       - else hover
     """
 
@@ -67,7 +65,6 @@ class DeterministicModeManager:
     def tick(self, state: Dict[str, Any]) -> Tuple[str, str]:
         now = time.time()
 
-        # Read signals (these should already be identity-gated upstream)
         hand = bool(state.get("hand_detected", False))
         face = bool(state.get("face_detected", False))
 
@@ -84,7 +81,7 @@ class DeterministicModeManager:
         except Exception:
             pass
 
-        # Search_360: exit immediately if a signal appears
+        # Search_360: exit early if reacquired
         if self.mode == "search_360":
             if hand:
                 self._set_mode("gesture", "Search: hand_detected -> gesture (exit search)")
@@ -100,16 +97,14 @@ class DeterministicModeManager:
 
         time_in_mode = now - self._mode_enter_ts
 
-        # Hysteresis: hold gesture mode unless hand truly gone
+        # Hold gesture mode unless hand truly gone
         if self.mode == "gesture":
             if time_in_mode < self.cfg.mode_hold_s:
                 return self.mode, self.reason
             if t_hand <= self.cfg.hand_release_s:
                 return self.mode, self.reason
-            # else: allow switching
 
-        # Hysteresis: hold face mode unless face truly gone
-        # BUT allow gesture to preempt face immediately
+        # Hold face mode unless face truly gone; gesture preempts face immediately
         if self.mode == "face":
             if hand:
                 self._set_mode("gesture", "Perception: hand_detected -> gesture (preempts face)")
@@ -119,7 +114,6 @@ class DeterministicModeManager:
                 return self.mode, self.reason
             if t_face <= self.cfg.face_release_s:
                 return self.mode, self.reason
-            # else: allow switching
 
         # Priority: gesture > face
         if hand:
@@ -130,12 +124,11 @@ class DeterministicModeManager:
             self._set_mode("face", "Perception: face_detected -> face")
             return self.mode, self.reason
 
-        # No human: search trigger
+        # No human -> search trigger
         if t_any >= float(self.cfg.nohuman_search_s) and now >= self._next_search_allowed_ts:
             self._set_mode("search_360", f"Autonomy: no human for {t_any:.1f}s -> search_360")
             return self.mode, self.reason
 
-        # Default: hover
         self._set_mode("hover", "Autonomy: no intent -> hover")
         return self.mode, self.reason
 
@@ -149,18 +142,11 @@ class LLMReasonConfig:
     enabled: bool = True
     model: str = "qwen2.5:0.5b-instruct"
     url: str = "http://127.0.0.1:11434/api/chat"
-    decision_hz: float = 1.0  # one reason per second max
+    decision_hz: float = 1.0
     timeout_s: float = 4.0
 
 
 class LLMReasoner:
-    """
-    Reason-only LLM:
-      - never controls the drone
-      - runs in a worker thread (non-blocking)
-      - stores last_reason string
-    """
-
     def __init__(self, cfg: Optional[LLMReasonConfig] = None):
         self.cfg = cfg or LLMReasonConfig()
         self._last_reason: str = ""
@@ -183,10 +169,6 @@ class LLMReasoner:
         return self._last_reason
 
     def tick(self, payload: Dict[str, Any]) -> str:
-        """
-        Called from main loop. Schedules LLM at decision_hz.
-        payload should include: mode, command, key signals, safety context.
-        """
         if not self.cfg.enabled:
             self._last_reason = ""
             return self._last_reason
