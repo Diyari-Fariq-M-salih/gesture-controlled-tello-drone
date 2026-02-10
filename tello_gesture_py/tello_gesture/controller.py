@@ -12,6 +12,7 @@ from .gesture_logic import RuleBasedGesture, rc_from_gesture_name
 from .keyboard import rc_from_key, RC
 from .telemetry_logger import TelemetryLogger, DecisionLogger
 from .face_follow import FaceFollower
+from face_recognition.face_recognizer_hybrid import FaceRecognizer
 
 from .mode_manager import (
     DeterministicModeManager,
@@ -40,6 +41,16 @@ class Controller:
         # keep face detections "fresh" longer on low FPS streams
         self.face.cfg.lost_timeout_s = 2.0
 
+
+        # Face recognizer (Mediapipe + InsightFace)
+        # thresholds:
+        # - det_thresh: higher -> fewer detections but more reliable; lower -> more detections but more false positives
+        # - simil_thresh: higher -> stricter matching to the authorized face (fewer false positives but more false negatives); lower -> looser matching
+        # typical values:
+        # - during day/afternoon: det_thresh=0.75, simil_thresh=0.6
+        # - at night: det_thresh=0.6, simil_thresh=0.45
+        self.recognizer = FaceRecognizer(det_thresh=0.65, simil_thresh=0.55) if cfg.recognize_faces else None
+    
         # Deterministic mode manager
         self.mode_mgr = DeterministicModeManager(DeterministicConfig(
             battery_land_pct=15,
@@ -57,7 +68,7 @@ class Controller:
 
         # LLM reasoner (reason-only)
         self.reasoner = LLMReasoner(LLMReasonConfig(
-            enabled=True,
+            enabled=False,
             decision_hz=1.0,
             timeout_s=4.0,
         ))
@@ -106,6 +117,8 @@ class Controller:
             from .model_classifier import TrainedClassifier
             self._trained = TrainedClassifier(model_path, labels_path)
 
+        self.TEXT_COLOR = (0, 255, 0)  # Green text for better visibility
+
     def _sdk_init(self) -> bool:
         ok, resp = self.tello.send_cmd("command", timeout_ms=6000)
         if not ok or resp.lower() != "ok":
@@ -120,6 +133,12 @@ class Controller:
             return "ground"
         return f"rc lr={rc.lr} fb={rc.fb} ud={rc.ud} yaw={rc.yaw}"
 
+    # def _cycle_mode(self):
+    #     cur = self.modes.mode
+    #     idx = MODES.index(cur)
+    #     self.modes.set_mode(MODES[(idx + 1) % len(MODES)])
+    #     print(f"Switched mode: {self.modes.mode.upper()}")
+
     def run(self) -> int:
         if not self._sdk_init():
             return 1
@@ -133,6 +152,18 @@ class Controller:
         last_rc_send = time.time()
         gesture_name = "NOHAND"
 
+        # flag to indicate if face recognition is enabled (used multiple times in the loop)
+        recognition_enabled = self.cfg.recognize_faces and self.recognizer is not None
+        auth_bbox = None
+        # init frame dimensions for face follower (will be captured from first frame)
+        ok, frame, _, _ = self.latest.get(copy=True)
+        if ok and frame is not None:
+            self.face.img_shape = frame.shape[:2]
+        else:
+            print("Error reading first frame, using default size for face follower.")
+            self.face.img_shape = [720, 960] # H, W
+        
+        ## MAIN LOOP ##
         try:
             while True:
                 ok, frame, _, _ = self.latest.get(copy=True)
@@ -156,11 +187,18 @@ class Controller:
 
                     # --- Face observe (throttled) ---
                     self._face_frame_i += 1
-                    if self._face_frame_i % self._face_every_n == 0:
-                        self.face.observe(frame)
-
-                    raw_face = self.face.face_detected()
+                    # if recognition enabled, run recognizer every N frames to keep it from being a bottleneck. If not enabled, run regular face follower detect.
+                    if recognition_enabled:
+                        if self._face_frame_i % self._face_every_n == 0:
+                            auth_bbox = self.recognizer.recognize(frame)
+                        raw_face = self.recognizer.face_detected()
+                    else:
+                        if self._face_frame_i % self._face_every_n == 0:
+                            self.face.observe(frame)
+                        raw_face = self.face.face_detected()
+                        
                     self._face_streak = min(self._face_streak + 1, 10) if raw_face else 0
+                    # face is considered detected if it has been observed for N consecutive checks (helps with jitter on low FPS streams)
                     face_detected = self._face_streak >= self._face_streak_on
                     if face_detected:
                         self._last_face_ts = now
@@ -182,8 +220,9 @@ class Controller:
                             self.rule.reset()
                         except Exception:
                             pass
-
+                    # current detection state for mode manager (used for deterministic mode decisions and LLM reasoning)
                     state_for_mode = {
+                        "recognition_enabled": bool (recognition_enabled),
                         "hand_detected": bool(hand_detected),
                         "face_detected": bool(face_detected),
                         "time_since_hand_s": float(time_since_hand),
@@ -194,10 +233,32 @@ class Controller:
                         "flying": bool(self.flying),
                     }
 
+                    # for debugging:
+                    # print(f"State: Hand detected: {hand_detected}, Face detected: {face_detected}, \n")
+                    # print(f"Time since hand: {time_since_hand:.1f}s, Time since face: {time_since_face:.1f}s")
+                    
                     mode, det_reason = self.mode_mgr.tick(state_for_mode)
 
                     # --- Execute deterministic mode ---
+                    # MODE 1: Hand gesture control
                     if mode == "gesture":
+                        # Case 1: Face recognition enabled -> use auth_bbox to select which hand to follow (if multiple detected)
+                        if recognition_enabled and auth_bbox is not None:
+                            det = self.hand.detect_auth(frame, auth_bbox)
+                            # Just extract the single hand array from the list
+                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
+                                det.landmarks = det.landmarks[0]
+
+                        # Case 2: No face recognition -> just use the most recently detected hand (if any)
+                        else:
+                            # get all detected hands as a list of HandDetection objects
+                            # det = self.hand.detect(frame)
+                            # det is a list of HandDetection objects
+                            # But we only keep the first hand landmarks to avoid breaking the gesture classifier which expects one hand
+                            # this was previously done inside the classifier, but doing it here allows us to still get multiple hand detections for the recognition case
+                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
+                                det.landmarks = det.landmarks[0]
+
                         if hand_detected and det is not None and det.landmarks is not None:
                             if self._trained is not None:
                                 gr = self._trained.predict(det.landmarks)
@@ -226,20 +287,31 @@ class Controller:
                             self._gesture_stable_count = 0
                             rc = RC(active=True) if self.flying else RC(active=False)
 
+                    # MODE 2: Face following
                     elif mode == "face":
-                        cmd, frame = self.face.update(frame)
+                        # Case 1: Face recognition enabled -> use auth_bbox of the authorized face for control
+                        if recognition_enabled:
+                            cmd, frame = self.face.update_from_bbox_dbg(auth_bbox, frame)
+                            # print('cmd: left/right: ', cmd.lr, ' forward/back: ', cmd.fb, ' up/down: ', cmd.ud, ' yaw: ', cmd.yaw)
+                        # Case 2: No face recognition -> just use the largest detected face
+                        else:
+                            cmd, frame = self.face.update(frame)
+                        # update RC command only if we're currently flying, otherwise keep it inactive to prevent drift when we take off
                         rc = cmd if self.flying else RC(active=False)
                         gesture_name = "FACE"
 
+                    # MODE 3: 360 Search
                     elif mode == "search_360":
                         # fast spin command during the 5s search window
                         rc = RC(lr=0, fb=0, ud=0, yaw=self._search_yaw_cmd, active=True) if self.flying else RC(active=False)
                         gesture_name = "SEARCH"
 
+                    # MODE 4: Hover (no control input, just maintain hover)
                     elif mode == "hover":
                         rc = RC(active=True) if self.flying else RC(active=False)
                         gesture_name = "HOVER"
 
+                    # MODE 5: Land (immediate land command, overrides any control input)
                     elif mode == "land":
                         if self.flying:
                             self.tello.send_cmd("land", timeout_ms=8000)
@@ -247,6 +319,7 @@ class Controller:
                         rc = RC(active=False)
                         gesture_name = "LAND"
 
+                    # MODE 6: Other (default fallback)
                     else:
                         rc = RC(active=True) if self.flying else RC(active=False)
                         gesture_name = "OTHER"
@@ -296,12 +369,12 @@ class Controller:
 
                     # --- Overlay ---
                     cv2.putText(frame, f"MODE={mode.upper()} fly={'Y' if self.flying else 'N'}",
-                                (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                                (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, self.TEXT_COLOR, 2)
                     cv2.putText(frame, f"hand={int(hand_detected)} face={int(face_detected)} g={gesture_name}",
-                                (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+                                (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.TEXT_COLOR, 2)
                     if llm_reason:
                         cv2.putText(frame, f"LLM: {llm_reason[:70]}",
-                                    (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+                                    (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, self.TEXT_COLOR, 2)
 
                     frame_small = cv2.resize(frame, (640, 480))
                     cv2.imshow("TELLO", frame_small)

@@ -1,3 +1,4 @@
+import time
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
@@ -59,7 +60,9 @@ class FaceRecognizer:
         self.initialized_auth_face = False
         self.auth_face_idx = -1  # Initialize to -1 to indicate no authorized face detected
         self.bboxes = []
-        
+        # Lost-face behavior
+        self.lost_timeout_s: float = 0.7
+        self._last_face_time = 0.0
         # Visualization parameters
         self.FONT_SIZE = 1
         self.FONT_THICKNESS = 1
@@ -123,7 +126,9 @@ class FaceRecognizer:
                     if is_same:
                         self.auth_face_idx = idx
                         self.auth_face_bbox = bbox
-                        return self.auth_face_bbox  # Only return if match found
+                        # update last seen time if authorized face is detected
+                        self._last_face_time = time.time()
+                        return self.auth_face_bbox  # return if first match found
                 
                 # No match found among detected faces
                 self.auth_face_idx = -1  # Reset to -1 since no authorized face detected
@@ -219,3 +224,11 @@ class FaceRecognizer:
         embedding = self.rec_model.get_feat(aligned_face).flatten()
         
         return embedding
+    
+    def face_detected(self) -> bool:
+        return (time.time() - self._last_face_time) <= self.lost_timeout_s
+    
+    def time_since_face_s(self) -> float:
+        if self._last_face_time <= 0:
+            return 1e9
+        return max(0.0, time.time() - self._last_face_time)

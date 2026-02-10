@@ -6,6 +6,8 @@ import threading
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple
 
+from scipy.datasets import face
+
 MODES = ("keyboard", "gesture", "face", "search_360", "hover", "land")
 
 
@@ -67,8 +69,15 @@ class DeterministicModeManager:
         now = time.time()
 
         # Read signals
+        recognition_enabled = bool(state.get("recognition_enabled", True))
+        # if recognition_enabled, face is True if authorized face detected and False if no face or only unauthorized faces detected
         hand = bool(state.get("hand_detected", False))
         face = bool(state.get("face_detected", False))
+
+        # This variable will be used for selecting gesture over face mode (priority)
+        hand_is_authorized = hand and (not recognition_enabled or face)
+        # If recognition is enabled, we only consider the hand "authorized" if an authorized face is detected (face = True)
+        # Else, if recognition is disabled, select gesture regardless of face detected or not (hand = True)
 
         t_hand = float(state.get("time_since_hand_s", 999.0))
         t_face = float(state.get("time_since_face_s", 999.0))
@@ -116,11 +125,13 @@ class DeterministicModeManager:
             # else: allow switching
 
 
-        # Priority: gesture > face
-        if hand:
-            self._set_mode("gesture", "Perception: hand_detected -> gesture (priority)")
+        # 2. Priority: gesture > face
+        if hand_is_authorized:
+            reason = "Perception: hand_detected" + (" (authorized)" if recognition_enabled else "")
+            self._set_mode("gesture", reason)
             return self.mode, self.reason
 
+        # 3. Fallback: If no authorized hand, check for just a face
         if face:
             self._set_mode("face", "Perception: face_detected -> face")
             return self.mode, self.reason
@@ -141,7 +152,7 @@ class DeterministicModeManager:
 
 @dataclass
 class LLMReasonConfig:
-    enabled: bool = True
+    enabled: bool = False
     model: str = "qwen2.5:0.5b-instruct"
     url: str = "http://127.0.0.1:11434/api/chat"
     decision_hz: float = 1.0  # one reason per second max

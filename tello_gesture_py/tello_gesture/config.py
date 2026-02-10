@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class ControllerConfig:
     # mode
 
-    mode: str = "keyboard"         # "gesture", "face", or "keyboard"
+    # mode: str = "face"         # "gesture", "face", or "keyboard"
     recognize_faces: bool = True  # if True, use face_recognition to identify known faces in follow mode
 
     # timing
