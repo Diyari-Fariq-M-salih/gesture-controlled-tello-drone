@@ -14,11 +14,11 @@ def _clamp(v, lo, hi):
 class FaceFollowConfig:
     target_area_frac: float = 0.075
 
-    kp_yaw: float = 0.05
+    kp_yaw: float = 0.2
     kp_ud: float = 0.12
     kp_fb: float = 0.30
 
-    max_yaw: int = 2
+    max_yaw: int = 20
     max_ud: int = 40
     max_fb: int = 40
 
@@ -28,9 +28,9 @@ class FaceFollowConfig:
     lost_timeout_s: float = 0.7
 
     # Cheaper detection -> smoother stream
-    detect_w: int = 256
-    detect_h: int = 192
-    detect_every_n: int = 5
+    detect_w: int = 960
+    detect_h: int = 720
+    detect_every_n: int = 3
     control_hz: float = 15.0
 
     area_ema_alpha: float = 0.25

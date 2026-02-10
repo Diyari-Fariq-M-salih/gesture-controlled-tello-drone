@@ -53,16 +53,16 @@ class Controller:
         # Deterministic mode manager
         self.mode_mgr = DeterministicModeManager(DeterministicConfig(
             battery_land_pct=15,
-            nohuman_search_s=10.0,
-            search_duration_s=5.0,
+            nohuman_search_s=5.0,
+            search_duration_s=12.0,
             search_cooldown_s=10.0,
-            mode_hold_s=1.2,
+            mode_hold_s=2,
             hand_release_s=0.8,
             face_release_s=0.8,
         ))
 
         # Faster spin
-        self._search_yaw_cmd = 80
+        self._search_yaw_cmd = 30
 
         # LLM reasoner (reason-only)
         self.reasoner = LLMReasoner(LLMReasonConfig(
