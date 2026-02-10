@@ -5,7 +5,6 @@ Webcam-only test harness that mirrors the drone logic:
 - Face-follow ONLY when Face-ID matches enrolled template
 - Gestures ONLY when authorized face is present
 - Search_360 triggers after no authorized face/hand for N seconds, exits immediately when reacquired
-- Shows the "command" string + mode + LLM is NOT used here (optional)
 
 Keys:
   p : start/stop FaceID enrollment (collects N crops)
@@ -14,9 +13,16 @@ Keys:
   l : set flying False (simulates land)
   q : quit
 
-Requires:
-  - your updated modules in tello_gesture/: face_follow.py, face_id.py, mode_manager.py, hand_gesture.py, gesture_logic.py, rc_command.py
-  - an ONNX embedding model at: models/arcface.onnx (or edit MODEL_PATH below)
+Requires your project modules:
+  tello_gesture/face_follow.py
+  tello_gesture/face_id.py
+  tello_gesture/mode_manager.py
+  tello_gesture/hand_gesture.py
+  tello_gesture/gesture_logic.py
+  tello_gesture/rc_command.py
+
+And an ONNX face-embedding model at:
+  models/arcface.onnx   (or edit MODEL_PATH below)
 """
 
 import time
@@ -52,7 +58,21 @@ def rc_to_command_str(rc: RC, flying: bool) -> str:
     return f"rc lr={rc.lr} fb={rc.fb} ud={rc.ud} yaw={rc.yaw}"
 
 
-def main():
+def _face_authorized(face_id: FaceID, crop_bgr) -> bool:
+    """
+    Compatibility helper:
+    - If FaceID has is_authorized(), use it.
+    - Else use match_score() + threshold.
+    """
+    if crop_bgr is None:
+        return False
+    if hasattr(face_id, "is_authorized"):
+        return bool(face_id.is_authorized(crop_bgr))
+    score = float(face_id.match_score(crop_bgr))
+    return bool(face_id.enrolled and score >= float(face_id.cfg.cosine_thr))
+
+
+def main() -> int:
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         print("Failed to open webcam.")
@@ -61,12 +81,14 @@ def main():
     cv2.namedWindow("WEBCAM_DEMO", cv2.WINDOW_NORMAL)
 
     face = FaceFollower()
-    face.cfg.lost_timeout_s = 2.0  # keep face "fresh" a bit longer on low fps
+    face.cfg.lost_timeout_s = 2.0  # keep face "fresh" longer on low fps
 
     face_id = FaceID(FaceIDConfig(
         model_path=MODEL_PATH,
         cosine_thr=COS_THR,
         enroll_samples=ENROLL_SAMPLES,
+        # If your model expects BGR, set rgb=False in your face_id.py config.
+        # rgb=True,
     ))
 
     hand = HandGesture(max_num_hands=1)
@@ -92,7 +114,6 @@ def main():
     # Throttling
     hand_frame_i = 0
     last_hand_det = None
-
     face_frame_i = 0
 
     # Streak gating
@@ -140,9 +161,7 @@ def main():
         if face_id.enrolling and face_crop is not None:
             face_id.add_sample(face_crop)
 
-        authorized_face = False
-        if face_crop is not None:
-            authorized_face = bool(face_id.is_authorized(face_crop))
+        authorized_face = _face_authorized(face_id, face_crop)
 
         # Streak gating on AUTH face only
         face_streak = min(face_streak + 1, 10) if authorized_face else 0
@@ -236,7 +255,6 @@ def main():
 
         command_str = rc_to_command_str(rc, flying)
 
-        # ---- Overlay ----
         # -------- HUD overlay (compact & organized) --------
         x = 10
         y = 18
@@ -251,17 +269,15 @@ def main():
             cv2.putText(frame, line, (x, y), font, fs, col, th, cv2.LINE_AA)
             y += dy
 
-        hud(f"MODE: {mode.upper()}   FLY: {'Y' if flying else 'N'}")
+        hud(f"MODE: {mode.upper():<10}  FLY: {'Y' if flying else 'N'}")
+        hud(f"FACE: raw={int(raw_face)} auth={int(face_detected)}   HAND: raw={int(hand_detected_raw)} auth={int(hand_detected)}")
 
-        hud(f"FACE: raw={int(raw_face)} auth={int(face_detected)}"
-            f"   HAND: raw={int(hand_detected_raw)} auth={int(hand_detected)}")
+        n, N = face_id.enroll_progress() if hasattr(face_id, "enroll_progress") else (0, ENROLL_SAMPLES)
+        hud(f"FACE-ID: enrolled={'Y' if face_id.enrolled else 'N'}  enrolling={'Y' if face_id.enrolling else 'N'}  ({n}/{N})"
+            f"  score={face_id.last_score:.3f}  thr={face_id.cfg.cosine_thr:.2f}")
 
-        hud(f"FACE-ID: enrolled={'Y' if face_id.enrolled else 'N'} "
-            f"enrolling={'Y' if face_id.enrolling else 'N'} "
-            f"score={face_id.last_score:.3f} thr={face_id.cfg.cosine_thr:.2f}")
-
+        hud(f"GESTURE: {gesture_name}")
         hud(f"CMD: {command_str}")
-
         hud("KEYS: t=fly  l=land  p=enroll  o=clear  q=quit")
 
         cv2.imshow("WEBCAM_DEMO", frame)
