@@ -49,22 +49,25 @@ class Controller:
         # typical values:
         # - during day/afternoon: det_thresh=0.75, simil_thresh=0.6
         # - at night: det_thresh=0.6, simil_thresh=0.45
-        self.recognizer = FaceRecognizer(det_thresh=0.65, simil_thresh=0.55) if cfg.recognize_faces else None
+        self.recognizer = FaceRecognizer(det_thresh=0.5, simil_thresh=0.6) if cfg.recognize_faces else None
     
+        self._search_yaw_cmd = 30
+        hold_d = 360.0 / self._search_yaw_cmd
+        N_search_turns = 1
+        search_duration_s = N_search_turns * hold_d
         # Deterministic mode manager
         self.mode_mgr = DeterministicModeManager(DeterministicConfig(
             battery_land_pct=15,
-            nohuman_search_s=10.0,
-            search_duration_s=5.0,     # quick spin window
+            nohuman_search_s=5.0,
+            search_duration_s=search_duration_s,     # quick spin window
             search_cooldown_s=10.0,    # prevent back-to-back spins
-            mode_hold_s=1.2,
+            mode_hold_s=hold_d,
             hand_release_s=0.8,
             face_release_s=0.8,
         ))
 
         # Faster spin: raise yaw rate for ~5s "full-ish" sweep
         # Tello yaw command range is [-100..100]. 80 is aggressive but still within limits.
-        self._search_yaw_cmd = 80
 
         # LLM reasoner (reason-only)
         self.reasoner = LLMReasoner(LLMReasonConfig(
@@ -159,6 +162,7 @@ class Controller:
         ok, frame, _, _ = self.latest.get(copy=True)
         if ok and frame is not None:
             self.face.img_shape = frame.shape[:2]
+            print('Image size:', self.face.img_shape)
         else:
             print("Error reading first frame, using default size for face follower.")
             self.face.img_shape = [720, 960] # H, W
@@ -242,28 +246,28 @@ class Controller:
                     # --- Execute deterministic mode ---
                     # MODE 1: Hand gesture control
                     if mode == "gesture":
-                        # Case 1: Face recognition enabled -> use auth_bbox to select which hand to follow (if multiple detected)
-                        if recognition_enabled and auth_bbox is not None:
-                            det = self.hand.detect_auth(frame, auth_bbox)
-                            # Just extract the single hand array from the list
-                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
-                                det.landmarks = det.landmarks[0]
-
-                        # Case 2: No face recognition -> just use the most recently detected hand (if any)
+                        # Determine which detection to use based on recognition settings
+                        gesture_det = None
+                        
+                        if recognition_enabled:
+                            if auth_bbox is not None:
+                                # Face recognition enabled + authorized face detected -> detect hand near authorized face
+                                gesture_det = self.hand.detect_auth(frame, auth_bbox)
+                                if gesture_det and gesture_det.has_hand and gesture_det.landmarks is not None and len(gesture_det.landmarks) > 0:
+                                    gesture_det.landmarks = gesture_det.landmarks[0]
+                            # else: no authorized face -> no gesture detection (gesture_det stays None)
                         else:
-                            # get all detected hands as a list of HandDetection objects
-                            # det = self.hand.detect(frame)
-                            # det is a list of HandDetection objects
-                            # But we only keep the first hand landmarks to avoid breaking the gesture classifier which expects one hand
-                            # this was previously done inside the classifier, but doing it here allows us to still get multiple hand detections for the recognition case
-                            if det.has_hand and det.landmarks is not None and len(det.landmarks) > 0:
-                                det.landmarks = det.landmarks[0]
+                            # No face recognition -> use throttled hand detection
+                            gesture_det = det
+                            if gesture_det and gesture_det.has_hand and gesture_det.landmarks is not None and len(gesture_det.landmarks) > 0:
+                                gesture_det.landmarks = gesture_det.landmarks[0]
 
-                        if hand_detected and det is not None and det.landmarks is not None:
+                        if hand_detected and gesture_det is not None and gesture_det.landmarks is not None:
+                            # print('face and hand detected - proc gesture')
                             if self._trained is not None:
-                                gr = self._trained.predict(det.landmarks)
+                                gr = self._trained.predict(gesture_det.landmarks)
                             else:
-                                gr = self.rule.predict(det.landmarks)
+                                gr = self.rule.predict(gesture_det.landmarks)
 
                             # Track stability of the predicted gesture label
                             if gr.name == self._gesture_stable_name:
@@ -372,11 +376,12 @@ class Controller:
                                 (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, self.TEXT_COLOR, 2)
                     cv2.putText(frame, f"hand={int(hand_detected)} face={int(face_detected)} g={gesture_name}",
                                 (10, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.TEXT_COLOR, 2)
-                    if llm_reason:
-                        cv2.putText(frame, f"LLM: {llm_reason[:70]}",
-                                    (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, self.TEXT_COLOR, 2)
-
+                    # if llm_reason:
+                        # cv2.putText(frame, f"LLM: {llm_reason[:70]}",
+                                    # (10, 85), cv2.FONT_HERSHEY_SIMPLEX, 0.55, self.TEXT_COLOR, 2)
+                    cv2.putText(frame, f"bat={bat}", (10, 115), cv2.FONT_HERSHEY_SIMPLEX, 0.6, self.TEXT_COLOR, 2)
                     frame_small = cv2.resize(frame, (640, 480))
+                    # frame_small = frame
                     cv2.imshow("TELLO", frame_small)
 
                 else:

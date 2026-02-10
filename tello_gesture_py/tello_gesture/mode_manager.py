@@ -94,11 +94,21 @@ class DeterministicModeManager:
 
         # Search_360 timing / exit condition
         if self.mode == "search_360":
+            # Check if we found ANY authorized target to stop the search
+            # (Using the authorization logic we discussed: hand+face if enabled, else either)
+            target_found = (hand and (not recognition_enabled or face)) or face
+
+            if target_found:
+                # Determine which mode to jump into
+                new_mode = "gesture" if hand else "face"
+                self._set_mode(new_mode, f"Autonomy: Target found during search -> {new_mode}")
+                return self.mode, self.reason
+
+            # If time is up and still nothing found
             if (now - self._search_enter_ts) >= float(self.cfg.search_duration_s):
-                # stop spinning after 5s
                 self._set_mode("hover", f"Autonomy: search done ({self.cfg.search_duration_s:.0f}s) -> hover")
-                # prevent immediate re-entry
                 self._next_search_allowed_ts = now + float(self.cfg.search_cooldown_s)
+            
             return self.mode, self.reason
 
         time_in_mode = now - self._mode_enter_ts
