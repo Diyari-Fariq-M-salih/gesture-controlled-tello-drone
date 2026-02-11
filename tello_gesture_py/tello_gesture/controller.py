@@ -71,16 +71,17 @@ def draw_hud(
     """Centralized overlay/HUD drawing (clean, non-overlapping, readable)."""
     x = 10
     y = 24
-    line_h = 24
+    line_h = 28
 
-    # Line 1: status
+    # Line 1: status (same style as the rest)
     _put_text_box(
         frame,
         f"MODE={mode.upper()}  fly={'Y' if flying else 'N'}",
         (x, y),
-        scale=0.65,
-        thickness=2,
-        alpha=0.55,
+        scale=0.55,      # same as line 2
+        thickness=1,     # same as line 2
+        alpha=0.55,      # same as line 2
+        pad=4,           # same as default
     )
     y += line_h
 

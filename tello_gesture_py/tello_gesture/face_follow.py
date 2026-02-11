@@ -267,13 +267,37 @@ class FaceFollower:
                 cv2.circle(frame_bgr, (cx, cy), 4, (0, 255, 0), -1, lineType=cv2.LINE_AA)
 
         area = self._last_area_frac if self._last_area_frac is not None else 0.0
+        text = f"FaceFollow area:{area:.3f} target:{cfg.target_area_frac:.3f}"
+        x, y = 10, 170
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        scale = 0.55
+        thickness = 1
+        pad = 4
+        alpha = 0.55
+
+        (tw, th), baseline = cv2.getTextSize(text, font, scale, thickness)
+
+        # background box
+        overlay = frame_bgr.copy()
+        cv2.rectangle(
+            overlay,
+            (x - pad, y - th - pad),
+            (x + tw + pad, y + baseline + pad),
+            (0, 0, 0),
+            -1,
+        )
+        cv2.addWeighted(overlay, alpha, frame_bgr, 1 - alpha, 0, frame_bgr)
+
+        # text
         cv2.putText(
             frame_bgr,
-            f"FaceFollow area:{area:.3f} target:{cfg.target_area_frac:.3f}",
-            (10, 145),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.65,
+            text,
+            (x, y),
+            font,
+            scale,
             (255, 255, 255),
-            2,
+            thickness,
             lineType=cv2.LINE_AA,
         )
+
+
