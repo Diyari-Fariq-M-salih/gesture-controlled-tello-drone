@@ -40,7 +40,10 @@ def main():
     ap.add_argument("--labels", required=True)
     ap.add_argument("--out", default="model.joblib")
 
-    # NEW:
+    # NEW: cap samples per class
+    ap.add_argument("--max_per_class", type=int, default=0,
+                    help="Cap samples per class (0 = no cap)")
+
     ap.add_argument("--metrics_out", default="training_metrics.json")
     ap.add_argument("--cm_png_out", default="confusion_matrix.png")
 
@@ -50,16 +53,43 @@ def main():
         labels = {int(k): v for k, v in json.load(f).items()}
 
     df = pd.read_csv(args.dataset)
+
+    # -----------------------------
+    # Cap samples per class (balanced)
+    # -----------------------------
+    if args.max_per_class and args.max_per_class > 0:
+        rng = 42
+        df = (
+            df.groupby("label", group_keys=False)
+              .apply(lambda g: g.sample(n=min(len(g), args.max_per_class),
+                                        random_state=rng))
+              .sample(frac=1.0, random_state=rng)  # shuffle
+              .reset_index(drop=True)
+        )
+        print(f"Capped dataset to max {args.max_per_class} samples per class")
+        print("New dataset size:", len(df))
+
+    # -----------------------------
+    # Prepare X / y
+    # -----------------------------
     y = df["label"].astype(int).values
     X = df.drop(columns=["label"]).values.astype(np.float32)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.25, random_state=42, stratify=y
+        X, y,
+        test_size=0.25,
+        random_state=42,
+        stratify=y
     )
 
     clf = Pipeline([
         ("scaler", StandardScaler()),
-        ("svc", SVC(kernel="rbf", probability=True, C=10.0, gamma="scale"))
+        ("svc", SVC(
+            kernel="rbf",
+            probability=True,
+            C=10.0,
+            gamma="scale"
+        ))
     ])
 
     clf.fit(X_train, y_train)
@@ -88,8 +118,13 @@ def main():
         "labels": labels,
         "dataset": args.dataset,
         "model_out": args.out,
+        "max_per_class": args.max_per_class,
     }
-    Path(args.metrics_out).write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+
+    Path(args.metrics_out).write_text(
+        json.dumps(metrics, indent=2),
+        encoding="utf-8"
+    )
 
     print("Saved metrics:", args.metrics_out)
     print("Saved confusion matrix image:", args.cm_png_out)
