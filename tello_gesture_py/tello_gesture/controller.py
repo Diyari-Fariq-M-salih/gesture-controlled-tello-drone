@@ -78,10 +78,10 @@ def draw_hud(
         frame,
         f"MODE={mode.upper()}  fly={'Y' if flying else 'N'}",
         (x, y),
-        scale=0.55,      # same as line 2
-        thickness=1,     # same as line 2
-        alpha=0.55,      # same as line 2
-        pad=4,           # same as default
+        scale=0.55,
+        thickness=1,
+        alpha=0.55,
+        pad=4,
     )
     y += line_h
 
@@ -226,6 +226,9 @@ class Controller:
 
         self._warned_deadband = False
 
+        # Window sizing (avoid frame-before-assignment crash)
+        self._window_sized = False
+
         self._trained = None
         if model_path and labels_path:
             from .model_classifier import TrainedClassifier
@@ -267,7 +270,9 @@ class Controller:
         self.state.start()
         if not self.video.start():
             print("Video stream not opened. Check firewall UDP 11111.")
-        cv2.namedWindow("TELLO", cv2.WINDOW_NORMAL)
+
+        # WINDOW_NORMAL so resizeWindow works; do NOT touch frame until we have one.
+        cv2.namedWindow("TELLO", cv2.WINDOW_AUTOSIZE)
 
         rc = RC(active=False)
         last_rc_send = time.time()
@@ -279,6 +284,12 @@ class Controller:
                 now = time.time()
 
                 if ok and frame is not None:
+                    # Size the window exactly once, after the first real frame
+                    if not self._window_sized:
+                        h, w = frame.shape[:2]
+                        # cv2.resizeWindow("TELLO", w, h)
+                        self._window_sized = True
+
                     # --- Hand detect (throttled) ---
                     self._hand_frame_i += 1
                     if self._hand_frame_i % self._hand_every_n == 0:
@@ -473,11 +484,19 @@ class Controller:
                     cv2.imshow("TELLO", frame)
 
                 else:
-                    # Match your actual stream size if you know it; otherwise keep 240x320
+                    # Waiting screen (avoid using `frame` here)
                     h, w = 240, 320
                     blank = 255 * (cv2.UMat(h, w, cv2.CV_8UC3).get())
-                    cv2.putText(blank, "Waiting for video...", (10, 40),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2, cv2.LINE_AA)
+                    cv2.putText(
+                        blank,
+                        "Waiting for video...",
+                        (10, 40),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.7,
+                        (0, 0, 0),
+                        2,
+                        cv2.LINE_AA,
+                    )
                     cv2.imshow("TELLO", blank)
 
                 # --- Keyboard ---
@@ -507,8 +526,10 @@ class Controller:
                 if self.flying and (not self._warned_deadband):
                     try:
                         if int(self.cfg.rc_deadband) >= int(self.cfg.rc_speed):
-                            print(f"[WARN] rc_deadband ({self.cfg.rc_deadband}) >= rc_speed ({self.cfg.rc_speed}). "
-                                  "Gesture/face RC may be clamped to 0. Lower deadband or raise speed.")
+                            print(
+                                f"[WARN] rc_deadband ({self.cfg.rc_deadband}) >= rc_speed ({self.cfg.rc_speed}). "
+                                "Gesture/face RC may be clamped to 0. Lower deadband or raise speed."
+                            )
                         self._warned_deadband = True
                     except Exception:
                         self._warned_deadband = True
