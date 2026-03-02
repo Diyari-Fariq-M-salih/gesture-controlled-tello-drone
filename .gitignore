@@ -1,5 +1,6 @@
 *.pyc
 *.jpg
-tello_gesture_py/models/arcface.onnx
 __pycache__/
 *.pyc
+# Ignore the large model file
+models/third_party/arcface.onnx
