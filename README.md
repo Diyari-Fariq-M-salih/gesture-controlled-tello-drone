@@ -1,5 +1,7 @@
 # Tello Gesture Control System (Python)
 
+### Special thanks to **Université Paris-Saclay** and our supervisor, **Mme. Naima Aitoufroukh-Mammar**, Head of the M2 SAAS (Smart Aerospace and Autonomous Systems) department, for her guidance and support.
+
 ---
 
 ## 🎥 Demo
