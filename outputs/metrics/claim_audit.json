@@ -1511,8 +1511,7 @@
         "green": 121,
         "red": 133,
         "blue_minus_red": -27
-      },
-      "_from": "outputs/metrics/capture_conditions.json"
+      }
     },
     "d_runtime": {
       "run": "20260920-013558_drone_n1-scenarios-6-7",

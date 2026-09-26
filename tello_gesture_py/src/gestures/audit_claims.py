@@ -209,7 +209,7 @@ def d_capture_conditions():
             f.write("\n")
     elif os.path.exists(rec):
         with open(rec, encoding="utf-8") as f:
-            out = dict(json.load(f), _from=rec)
+            out = json.load(f)
     return out or None
 
 
