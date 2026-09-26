@@ -1,0 +1,4 @@
+accuracy: 0.9485714285714286
+dataset: dataset_features.csv
+model_out: model.joblib
+max_per_class: 100

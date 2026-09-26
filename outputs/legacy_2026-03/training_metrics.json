@@ -1,0 +1,137 @@
+{
+  "accuracy": 0.9970544918998527,
+  "report": {
+    "0": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "1": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "2": {
+      "precision": 1.0,
+      "recall": 0.9791666666666666,
+      "f1-score": 0.9894736842105263,
+      "support": 96.0
+    },
+    "3": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 100.0
+    },
+    "4": {
+      "precision": 0.98,
+      "recall": 1.0,
+      "f1-score": 0.98989898989899,
+      "support": 98.0
+    },
+    "5": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 90.0
+    },
+    "6": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 95.0
+    },
+    "accuracy": 0.9970544918998527,
+    "macro avg": {
+      "precision": 0.9971428571428572,
+      "recall": 0.9970238095238094,
+      "f1-score": 0.9970532391585023,
+      "support": 679.0
+    },
+    "weighted avg": {
+      "precision": 0.9971134020618556,
+      "recall": 0.9970544918998527,
+      "f1-score": 0.9970538655291774,
+      "support": 679.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      100,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      100,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      94,
+      0,
+      2,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      100,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      98,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      90,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      95
+    ]
+  ],
+  "labels": {
+    "0": "CENTER",
+    "1": "LEFT",
+    "2": "RIGHT",
+    "3": "UP",
+    "4": "DOWN",
+    "5": "FORWARD",
+    "6": "BACK"
+  },
+  "dataset": "data/processed/dataset_features.csv",
+  "model_out": "models/experiments/model.joblib",
+  "max_per_class": 0
+}

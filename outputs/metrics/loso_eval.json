@@ -1,0 +1,817 @@
+{
+  "loso": {
+    "A": {
+      "train_sessions": [
+        "B",
+        "C",
+        "D"
+      ],
+      "train_n": 7742,
+      "test_n": 2715,
+      "accuracy": 0.7930018416206261,
+      "macro_f1": 0.7799723292831555,
+      "confusion_matrix": [
+        [
+          399,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          394,
+          6,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          20,
+          288,
+          0,
+          6,
+          67,
+          2
+        ],
+        [
+          234,
+          1,
+          6,
+          158,
+          0,
+          0,
+          0
+        ],
+        [
+          3,
+          14,
+          7,
+          0,
+          364,
+          2,
+          3
+        ],
+        [
+          3,
+          0,
+          2,
+          0,
+          15,
+          340,
+          0
+        ],
+        [
+          0,
+          2,
+          28,
+          0,
+          111,
+          28,
+          210
+        ]
+      ],
+      "per_class_f1": [
+        0.7673076923076924,
+        0.9471153846153846,
+        0.7988904299583911,
+        0.5673249551166966,
+        0.8188976377952756,
+        0.8531994981179423,
+        0.7070707070707071
+      ]
+    },
+    "B": {
+      "train_sessions": [
+        "A",
+        "C",
+        "D"
+      ],
+      "train_n": 8112,
+      "test_n": 2345,
+      "accuracy": 0.8823027718550107,
+      "macro_f1": 0.8400929446061395,
+      "confusion_matrix": [
+        [
+          389,
+          0,
+          0,
+          3,
+          0,
+          5,
+          1
+        ],
+        [
+          0,
+          399,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          344,
+          0,
+          0,
+          2,
+          7
+        ],
+        [
+          1,
+          0,
+          0,
+          268,
+          0,
+          8,
+          3
+        ],
+        [
+          4,
+          0,
+          18,
+          0,
+          52,
+          8,
+          180
+        ],
+        [
+          1,
+          2,
+          3,
+          0,
+          1,
+          328,
+          9
+        ],
+        [
+          0,
+          0,
+          13,
+          0,
+          0,
+          4,
+          289
+        ]
+      ],
+      "per_class_f1": [
+        0.9810844892812106,
+        0.9937733499377335,
+        0.9373297002724795,
+        0.9727767695099818,
+        0.33015873015873015,
+        0.9384835479256081,
+        0.7270440251572327
+      ]
+    },
+    "C": {
+      "train_sessions": [
+        "A",
+        "B",
+        "D"
+      ],
+      "train_n": 7844,
+      "test_n": 2613,
+      "accuracy": 0.9781859931113662,
+      "macro_f1": 0.9761507720234491,
+      "confusion_matrix": [
+        [
+          400,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          400,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          400,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          400,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          400,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          260,
+          16
+        ],
+        [
+          0,
+          0,
+          40,
+          0,
+          0,
+          0,
+          296
+        ]
+      ],
+      "per_class_f1": [
+        1.0,
+        0.9987515605493134,
+        0.9523809523809523,
+        1.0,
+        1.0,
+        0.9683426443202979,
+        0.9135802469135802
+      ]
+    },
+    "D": {
+      "train_sessions": [
+        "A",
+        "B",
+        "C"
+      ],
+      "train_n": 7673,
+      "test_n": 2784,
+      "accuracy": 0.9881465517241379,
+      "macro_f1": 0.9879982898340645,
+      "confusion_matrix": [
+        [
+          400,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          400,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          393,
+          0,
+          0,
+          0,
+          7
+        ],
+        [
+          0,
+          0,
+          0,
+          400,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          391,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          399,
+          0
+        ],
+        [
+          0,
+          0,
+          15,
+          0,
+          11,
+          0,
+          368
+        ]
+      ],
+      "per_class_f1": [
+        1.0,
+        1.0,
+        0.9727722772277227,
+        1.0,
+        0.9861286254728878,
+        1.0,
+        0.9570871261378413
+      ]
+    }
+  },
+  "transfer": {
+    "A": {
+      "B": 0.8153518123667377,
+      "C": 0.8415614236509759,
+      "D": 0.9299568965517241
+    },
+    "B": {
+      "A": 0.7090239410681399,
+      "C": 0.9693838499808649,
+      "D": 0.9766522988505747
+    },
+    "C": {
+      "A": 0.47108655616942907,
+      "B": 0.5087420042643923,
+      "D": 0.8419540229885057
+    },
+    "D": {
+      "A": 0.6375690607734806,
+      "B": 0.7368869936034115,
+      "C": 0.965556831228473
+    }
+  },
+  "sessions": {
+    "A": "data/processed\\sessionA_features.csv",
+    "B": "data/processed\\sessionB_features.csv",
+    "C": "data/processed\\sessionC_features.csv",
+    "D": "data/processed\\sessionD_features.csv"
+  },
+  "session_meta": {
+    "A": {
+      "features": "data/processed/dataset_features.csv",
+      "images": "data/raw",
+      "captured": "2026-02-04",
+      "illumination": "daylight",
+      "background": "uniform",
+      "background_description": "laboratory, uniform blue wall",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 114,
+        "blue": 150,
+        "green": 127,
+        "red": 75,
+        "blue_minus_red": 74
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "B": {
+      "features": "data/processed/sessionB_features.csv",
+      "images": "data/raw/sessionB",
+      "captured": "2026-09-20",
+      "illumination": "artificial",
+      "background": "non-uniform",
+      "background_description": "domestic room, background close to skin tone",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 118,
+        "blue": 119,
+        "green": 118,
+        "red": 117,
+        "blue_minus_red": 2
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "C": {
+      "features": "data/processed/sessionC_features.csv",
+      "images": "data/raw/sessionC",
+      "captured": "2026-09-20",
+      "illumination": "artificial",
+      "background": "non-uniform",
+      "background_description": "domestic room, mixed background",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 116,
+        "blue": 117,
+        "green": 115,
+        "red": 118,
+        "blue_minus_red": 0
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "D": {
+      "features": "data/processed/sessionD_features.csv",
+      "images": "data/raw/sessionD",
+      "captured": "2026-09-20",
+      "illumination": "daylight",
+      "background": "non-uniform",
+      "background_description": "living room, clothes, food pantry",
+      "nominal_distance_m": 1.25,
+      "images_per_class": 400,
+      "photometry": null,
+      "provenance": "recorded at capture"
+    }
+  },
+  "loso_mean_accuracy": 0.9104,
+  "loso_ABC": {
+    "A": {
+      "train_sessions": [
+        "B",
+        "C"
+      ],
+      "train_n": 4958,
+      "test_n": 2715,
+      "accuracy": 0.7561694290976059,
+      "macro_f1": 0.7314049888951197,
+      "confusion_matrix": [
+        [
+          399,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          393,
+          7,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          1,
+          20,
+          285,
+          0,
+          11,
+          67,
+          0
+        ],
+        [
+          290,
+          0,
+          6,
+          103,
+          0,
+          0,
+          0
+        ],
+        [
+          2,
+          6,
+          18,
+          0,
+          365,
+          2,
+          0
+        ],
+        [
+          3,
+          0,
+          2,
+          0,
+          13,
+          342,
+          0
+        ],
+        [
+          0,
+          0,
+          36,
+          0,
+          151,
+          26,
+          166
+        ]
+      ],
+      "per_class_f1": [
+        0.7287671232876712,
+        0.9585365853658536,
+        0.7723577235772358,
+        0.4103585657370518,
+        0.782422293676313,
+        0.8582183186951067,
+        0.6091743119266055
+      ]
+    },
+    "B": {
+      "train_sessions": [
+        "A",
+        "C"
+      ],
+      "train_n": 5328,
+      "test_n": 2345,
+      "accuracy": 0.8776119402985074,
+      "macro_f1": 0.8309011479702206,
+      "confusion_matrix": [
+        [
+          390,
+          0,
+          0,
+          4,
+          0,
+          3,
+          1
+        ],
+        [
+          0,
+          399,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          2,
+          335,
+          0,
+          0,
+          2,
+          16
+        ],
+        [
+          0,
+          0,
+          0,
+          270,
+          0,
+          2,
+          8
+        ],
+        [
+          4,
+          0,
+          28,
+          0,
+          41,
+          5,
+          184
+        ],
+        [
+          1,
+          2,
+          4,
+          0,
+          0,
+          324,
+          13
+        ],
+        [
+          0,
+          0,
+          5,
+          0,
+          0,
+          2,
+          299
+        ]
+      ],
+      "per_class_f1": [
+        0.9836065573770492,
+        0.9937733499377335,
+        0.9203296703296703,
+        0.9747292418772563,
+        0.2706270627062706,
+        0.9501466275659824,
+        0.7230955259975816
+      ]
+    },
+    "C": {
+      "train_sessions": [
+        "A",
+        "B"
+      ],
+      "train_n": 5060,
+      "test_n": 2613,
+      "accuracy": 0.9808649062380406,
+      "macro_f1": 0.979400648075977,
+      "confusion_matrix": [
+        [
+          400,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          400,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          400,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          400,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          400,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          0,
+          266,
+          10
+        ],
+        [
+          0,
+          0,
+          39,
+          0,
+          0,
+          0,
+          297
+        ]
+      ],
+      "per_class_f1": [
+        1.0,
+        0.9987515605493134,
+        0.9535160905840286,
+        1.0,
+        1.0,
+        0.9797421731123389,
+        0.9237947122861586
+      ]
+    }
+  },
+  "loso_ABC_mean_accuracy": 0.8715,
+  "pair_summary": {
+    "groups": {
+      "nothing_varies": {
+        "n_pairs": 2,
+        "mean_accuracy": 0.7391,
+        "min": 0.5087,
+        "max": 0.9694
+      },
+      "background_varies": {
+        "n_pairs": 2,
+        "mean_accuracy": 0.7838,
+        "min": 0.6376,
+        "max": 0.93
+      },
+      "illumination_varies": {
+        "n_pairs": 4,
+        "mean_accuracy": 0.8803,
+        "min": 0.7369,
+        "max": 0.9767
+      },
+      "both_vary": {
+        "n_pairs": 4,
+        "mean_accuracy": 0.7093,
+        "min": 0.4711,
+        "max": 0.8416
+      }
+    },
+    "pairs": {
+      "A->B": {
+        "accuracy": 0.8154,
+        "group": "both_vary",
+        "illumination_varies": true,
+        "background_varies": true
+      },
+      "A->C": {
+        "accuracy": 0.8416,
+        "group": "both_vary",
+        "illumination_varies": true,
+        "background_varies": true
+      },
+      "A->D": {
+        "accuracy": 0.93,
+        "group": "background_varies",
+        "illumination_varies": false,
+        "background_varies": true
+      },
+      "B->A": {
+        "accuracy": 0.709,
+        "group": "both_vary",
+        "illumination_varies": true,
+        "background_varies": true
+      },
+      "B->C": {
+        "accuracy": 0.9694,
+        "group": "nothing_varies",
+        "illumination_varies": false,
+        "background_varies": false
+      },
+      "B->D": {
+        "accuracy": 0.9767,
+        "group": "illumination_varies",
+        "illumination_varies": true,
+        "background_varies": false
+      },
+      "C->A": {
+        "accuracy": 0.4711,
+        "group": "both_vary",
+        "illumination_varies": true,
+        "background_varies": true
+      },
+      "C->B": {
+        "accuracy": 0.5087,
+        "group": "nothing_varies",
+        "illumination_varies": false,
+        "background_varies": false
+      },
+      "C->D": {
+        "accuracy": 0.842,
+        "group": "illumination_varies",
+        "illumination_varies": true,
+        "background_varies": false
+      },
+      "D->A": {
+        "accuracy": 0.6376,
+        "group": "background_varies",
+        "illumination_varies": false,
+        "background_varies": true
+      },
+      "D->B": {
+        "accuracy": 0.7369,
+        "group": "illumination_varies",
+        "illumination_varies": true,
+        "background_varies": false
+      },
+      "D->C": {
+        "accuracy": 0.9656,
+        "group": "illumination_varies",
+        "illumination_varies": true,
+        "background_varies": false
+      }
+    },
+    "verdict": "background dominates",
+    "gap": 0.0965,
+    "background_varies_mean": 0.7838,
+    "illumination_varies_mean": 0.8803
+  }
+}

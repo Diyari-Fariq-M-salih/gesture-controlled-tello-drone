@@ -1,0 +1,17 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying
+1787925338.138883,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925338.6411114,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925339.1608405,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925339.641649,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925340.1586728,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925340.691255,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925341.17478,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925341.6969135,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925342.2296476,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925342.7640195,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925343.2412608,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925343.7751062,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925344.3077989,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925344.8080287,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925345.341645,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False
+1787925345.861594,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,False,,,False,False,0/20,-1.0,False

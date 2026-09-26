@@ -1,0 +1,20 @@
+\begin{table}[t]
+\caption{Transfer accuracy $\uparrow$, training on the row session and testing on the column. A daylight/uniform, B and C artificial/non-uniform, D daylight/non-uniform.}
+\label{tab:transfer}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+\multicolumn{2}{@{}l}{Train} & \multicolumn{4}{c}{Test} \\
+\cmidrule(l){3-6}
+ & & A & B & C & D \\
+\midrule
+A & \footnotesize day/unif. & -- & 0.815 & 0.842 & 0.930 \\
+B & \footnotesize art./clutter & 0.709 & -- & 0.969 & 0.977 \\
+C & \footnotesize art./clutter & 0.471 & 0.509 & -- & 0.842 \\
+D & \footnotesize day/clutter & 0.638 & 0.737 & 0.966 & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

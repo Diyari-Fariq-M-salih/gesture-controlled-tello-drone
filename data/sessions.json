@@ -1,0 +1,95 @@
+{
+  "_comment": [
+    "Capture conditions per gesture session. Written by auto_collect_dataset.py",
+    "for new sessions; A, B and C are backfilled from what the repository",
+    "records -- capture timestamps in the image filenames, the photometry",
+    "derived by audit_claims.d_capture_conditions, and the condition",
+    "descriptions in the manuscript. Fields that were never recorded are null",
+    "rather than estimated: nominal_distance_m in particular was not controlled",
+    "across A, B and C, which is itself a finding (Section V-C attributes the",
+    "nominal_distance_m is null for A-C because no single distance applies: the operator deliberately varied standoff across 0.5-2.0 m within each session so the dataset would span scales. That is a design choice, not an uncontrolled variable, and it decorrelates apparent hand size from class label - which is the real reason the two scale-derived classes transfer worst."
+  ],
+  "sessions": {
+    "A": {
+      "features": "data/processed/dataset_features.csv",
+      "images": "data/raw",
+      "captured": "2026-02-04",
+      "illumination": "daylight",
+      "background": "uniform",
+      "background_description": "laboratory, uniform blue wall",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 114,
+        "blue": 150,
+        "green": 127,
+        "red": 75,
+        "blue_minus_red": 74
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "B": {
+      "features": "data/processed/sessionB_features.csv",
+      "images": "data/raw/sessionB",
+      "captured": "2026-09-20",
+      "illumination": "artificial",
+      "background": "non-uniform",
+      "background_description": "domestic room, background close to skin tone",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 118,
+        "blue": 119,
+        "green": 118,
+        "red": 117,
+        "blue_minus_red": 2
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "C": {
+      "features": "data/processed/sessionC_features.csv",
+      "images": "data/raw/sessionC",
+      "captured": "2026-09-20",
+      "illumination": "artificial",
+      "background": "non-uniform",
+      "background_description": "domestic room, mixed background",
+      "nominal_distance_m": null,
+      "images_per_class": 400,
+      "photometry": {
+        "grey": 116,
+        "blue": 117,
+        "green": 115,
+        "red": 118,
+        "blue_minus_red": 0
+      },
+      "provenance": "backfilled",
+      "distance_range_m": [
+        0.5,
+        2.0
+      ],
+      "distance_protocol": "deliberately varied across 0.5-2.0 m during capture, to train across scales; not held fixed and not logged per frame"
+    },
+    "D": {
+      "features": "data/processed/sessionD_features.csv",
+      "images": "data/raw/sessionD",
+      "captured": "2026-09-20",
+      "illumination": "daylight",
+      "background": "non-uniform",
+      "background_description": "living room, clothes, food pantry",
+      "nominal_distance_m": 1.25,
+      "images_per_class": 400,
+      "photometry": null,
+      "provenance": "recorded at capture"
+    }
+  }
+}

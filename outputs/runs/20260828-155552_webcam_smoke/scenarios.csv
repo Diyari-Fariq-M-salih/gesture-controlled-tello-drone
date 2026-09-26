@@ -1,0 +1,5 @@
+run_id,scenario,trial,t_start,t_end,duration_s,mode_at_start,mode_at_end,battery_at_start,success
+20260828-155552_smoke,face_following_activates,1,1787925399.9501276,1787925402.7187588,2.7686312198638916,gesture,gesture,,True
+20260828-155552_smoke,face_following_activates,2,1787925404.5940452,1787925406.8297353,2.235690116882324,gesture,gesture,,True
+20260828-155552_smoke,face_following_activates,3,1787925415.538363,1787925418.2168722,2.67850923538208,face,gesture,,True
+20260828-155552_smoke,face_following_activates,4,1787925420.9340837,1787925422.4428928,1.5088090896606445,face,gesture,,True

@@ -1,0 +1,68 @@
+{
+  "run_id": "assoc_webcam",
+  "name": "20260923-130937_assoc_webcam",
+  "note": "",
+  "started_at": 1790161777.6920667,
+  "started_at_iso": "2026-09-23T13:09:37",
+  "git_sha": "cff10c21105f91dade7a80457a782d3ec068371f",
+  "git_dirty": true,
+  "libraries": {
+    "python": "3.12.3",
+    "cv2": "4.11.0",
+    "mediapipe": "0.10.14",
+    "numpy": "1.26.4",
+    "sklearn": "1.5.2",
+    "onnxruntime": "1.19.2",
+    "joblib": "1.4.2"
+  },
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "machine": "AMD64"
+  },
+  "argv": [
+    "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\tello_gesture_py\\scripts\\webcam_demo.py",
+    "--associate-hands",
+    "--target-side",
+    "left",
+    "--run-id",
+    "assoc_webcam"
+  ],
+  "harness": "webcam_demo",
+  "params": {
+    "cosine_thr": 0.55,
+    "auth_hysteresis": true,
+    "enroll_samples": 20,
+    "nohuman_search_s": 10.0,
+    "search_duration_s": 5.0,
+    "mode_hold_s": 1.2,
+    "hand_release_s": 0.8,
+    "face_release_s": 0.8,
+    "hand_every_n": 2,
+    "face_every_n": 4,
+    "rc_speed": 40,
+    "cam": 0,
+    "flip": false,
+    "hand_association": true,
+    "assoc_target_side": "left",
+    "assoc_mirrored": false
+  },
+  "hand_association": {
+    "pose_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\models\\mediapipe\\pose_landmarker_full.task",
+    "num_poses": 2,
+    "every_n": 20
+  },
+  "model": {
+    "faceid_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\models\\third_party\\arcface.onnx",
+    "faceid_enabled": true,
+    "classifier": "rule_based"
+  },
+  "summary": {
+    "frames_logged": 1306,
+    "decisions": 132,
+    "scenario_trials": 0,
+    "scenario_tally": {}
+  },
+  "ended_at": 1790161851.9008436,
+  "duration_s": 74.20877695083618
+}

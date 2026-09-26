@@ -1,0 +1,18 @@
+t,mode_before,mode_after,gesture,gesture_conf,face_detected,time_since_face_s,hand_detected,time_since_hand_s,key,battery,altitude_cm,reason,command,det_reason,face_auth,face_raw,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,hand_auth,hand_raw,llm_reason,mode,t_any
+1772407188.6119761,,,,,,,,,,51.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,,search_360,6.845834255218506
+1772407189.6135564,,,,,,,,,,51.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,,search_360,7.847414493560791
+1772407189.8717642,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,The drone is currently flying over the area.,search_360,8.079130411148071
+1772407190.8573308,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,The drone is currently flying over the area.,search_360,9.091188907623291
+1772407191.8890567,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,The drone is currently flying over the area.,search_360,10.121917486190796
+1772407192.9018817,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,False,False,False,0/20,-1.0,False,False,The drone is currently flying over the area.,search_360,11.135739803314209
+1772407193.908894,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,False,0/20,-1.0,False,False,LLM error (ReadTimeout),search_360,12.110981941223145
+1772407194.9020445,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,False,0/20,-1.0,False,False,LLM error (ReadTimeout),search_360,13.134909868240356
+1772407195.9413276,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,False,0/20,-1.0,False,False,LLM error (ReadTimeout),search_360,14.174189329147339
+1772407196.7674031,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,False,0/20,-1.0,False,False,Autonomy: no human for 6.8s -> search_360,search_360,14.971710443496704
+1772407197.9221842,,,,,,,,,,50.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,True,3/20,-1.0,False,False,Autonomy: no human for 6.8s -> search_360,search_360,16.09160852432251
+1772407198.6765828,,,,,,,,,,49.0,0.0,,ground,Autonomy: no human for 6.8s -> search_360,False,True,False,True,10/20,-1.0,False,False,The drone must return to the ground before flying,search_360,16.781113862991333
+1772407199.7505682,,,,,,,,,,49.0,0.0,,ground,Search: face_detected -> face (exit search),True,True,True,False,0/20,0.8605072498321533,False,False,The drone must return to the ground before flying,face,0.0
+1772407200.7472045,,,,,,,,,,49.0,0.0,,ground,Search: face_detected -> face (exit search),False,True,True,False,0/20,0.10879138112068176,False,True,The drone must return to the ground before flying,face,0.18684649467468262
+1772407201.8324406,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,True,True,False,0/20,0.08104705810546875,False,True,The drone must return to the ground before flying,hover,1.2394649982452393
+1772407202.6189833,,,,,,,,,,49.0,0.0,,ground,Autonomy: no intent -> hover,False,True,True,False,0/20,0.5285077095031738,False,True,LLM error (ReadTimeout),hover,2.013759136199951
+1772407203.6666715,,,,,,,,,,49.0,0.0,,ground,Perception: hand_detected -> gesture (priority),True,True,True,False,0/20,0.6363042593002319,True,True,LLM error (ReadTimeout),gesture,0.0

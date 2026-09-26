@@ -1,0 +1,10 @@
+TITLE
+A Deployment Study of Identity-Gated Drone Gesture Control
+
+AUTHORS  (paste exactly; arXiv metadata is plain ASCII)
+Diyari Mohammed Salih, Ilyes Chaabeni, Naima Ait Oufroukh
+
+PRIMARY  cs.RO        CROSS-LIST  cs.CV
+
+ABSTRACT
+Vision-based gesture control accepts commands from any hand in the camera field of view, which is unsafe in shared indoor spaces. This paper presents IGate, an identity-gated control stack that includes gesture control and face tracking, in which commands are admitted only when an enrolled operator is verified. The system performs few-shot user enrolment from 20 initial face frames, without prior user-specific training: verification compares an embedding of the current face crop against the enrolled template by cosine similarity, while face tracking uses proportional correction. Gesture control is achieved by classifying extracted hand landmarks using an RBF-SVM trained on a custom dataset. Additionally, a hierarchical finite-state machine handles mode selection, default, and fallback behaviours. The approach is tested on a DJI Tello EDU, each component evaluated offline and in-flight across 270 trials (149 flown). Face verification yields a 0.32% offline equal error rate versus 19.3% in-flight. Under hover-locked conditions, the RBF-SVM gesture classifier outperforms the geometric rule (0.850 vs. 0.651 accuracy), with 82% of this gap stemming from the depth channel. All logs and reproduction scripts will be released.

@@ -1,0 +1,57 @@
+{
+  "run_id": "flash_latency",
+  "name": "20260924-182345_flash_latency",
+  "note": "",
+  "started_at": 1790267025.841118,
+  "started_at_iso": "2026-09-24T18:23:45",
+  "git_sha": "eb4c026585e1831490f36065322a85a63c10e0a6",
+  "git_dirty": true,
+  "libraries": {
+    "python": "3.12.3",
+    "cv2": "4.11.0",
+    "mediapipe": "0.10.14",
+    "numpy": "1.26.4",
+    "sklearn": "1.5.2",
+    "onnxruntime": "1.19.2",
+    "joblib": "1.4.2"
+  },
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "machine": "AMD64"
+  },
+  "argv": [
+    "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\tello_gesture_py\\scripts\\flash_latency.py"
+  ],
+  "flash_latency": {
+    "source": "tello",
+    "perception_load": true,
+    "switches": 60,
+    "detected": 60,
+    "delay_arrival_ms": {
+      "median": 604.0,
+      "p95": 650.2,
+      "min": 558.3,
+      "max": 664.1
+    },
+    "delay_pickup_ms": {
+      "median": 607.7,
+      "p95": 654.0
+    },
+    "by_edge_arrival_median_ms": {
+      "rise": 597.6,
+      "fall": 608.8
+    },
+    "load_ms_per_frame_median": 0.0,
+    "frames": 2503,
+    "video_reopens": 0,
+    "battery_pct": {
+      "start": "96",
+      "end": "90"
+    },
+    "seed": 1790267028,
+    "note": "includes the screen's own response time: an upper bound on the camera path"
+  },
+  "ended_at": 1790267138.4340632,
+  "duration_s": 112.59294509887695
+}

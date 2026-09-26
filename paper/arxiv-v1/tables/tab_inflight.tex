@@ -1,0 +1,27 @@
+\begin{table}[t]
+\caption{Gesture classification in flight $\uparrow$, hover-locked cued capture. Recall is unconditioned; the bracketed figure conditions on detection. Per-hold scores each of the 42 holds by majority vote.}
+\label{tab:inflight}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+& \multicolumn{3}{c}{RBF-SVM} & \multicolumn{3}{c}{Rule} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Class & Recall & Prec. & $F_1$ & Recall & Prec. & $F_1$ \\
+\midrule
+CENTER & 0.988 & 0.941 & 0.964 & 0.881 & 0.567 & 0.690 \\
+LEFT & 0.980 & 0.736 & 0.841 & 0.999 & 1.000 & 0.999 \\
+RIGHT & 0.985 & 0.685 & 0.808 & 0.968 & 0.997 & 0.982 \\
+UP & 0.999 & 1.000 & 0.999 & 0.854 & 0.548 & 0.668 \\
+DOWN & 0.920 & 1.000 & 0.958 & 0.908 & 1.000 & 0.952 \\
+FORWARD & 0.777 (0.858) & 1.000 & 0.874 & 0.000 & 0.000 & 0.000 \\
+BACK & 0.336 & 0.859 & 0.483 & 0.008 & 0.750 & 0.017 \\
+\midrule
+Per frame & \multicolumn{3}{c}{0.850 [0.840, 0.860]} & \multicolumn{3}{c}{0.651 [0.638, 0.664]} \\
+Per hold & \multicolumn{3}{c}{0.905 [0.779, 0.962]} & \multicolumn{3}{c}{0.714 [0.564, 0.828]} \\
+Detection & \multicolumn{3}{c}{0.986} & \multicolumn{3}{c}{0.984} \\
+\bottomrule
+\end{tabular}
+\end{table}

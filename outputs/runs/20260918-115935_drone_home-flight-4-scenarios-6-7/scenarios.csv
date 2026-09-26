@@ -1,0 +1,2 @@
+run_id,scenario,trial,t_start,t_end,duration_s,mode_at_start,mode_at_end,battery_at_start,success
+20260918-115935_home_f4_s67,search_starts_after_loss,1,1789725673.7642949,1789725685.7751868,12.010891914367676,hover,hover,90.0,True

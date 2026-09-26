@@ -1,0 +1,29 @@
+\begin{table*}[t]
+\caption{Parameters Section~\ref{sec:system} specifies and Section~\ref{sec:results} measures. The left half is generated from the deployed configuration.}
+\label{tab:design}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{@{}llccl@{}}
+\toprule
+Parameter & Deployed value & Set in & Measured in & Result \\
+\midrule
+Hand, face throttle & 2, 4 frames & \S\,\ref{sec:perception} & \S\,\ref{sec:runtime} & duty 50\%, 25\%; 22.3~fps \\
+EMA $\alpha$ (rule only) & 0.35 & \S\,\ref{sec:perception} & \S\,\ref{sec:inflight} & arms not input-matched \\
+$\theta_{\mathrm{dir}}$ & 0.1 & \S\,\ref{sec:vocab} & \S\,\ref{sec:opgesture} & lateral $F_1$ 0.921 / 0.937 / 0.855 \\
+$\theta_{\mathrm{scale}}$ on $\Delta s_t$ & 0.18 & \S\,\ref{sec:vocab} & \S\,\ref{sec:depth} & depth $F_1$ 0.008 / 0.066; pose form 0.447 / 0.567 \\
+Depth stability streak & 2 frames & \S\,\ref{sec:vocab} & \S\,\ref{sec:depth} & gated vs ungated differ by 0.004 \\
+Face-follow target $\rho^{\star}$ & 0.075 of frame & \S\,\ref{sec:facefollow} & \S\,\ref{sec:identity} & 0.94~m, band 0.90--1.00~m \\
+$\tau_{\mathrm{on}}$ & 0.55 & \S\,\ref{sec:gate} & \S\,\ref{sec:identity} & FRR 19.3\% in flight; 35.1\% ungated at the same threshold \\
+$\tau_{\mathrm{off}}$, $k$ & 0.45, 3 & \S\,\ref{sec:gate} & \S\,\ref{sec:hysteresis} & 15.7 vs 78.5 mode switches/min; impostor 0.0\% $\to$ 5.6\% \\
+Enrolment $N$ & 20 crops & \S\,\ref{sec:gate} & \S\,\ref{sec:identity} & genuine cluster $0.770\pm0.109$ \\
+$\Delta_{\max}$ crop freshness & 0.35~s & \S\,\ref{sec:gate} & \S\,\ref{sec:staleness} & background share 56\% $\to$ 20\%; authorized 41\% $\to$ 68\% \\
+Arbitration face hold & 2.0~s & \S\,\ref{sec:gate} & \S\,\ref{sec:staleness} & search decisions 130 $\to$ 4 \\
+Mode hold, release & 1.2~s, 0.8~s & \S\,\ref{sec:arb} & \S\,\ref{sec:results} & 149/149 trials produced the specified behaviour \\
+Search sweep & 28~s & \S\,\ref{sec:arb} & \S\,\ref{sec:flightbehaviour} & 318\textdegree{} over 22 episodes; 60\textdegree{} at the 5~s originally specified \\
+Battery failsafe & 15\% & \S\,\ref{sec:arb} & \S\,\ref{sec:flightbehaviour} & 11 consecutive landings, 91\% $\to$ 21\% \\
+LLM decision rate & 1~Hz, no actuation & \S\,\ref{sec:reasondesign} & \S\,\ref{sec:llm} & 1766~ms mean, 5.5\% timeouts \\
+\bottomrule
+\end{tabular}
+\end{table*}

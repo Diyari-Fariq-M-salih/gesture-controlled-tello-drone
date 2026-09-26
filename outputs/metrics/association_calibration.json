@@ -1,0 +1,82 @@
+{
+  "frames": {
+    "frames": 420,
+    "evaluable": 267,
+    "no_face": 79,
+    "no_hand": 30,
+    "no_skeleton": 44
+  },
+  "acceptance_at_default_thresholds": {
+    "right_mirrored=False": 0.022,
+    "right_mirrored=True": 0.839,
+    "left_mirrored=False": 0.839,
+    "left_mirrored=True": 0.022
+  },
+  "setting_for_unflipped_frames": {
+    "target_side": "left",
+    "mirrored": false
+  },
+  "d_target": {
+    "p50": 0.299,
+    "p90": 0.523,
+    "p95": 0.66,
+    "p99": 2.26,
+    "max": 2.357
+  },
+  "d_other": {
+    "p1": 0.349,
+    "p5": 0.625,
+    "p50": 2.373,
+    "min": 0.222
+  },
+  "acceptance_by_dist_thresh": {
+    "0.5": 0.854,
+    "0.6": 0.895,
+    "0.7": 0.914,
+    "0.8": 0.921,
+    "1.0": 0.921
+  },
+  "per_class_d_target": {
+    "BACK": {
+      "n": 41,
+      "p50": 0.3,
+      "p90": 0.5
+    },
+    "CENTER": {
+      "n": 36,
+      "p50": 0.308,
+      "p90": 0.655
+    },
+    "DOWN": {
+      "n": 32,
+      "p50": 0.31,
+      "p90": 0.494
+    },
+    "FORWARD": {
+      "n": 34,
+      "p50": 0.501,
+      "p90": 0.677
+    },
+    "LEFT": {
+      "n": 42,
+      "p50": 0.258,
+      "p90": 0.328
+    },
+    "RIGHT": {
+      "n": 46,
+      "p50": 0.21,
+      "p90": 0.367
+    },
+    "UP": {
+      "n": 36,
+      "p50": 0.28,
+      "p90": 0.421
+    }
+  },
+  "params": {
+    "per_class": 15,
+    "seed": 1,
+    "side_margin": 0.85,
+    "pose_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\models\\mediapipe\\pose_landmarker_full.task"
+  }
+}

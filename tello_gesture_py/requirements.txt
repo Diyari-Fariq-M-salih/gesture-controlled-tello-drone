@@ -1,0 +1,26 @@
+# Pinned for reproducibility. Verified working on CPython 3.12.3 (Windows).
+#
+# Python version matters: mediapipe's legacy `mp.solutions` API -- which every
+# perception wrapper in this project uses -- is not present in the builds
+# published for CPython 3.13+. Use 3.12.
+#
+#   py -3.12 -m venv .venv
+#   .venv\Scripts\activate
+#   pip install -r tello_gesture_py/requirements.txt
+
+# --- perception ---
+mediapipe==0.10.14
+opencv-python==4.10.0.84
+numpy==1.26.4
+
+# --- face identity (ONNX embedding model) ---
+onnxruntime==1.19.2
+
+# --- reason-only LLM client (talks to a local Ollama server) ---
+requests==2.32.3
+
+# --- dataset collection, training and analysis ---
+scikit-learn==1.5.2
+joblib==1.4.2
+pandas==2.2.3
+matplotlib==3.9.2

@@ -1,0 +1,60 @@
+{
+  "run_id": "d1_arbitration",
+  "name": "20260828-161355_d1_arbitration",
+  "note": "scenarios 4+5 x20 each, self enrolled",
+  "started_at": 1787926435.1181867,
+  "started_at_iso": "2026-08-28T16:13:55",
+  "git_sha": "cb32d0baa496319ca7e4bb2ba9c22381af3cf791",
+  "git_dirty": true,
+  "libraries": {
+    "python": "3.12.3",
+    "cv2": "4.11.0",
+    "mediapipe": "0.10.14",
+    "numpy": "1.26.4",
+    "sklearn": "1.5.2",
+    "onnxruntime": "1.19.2",
+    "joblib": "1.4.2"
+  },
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "machine": "AMD64"
+  },
+  "argv": [
+    "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\gesture-controlled-tello-drone\\tello_gesture_py\\scripts\\webcam_demo.py",
+    "--run-id",
+    "d1_arbitration",
+    "--note",
+    "scenarios 4+5 x20 each, self enrolled"
+  ],
+  "harness": "webcam_demo",
+  "params": {
+    "cosine_thr": 0.55,
+    "enroll_samples": 20,
+    "nohuman_search_s": 10.0,
+    "search_duration_s": 5.0,
+    "mode_hold_s": 1.2,
+    "hand_release_s": 0.8,
+    "face_release_s": 0.8,
+    "hand_every_n": 2,
+    "face_every_n": 4,
+    "rc_speed": 40,
+    "cam": 0
+  },
+  "model": {
+    "faceid_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\gesture-controlled-tello-drone\\models\\third_party\\arcface.onnx",
+    "faceid_enabled": true,
+    "classifier": "rule_based"
+  },
+  "summary": {
+    "frames_logged": 8013,
+    "decisions": 510,
+    "scenario_trials": 40,
+    "scenario_tally": {
+      "gesture_preempts_face": "19/20",
+      "hysteresis_prevents_flicker": "20/20"
+    }
+  },
+  "ended_at": 1787926704.7785335,
+  "duration_s": 269.6603467464447
+}

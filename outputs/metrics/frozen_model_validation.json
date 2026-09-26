@@ -1,0 +1,99 @@
+{
+  "frozen": "models/production/model.joblib",
+  "frozen_sha256": "e34704a1317101572a7604ae6ec84484c35d323637faf1a40ba11fbe88a934d4",
+  "original": "models/experiments/model-400.joblib",
+  "original_sha256": "b95699124df7e7405d08f83aa840476cb3bdd034a2152d4893ef0911e16b12c5",
+  "disagreement_fraction": 0.0,
+  "per_session": {
+    "A": {
+      "n": 2715,
+      "disagree": 0,
+      "frac": 0.0,
+      "acc_frozen": 0.9978,
+      "acc_original": 0.9978
+    },
+    "B": {
+      "n": 2345,
+      "disagree": 0,
+      "frac": 0.0,
+      "acc_frozen": 0.8107,
+      "acc_original": 0.8107
+    },
+    "C": {
+      "n": 2613,
+      "disagree": 0,
+      "frac": 0.0,
+      "acc_frozen": 0.845,
+      "acc_original": 0.845
+    },
+    "D": {
+      "n": 2784,
+      "disagree": 0,
+      "frac": 0.0,
+      "acc_frozen": 0.93,
+      "acc_original": 0.93
+    }
+  },
+  "results": [
+    {
+      "check": "frozen hash matches the pinned constant",
+      "kind": "ARTEFACT",
+      "ok": true,
+      "detail": "matches gesture_classifier.FROZEN_SVM_SHA256"
+    },
+    {
+      "check": "within-session reproduces",
+      "kind": "ENVIRONMENT",
+      "ok": true,
+      "detail": "all four match"
+    },
+    {
+      "check": "leave-one-session-out reproduces",
+      "kind": "ENVIRONMENT",
+      "ok": true,
+      "detail": "mean 0.910 vs 0.91"
+    },
+    {
+      "check": "transfer matrix present",
+      "kind": "ENVIRONMENT",
+      "ok": true,
+      "detail": "12 ordered pairs computed"
+    },
+    {
+      "check": "per-prediction agreement",
+      "kind": "ARTEFACT",
+      "ok": true,
+      "detail": "0/10457 samples differ (0.00%), threshold 1%"
+    },
+    {
+      "check": "retrain is deterministic",
+      "kind": "ARTEFACT",
+      "ok": true,
+      "detail": "0/2715 predictions differ from a fresh fit of the same recipe"
+    },
+    {
+      "check": "Table VI reproduces",
+      "kind": "ANALYSIS",
+      "ok": true,
+      "detail": "per-frame 0.784, per-hold 0.810 over 42 holds, RIGHT->BACK 0.72, FORWARD->BACK 0.71"
+    },
+    {
+      "check": "landmarks retained for offline re-scoring",
+      "kind": "INFO",
+      "ok": false,
+      "detail": "op_gesture.csv holds derived quantities only, so the frozen model cannot be re-run on these frames; provenance rests on file times and resolution order"
+    },
+    {
+      "check": "frozen artefact predates the capture",
+      "kind": "PROVENANCE",
+      "ok": true,
+      "detail": "model mtime 1789891499 < capture 1789897057"
+    },
+    {
+      "check": "capture recorded a bare model name",
+      "kind": "INFO",
+      "ok": false,
+      "detail": "manifest says 'model.joblib'; no hash was recorded at capture time (the harness records one now)"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{Cross-session gesture classification. Per-class $F_1$; the in-session figure is a random split within one recording session and is reported only as a reference point.}
+\label{tab:crosssession}
+\centering
+\begin{tabular}{lrrr}
+\toprule
+Class & A$\rightarrow$B & A$\rightarrow$C & B$\rightarrow$C \\
+\midrule
+CENTER & 0.973 & 1.000 & 1.000 \\
+LEFT & 0.995 & 0.999 & 0.998 \\
+RIGHT & 0.816 & 0.534 & 0.950 \\
+UP & 0.921 & 0.972 & 1.000 \\
+DOWN & 0.236 & 0.950 & 0.955 \\
+FORWARD & 0.846 & 0.834 & 0.936 \\
+BACK & 0.613 & 0.599 & 0.931 \\
+\midrule
+Macro $F_1$ & 0.771 & 0.841 & 0.967 \\
+Accuracy & 0.815 & 0.842 & 0.969 \\
+\bottomrule
+\end{tabular}
+\end{table}

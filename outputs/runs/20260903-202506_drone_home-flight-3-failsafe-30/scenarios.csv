@@ -1,0 +1,2 @@
+run_id,scenario,trial,t_start,t_end,duration_s,mode_at_start,mode_at_end,battery_at_start,success
+20260903-202506_home_f3_fs30,battery_failsafe_landing,1,1788459927.0552204,1788459972.2467275,45.19150710105896,hover,land,42.0,True

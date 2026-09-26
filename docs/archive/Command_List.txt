@@ -1,0 +1,23 @@
+python -m tello_gesture_py.src.main
+
+python -m tello_gesture_py.src.main --model models/experiments/model.joblib --labels data/labels/labels_example.json
+
+python -m tello_gesture_py.src.gestures.auto_collect_dataset `
+>>   --labels data/labels/labels_example.json `
+>>   --out_dir data/raw `
+>>   --out_csv data/processed/dataset.csv
+
+python -m tello_gesture_py.src.gestures.images_to_features `
+>>   --dataset data/processed/dataset.csv `
+>>   --out data/processed/dataset_features.csv
+
+ python -m tello_gesture_py.src.gestures.train_model `
+>>   --dataset data/processed/dataset_features.csv `
+>>   --labels data/labels/labels_example.json `
+>>   --out models/experiments/model.joblib `
+>>   --metrics_out outputs/training_metrics.json `
+>>   --cm_png_out outputs/confusion_matrix.png
+
+python tello_gesture_py/src/utils/reporting.py `
+>>   --telemetry outputs/telemetry_log.csv `
+>>   --outdir outputs/experiment_runs

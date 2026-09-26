@@ -1,0 +1,17 @@
+\begin{table}[t]
+\caption{Gesture classification through the aircraft video pipeline, cued capture on the ground. Each classifier is scored on the vocabulary it was designed for and on the other's. The SVM maps static hand configurations; the rule decodes the direction of the index finger and infers depth from frame-to-frame change in hand area. Both score every frame, so each column is one capture. Accuracy is over all cued frames; the per-hold column scores each hold by majority vote, the hold being the independent unit.}
+\label{tab:operational}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Classifier & Vocabulary & Frames & Detected & Accuracy & Per hold \\
+\midrule
+RBF-SVM & static poses & 2947 & 1.000 & 0.783 & 0.809 \\
+Rule (deployed) & static poses & 2947 & 1.000 & 0.287 & 0.286 \\
+Rule (deployed) & pointing & 2625 & 0.890 & 0.584 & 0.611 \\
+\bottomrule
+\end{tabular}
+\end{table}

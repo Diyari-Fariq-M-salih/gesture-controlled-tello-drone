@@ -1,0 +1,170 @@
+{
+  "config": {
+    "battery_land_pct": 15,
+    "nohuman_search_s": 10.0,
+    "search_duration_s": 5.0,
+    "search_cooldown_s": 10.0,
+    "mode_hold_s": 1.2,
+    "hand_release_s": 0.8,
+    "face_release_s": 0.8
+  },
+  "summary": {
+    "authorized_gesture_accepted": {
+      "trials": 2,
+      "successes": 2
+    },
+    "unauthorized_gesture_rejected": {
+      "trials": 2,
+      "successes": 2
+    },
+    "face_following_activates": {
+      "trials": 1,
+      "successes": 1
+    },
+    "gesture_preempts_face": {
+      "trials": 1,
+      "successes": 1
+    },
+    "hysteresis_prevents_flicker": {
+      "trials": 3,
+      "successes": 3
+    },
+    "search_starts_after_loss": {
+      "trials": 2,
+      "successes": 2
+    },
+    "target_reacquired_after_search": {
+      "trials": 3,
+      "successes": 3
+    },
+    "battery_failsafe_landing": {
+      "trials": 3,
+      "successes": 3
+    }
+  },
+  "sub_trials": [
+    {
+      "name": "authorized_gesture_accepted#1_from_hover",
+      "passed": true,
+      "log": [
+        "[OK] authorized hand from hover -> gesture (got gesture: Perception: hand_detected -> gesture (priority))"
+      ]
+    },
+    {
+      "name": "authorized_gesture_accepted#2_face_then_hand",
+      "passed": true,
+      "log": [
+        "[OK] hand without authorized face must not enter gesture (got hover)",
+        "[OK] once face authorized, gesture accepted same-frame (got gesture)"
+      ]
+    },
+    {
+      "name": "unauthorized_gesture_rejected#1_basic",
+      "passed": true,
+      "log": [
+        "[OK] unauthorized hand rejected (got hover: Autonomy: no intent -> hover)"
+      ]
+    },
+    {
+      "name": "unauthorized_gesture_rejected#2_persistent",
+      "passed": true,
+      "log": [
+        "[OK] unauthorized hand held 10s still rejected (got search_360)"
+      ]
+    },
+    {
+      "name": "face_following_activates#1_basic",
+      "passed": true,
+      "log": [
+        "[OK] authorized face, no hand -> face (got face: Perception: face_detected -> face)"
+      ]
+    },
+    {
+      "name": "gesture_preempts_face#1_immediate",
+      "passed": true,
+      "log": [
+        "[OK] precondition: starts in face mode",
+        "[OK] hand appears during face mode -> immediate preemption (got gesture: Perception: hand_detected -> gesture (preempts face))"
+      ]
+    },
+    {
+      "name": "hysteresis_prevents_flicker#1_brief_dropout",
+      "passed": true,
+      "log": [
+        "[OK] brief hand dropout (0.40s < release 0.8s) holds gesture (got gesture: Perception: hand_detected -> gesture (priority))"
+      ]
+    },
+    {
+      "name": "hysteresis_prevents_flicker#2_sustained_dropout",
+      "passed": true,
+      "log": [
+        "[OK] sustained hand dropout (1.00s > release 0.8s) releases to face (got face: Perception: face_detected -> face)"
+      ]
+    },
+    {
+      "name": "hysteresis_prevents_flicker#3_min_hold_time",
+      "passed": true,
+      "log": [
+        "[OK] cannot leave gesture before mode_hold_s=1.2s even with hand gone (got gesture: Perception: hand_detected -> gesture (priority))"
+      ]
+    },
+    {
+      "name": "search_starts_after_loss#1_before_threshold",
+      "passed": true,
+      "log": [
+        "[OK] before threshold (9.80s < 10.0s) must not search yet (got hover: Autonomy: no intent -> hover)"
+      ]
+    },
+    {
+      "name": "search_starts_after_loss#2_after_threshold",
+      "passed": true,
+      "log": [
+        "[OK] after threshold (10.20s >= 10.0s) search starts (got search_360: Autonomy: no human for 10.2s -> search_360)"
+      ]
+    },
+    {
+      "name": "target_reacquired_after_search#1_via_hand",
+      "passed": true,
+      "log": [
+        "[OK] precondition: search started",
+        "[OK] authorized hand during search -> immediate exit to gesture (got gesture: Search: hand_detected -> gesture (exit search))"
+      ]
+    },
+    {
+      "name": "target_reacquired_after_search#2_via_face",
+      "passed": true,
+      "log": [
+        "[OK] authorized face during search -> immediate exit to face (got face: Search: face_detected -> face (exit search))"
+      ]
+    },
+    {
+      "name": "target_reacquired_after_search#3_timeout_to_hover",
+      "passed": true,
+      "log": [
+        "[OK] search times out after 5.0s with nothing found -> hover (got hover: Autonomy: search done (5s) -> hover)"
+      ]
+    },
+    {
+      "name": "battery_failsafe_landing#1_at_threshold",
+      "passed": true,
+      "log": [
+        "[OK] battery == 15% triggers land (got land: Safety: battery 15.0% <= 15% -> land)"
+      ]
+    },
+    {
+      "name": "battery_failsafe_landing#2_above_threshold",
+      "passed": true,
+      "log": [
+        "[OK] battery == 16% must not trigger land (got hover: Autonomy: no intent -> hover)"
+      ]
+    },
+    {
+      "name": "battery_failsafe_landing#3_overrides_gesture",
+      "passed": true,
+      "log": [
+        "[OK] precondition: actively in gesture mode",
+        "[OK] battery failsafe overrides an active authorized gesture (got land: Safety: battery 15.0% <= 15% -> land)"
+      ]
+    }
+  ]
+}

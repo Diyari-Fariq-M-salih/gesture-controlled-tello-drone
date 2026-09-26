@@ -1,0 +1,4 @@
+run_id,scenario,trial,t_start,t_end,duration_s,mode_at_start,mode_at_end,battery_at_start,success
+20260828-143458_bench,face_following_activates,1,1787920759.1590412,1787920764.194131,5.035089731216431,face,face,46.0,True
+20260828-143458_bench,face_following_activates,2,1787920768.5427582,1787920785.402879,16.86012077331543,face,hover,46.0,True
+20260828-143458_bench,face_following_activates,3,1787920845.1508539,1787920863.176616,18.02576208114624,face,face,43.0,True

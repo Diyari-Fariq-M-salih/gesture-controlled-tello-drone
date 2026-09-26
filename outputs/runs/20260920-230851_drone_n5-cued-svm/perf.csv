@@ -1,0 +1,2 @@
+t,seq,dt_s,fps_inst,frame_age_ms,camera_to_command_ms,command_exec_ms,command_exec_ms_ran,face_detect_ms_ran,face_id_ms_ran,flying,hand_detect_ms_ran,mode,mode_manager_ms,mode_manager_ms_ran
+1789938536.350671,6,,,8.980751037597656,0.05630002124235034,0.00589998671784997,1,0,0,0,0,hover,0.024200009647756815,1

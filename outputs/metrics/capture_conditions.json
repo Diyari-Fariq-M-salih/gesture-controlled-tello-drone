@@ -1,0 +1,34 @@
+{
+  "A": {
+    "frames_sampled": 280,
+    "grey": 114,
+    "blue": 150,
+    "green": 127,
+    "red": 75,
+    "blue_minus_red": 74
+  },
+  "B": {
+    "frames_sampled": 286,
+    "grey": 118,
+    "blue": 119,
+    "green": 118,
+    "red": 117,
+    "blue_minus_red": 2
+  },
+  "C": {
+    "frames_sampled": 280,
+    "grey": 116,
+    "blue": 117,
+    "green": 115,
+    "red": 118,
+    "blue_minus_red": 0
+  },
+  "D": {
+    "frames_sampled": 280,
+    "grey": 123,
+    "blue": 105,
+    "green": 121,
+    "red": 133,
+    "blue_minus_red": -27
+  }
+}

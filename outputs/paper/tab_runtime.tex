@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{Runtime performance in flight. Latency is conditioned on frames where the stage actually ran; the duty cycle reports how often that was.}
+\label{tab:runtime}
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Stage & Mean & Median & p95 & Duty \\
+& (ms) & (ms) & (ms) & (\%) \\
+\midrule
+Hand detection (MediaPipe Hands) & 26.69 & 25.17 & 36.90 & 50 \\
+Face detection (MediaPipe) & 7.14 & 6.97 & 9.47 & 25 \\
+Face embedding + cosine match & 13.01 & 13.38 & 16.63 & 25 \\
+Mode-manager update & 0.02 & 0.02 & 0.04 & 100 \\
+Command execution & 0.61 & 0.01 & 2.86 & 100 \\
+Frame age (decode + queue) & 9.05 & 3.99 & 30.52 & 100 \\
+End-to-end camera-to-command & 19.08 & 18.62 & 55.16 & 100 \\
+\midrule
+Video stream & \multicolumn{4}{r}{22.3 fps} \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,10 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying,seq,t_any
+1787924337.5698287,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,5,5.641232967376709
+1787924338.5706973,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,142,6.642101526260376
+1787924339.5724618,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,166,7.643866062164307
+1787924340.5984979,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,190,8.645966529846191
+1787924341.6002457,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,214,9.650706052780151
+1787924341.8124804,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,LLM error (ReadTimeout),4231.386900006328,False,,,False,False,0/20,-1.0,False,220,9.88388466835022
+1787924342.8798184,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,False,False,False,False,3.0,0.0,LLM error (ReadTimeout),4231.386900006328,False,,,False,False,0/20,-1.0,False,244,10.951222658157349
+1787924343.513592,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,True,False,False,False,3.0,0.0,Do not introduce battery warnings unless safety is compromised,1708.8332999846898,True,392,392,False,False,0/20,-1.0,False,261,11.584438562393188
+1787924344.550873,land,ground,Safety: battery 3.0% <= 15% -> land,LAND,,True,False,False,False,3.0,0.0,Do not introduce battery warnings unless safety is compromised,1708.8332999846898,True,260,260,False,False,0/20,-1.0,False,282,12.59834361076355

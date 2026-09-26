@@ -1,0 +1,28 @@
+\begin{table}[t]
+\caption{Scenario validation. In-flight trials use the deployed configuration;
+the three arbitration scenarios were additionally run on the webcam harness under
+both identity-gate configurations. Intervals are Wilson score intervals at
+$z=1.96$, which is the interval to quote when every trial passes, since the
+normal approximation collapses to zero width at $p=1$.}
+\label{tab:scenarios}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Scenario & Harness & $n$ & Pass & 95\% CI \\
+\midrule
+Authorized gesture accepted & flight & 24 & 24 & [86, 100] \\
+Face-following activates & flight & 31 & 31 & [89, 100] \\
+Search starts after loss & flight & 48 & 48 & [93, 100] \\
+Target reacquired & flight & 33 & 33 & [90, 100] \\
+Battery failsafe landing & flight & 13 & 13 & [77, 100] \\
+\midrule
+\multicolumn{5}{l}{\emph{Webcam harness, bare threshold / with hysteresis}} \\
+Unauthorized gesture rejected & webcam & 40 & 20/20 & 20/20 \\
+Gesture preempts face & webcam & 40 & 19/20 & 20/20 \\
+Hysteresis prevents flicker & webcam & 41 & 20/20 & 21/21 \\
+\bottomrule
+\end{tabular}
+\end{table}

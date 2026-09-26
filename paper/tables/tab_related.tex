@@ -1,0 +1,24 @@
+\begin{table}[t]
+\caption{Positioning against representative gesture-controlled UAV systems.
+``Operational'' means measured through the aircraft's own video pipeline.
+$^{\dagger}$In-flight gesture accuracy and in-flight false rejection.}
+\label{tab:related}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+& Identity & Explicit & Cross-sess. & Operational \\
+& gate & arbitration & eval. & rates$^{\dagger}$ \\
+\midrule
+Latif \emph{et al.}~\cite{latif2022}      & --  & --  & --  & -- \\
+HGIC~\cite{hu2024hgic}                    & --  & yes & --  & -- \\
+Taylor \emph{et al.}~\cite{taylor2025}    & --  & yes & --  & -- \\
+Seidu \& Lawal~\cite{seidu2024}           & yes & --  & --  & -- \\
+Varga~\cite{varga2026}                    & --  & --  & yes & -- \\
+\midrule
+This work                                 & yes & yes & yes & 0.850\,/\,19.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}

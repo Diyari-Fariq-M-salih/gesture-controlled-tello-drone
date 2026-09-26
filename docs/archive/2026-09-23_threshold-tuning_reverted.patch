@@ -1,0 +1,38 @@
+diff --git a/tello_gesture_py/src/config.py b/tello_gesture_py/src/config.py
+index 54c5c4d..e72b639 100644
+--- a/tello_gesture_py/src/config.py
++++ b/tello_gesture_py/src/config.py
+@@ -51,10 +51,10 @@ class ControllerConfig:
+     search_yaw_cmd: int = 30
+ 
+     # face identity
+-    faceid_cosine_thr: float = 0.55
+-    faceid_enroll_samples: int = 20
++    faceid_cosine_thr: float = 0.6
++    faceid_enroll_samples: int = 40
+     faceid_hysteresis: bool = True      # Schmitt trigger on the authorization decision
+-    faceid_release_thr: float = 0.45    # de-authorize only below this
++    faceid_release_thr: float = 0.4    # de-authorize only below this
+     faceid_release_frames: int = 3      # ...and only after this many consecutive frames
+ 
+     # LLM reasoner
+diff --git a/tello_gesture_py/src/face_follow.py b/tello_gesture_py/src/face_follow.py
+index ae736ce..53eb124 100644
+--- a/tello_gesture_py/src/face_follow.py
++++ b/tello_gesture_py/src/face_follow.py
+@@ -14,11 +14,11 @@ def _clamp(v, lo, hi):
+ class FaceFollowConfig:
+     target_area_frac: float = 0.075
+ 
+-    kp_yaw: float = 0.2
+-    kp_ud: float = 0.12
+-    kp_fb: float = 0.30
++    kp_yaw: float = 0.65
++    kp_ud: float = 0.20
++    kp_fb: float = 0.45
+ 
+-    max_yaw: int = 20
++    max_yaw: int = 70
+     max_ud: int = 40
+     max_fb: int = 40
+ 

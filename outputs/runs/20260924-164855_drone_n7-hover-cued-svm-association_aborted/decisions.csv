@@ -1,0 +1,3 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,assoc_d,assoc_hands,assoc_mode,assoc_ok,assoc_reason,assoc_skeleton_hits,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying,seq,t_any
+1790261344.912324,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,100.0,0.0,,0.0,,0,,0,no_face,0,False,,,False,False,0/20,-1.0,False,6,5.923969745635986
+1790261345.960165,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,100.0,0.0,,0.0,,0,,0,no_face,0,False,,,False,False,0/20,-1.0,False,143,6.953541278839111

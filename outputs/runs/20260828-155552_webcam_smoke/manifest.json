@@ -1,0 +1,59 @@
+{
+  "run_id": "smoke",
+  "name": "20260828-155552_smoke",
+  "note": "verify run-scoped logging",
+  "started_at": 1787925352.972602,
+  "started_at_iso": "2026-08-28T15:55:52",
+  "git_sha": "cb32d0baa496319ca7e4bb2ba9c22381af3cf791",
+  "git_dirty": true,
+  "libraries": {
+    "python": "3.12.3",
+    "cv2": "4.11.0",
+    "mediapipe": "0.10.14",
+    "numpy": "1.26.4",
+    "sklearn": "1.5.2",
+    "onnxruntime": "1.19.2",
+    "joblib": "1.4.2"
+  },
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "machine": "AMD64"
+  },
+  "argv": [
+    "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\gesture-controlled-tello-drone\\tello_gesture_py\\scripts\\webcam_demo.py",
+    "--run-id",
+    "smoke",
+    "--note",
+    "verify run-scoped logging"
+  ],
+  "harness": "webcam_demo",
+  "params": {
+    "cosine_thr": 0.55,
+    "enroll_samples": 20,
+    "nohuman_search_s": 10.0,
+    "search_duration_s": 5.0,
+    "mode_hold_s": 1.2,
+    "hand_release_s": 0.8,
+    "face_release_s": 0.8,
+    "hand_every_n": 2,
+    "face_every_n": 4,
+    "rc_speed": 40,
+    "cam": 0
+  },
+  "model": {
+    "faceid_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\gesture-controlled-tello-drone\\models\\third_party\\arcface.onnx",
+    "faceid_enabled": true,
+    "classifier": "rule_based"
+  },
+  "summary": {
+    "frames_logged": 2026,
+    "decisions": 134,
+    "scenario_trials": 4,
+    "scenario_tally": {
+      "face_following_activates": "4/4"
+    }
+  },
+  "ended_at": 1787925425.4363625,
+  "duration_s": 72.46376061439514
+}

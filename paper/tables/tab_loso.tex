@@ -1,0 +1,27 @@
+\begin{table}[t]
+\caption{Leave-one-session-out gesture classification. Each fold trains on the two remaining sessions and tests on the held-out session.}
+\label{tab:loso}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Held-out session & A & B & C \\
+\midrule
+Train sessions & B+C & A+C & A+B \\
+Test samples & 2715 & 2345 & 2613 \\
+\midrule
+CENTER & 0.729 & 0.984 & 1.000 \\
+LEFT & 0.959 & 0.994 & 0.999 \\
+RIGHT & 0.772 & 0.920 & 0.954 \\
+UP & 0.410 & 0.975 & 1.000 \\
+DOWN & 0.782 & 0.271 & 1.000 \\
+FORWARD & 0.858 & 0.950 & 0.980 \\
+BACK & 0.609 & 0.723 & 0.924 \\
+\midrule
+\textbf{Macro $F_1$} & \textbf{0.731} & \textbf{0.831} & \textbf{0.979}\\
+\textbf{Accuracy} & \textbf{0.756} & \textbf{0.878} & \textbf{0.981}\\
+\bottomrule
+\end{tabular}
+\end{table}

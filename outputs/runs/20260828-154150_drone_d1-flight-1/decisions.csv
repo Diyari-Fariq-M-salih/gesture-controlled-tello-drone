@@ -1,0 +1,3 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying,seq,t_any
+1787924517.8438084,land,ground,Safety: battery 2.0% <= 15% -> land,LAND,,False,False,False,False,2.0,0.0,,0.0,False,,,False,False,0/20,-1.0,False,6,5.633883714675903
+1787924518.8445828,land,ground,Safety: battery 2.0% <= 15% -> land,LAND,,True,False,False,False,2.0,0.0,,0.0,True,371,371,False,False,0/20,-1.0,False,142,6.634658098220825

@@ -1,0 +1,1687 @@
+{
+  "results": [
+    {
+      "section": "abstract",
+      "claim": "270 logged trials over 43 instrumented runs",
+      "stated": [
+        270,
+        43
+      ],
+      "derived": [
+        270,
+        43
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "149 of them flown",
+      "stated": 149,
+      "derived": 149,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "ladder 0.997 / 0.910 / 0.783",
+      "stated": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "derived": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "spread 0.214 between reported and deployed",
+      "stated": 0.214,
+      "derived": 0.214,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "background 0.784 against illumination 0.880",
+      "stated": [
+        0.784,
+        0.88
+      ],
+      "derived": [
+        0.7838,
+        0.8803
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "III-B",
+      "claim": "the original campaign ran the rule throughout",
+      "stated": [
+        "rule_based"
+      ],
+      "derived": [
+        "rule_based"
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "rule on pointing 0.584 over 2625 frames",
+      "stated": [
+        0.584,
+        2625
+      ],
+      "derived": [
+        0.584,
+        2625
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "lateral F1 0.921 / 0.937 / 0.855",
+      "stated": [
+        0.921,
+        0.937,
+        0.855
+      ],
+      "derived": [
+        0.921,
+        0.937,
+        0.855
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "depth F1 0.008 / 0.066",
+      "stated": [
+        0.008,
+        0.066
+      ],
+      "derived": [
+        0.008,
+        0.066
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "6 holds excluded, lateral inversion without exception",
+      "stated": 6,
+      "derived": 6,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "the excluded holds invert 211 of 211 and 216 of 216 frames",
+      "stated": [
+        211,
+        216
+      ],
+      "derived": [
+        211,
+        216
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "depth fires in every hold but 9% of the window",
+      "stated": [
+        1.0,
+        0.092
+      ],
+      "derived": [
+        1.0,
+        0.092
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "67% of BACK holds emit a spurious FORWARD",
+      "stated": 0.667,
+      "derived": 0.667,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "gate changes accuracy by 0.004",
+      "stated": 0.004,
+      "derived": 0.004,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "no static class falls below 0.92 recall on the SVM",
+      "stated": 5,
+      "derived": 5,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "DOWN reaches 0.92 exactly, the SVM's lowest static class",
+      "stated": 0.92,
+      "derived": 0.92,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "on F1 two static classes fall short, LEFT and RIGHT",
+      "stated": 3,
+      "derived": 3,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "two of five reach 0.92 on the rule",
+      "stated": 2,
+      "derived": 2,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "CENTER, UP and DOWN fall short on the rule",
+      "stated": 3,
+      "derived": 3,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "depth contributes 82% of the 0.199 gap",
+      "stated": 0.199,
+      "derived": 0.199,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "depth share 0.82 at each arm's own frame shares",
+      "stated": 0.82,
+      "derived": 0.816,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "depth share 0.81 at pooled frame shares",
+      "stated": 0.81,
+      "derived": 0.81,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "remainder 0.037 after the depth channel",
+      "stated": 0.037,
+      "derived": 0.037,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "a hand was detected in every frame of the ground SVM capture",
+      "stated": 1.0,
+      "derived": 1.0,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-G",
+      "claim": "per-hold BACK 0.333 against per-frame 0.336",
+      "stated": [
+        0.333,
+        0.336
+      ],
+      "derived": [
+        0.333,
+        0.336
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-G",
+      "claim": "the two units agree on BACK to within 0.01",
+      "stated": 0.0,
+      "derived": -0.003,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-G",
+      "claim": "the six BACK holds divide two BACK, two LEFT, two RIGHT",
+      "stated": [
+        2,
+        2,
+        2
+      ],
+      "derived": [
+        2,
+        2,
+        2
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "BACK divides between LEFT at 0.33 and RIGHT at 0.30",
+      "stated": [
+        0.331,
+        0.298
+      ],
+      "derived": [
+        0.331,
+        0.298
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-E",
+      "claim": "the BACK split accounts for the whole class",
+      "stated": 1.0,
+      "derived": 1.0,
+      "status": "MATCH"
+    },
+    {
+      "section": "III",
+      "claim": "every parameter in Table III matches the deployed configuration",
+      "stated": [
+        14,
+        14
+      ],
+      "derived": [
+        14,
+        14
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "III",
+      "claim": "Table III has one row per measured parameter",
+      "stated": 15,
+      "derived": 15,
+      "status": "MATCH"
+    },
+    {
+      "section": "III",
+      "claim": "Table III carries the calibrated standoff, not a raw fraction",
+      "stated": true,
+      "derived": true,
+      "status": "MATCH"
+    },
+    {
+      "section": "III-D",
+      "claim": "face-follow target area fraction 0.075",
+      "stated": 0.075,
+      "derived": 0.075,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "sqrt(area) calibration 0.258 m over 4861 in-envelope frames",
+      "stated": [
+        0.258,
+        4861
+      ],
+      "derived": [
+        0.2579,
+        4861
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "box-height calibration 214 px.m",
+      "stated": 214.0,
+      "derived": 214.4,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "target framing 0.94 m, band 0.90--1.00 m",
+      "stated": [
+        0.94,
+        0.9,
+        1.0
+      ],
+      "derived": [
+        0.94,
+        0.9,
+        1.0
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "the target framing sits inside the 0.5--1.5 m envelope",
+      "stated": true,
+      "derived": true,
+      "status": "MATCH"
+    },
+    {
+      "section": "I",
+      "claim": "Table I's headline cell is Table VII's per-frame SVM accuracy",
+      "stated": 0.85,
+      "derived": 0.85,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-D",
+      "claim": "only two off-diagonal cells exceed 0.10, ground SVM",
+      "stated": 2,
+      "derived": 2,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "no off-diagonal cell exceeds 0.12 in folds C and D",
+      "stated": 0.12,
+      "derived": 0.119,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "in-flight SVM 0.850 per frame, 0.905 per hold",
+      "stated": [
+        0.85,
+        0.905
+      ],
+      "derived": [
+        0.85,
+        0.905
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "in-flight rule 0.651 per frame, 0.714 per hold",
+      "stated": [
+        0.651,
+        0.714
+      ],
+      "derived": [
+        0.651,
+        0.714
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "in-flight depth: SVM 0.777 / 0.336 vs rule 0.000 / 0.008",
+      "stated": [
+        0.777,
+        0.336,
+        0.0,
+        0.008
+      ],
+      "derived": [
+        0.777,
+        0.336,
+        0.0,
+        0.008
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "in-flight detection above 0.98 both arms",
+      "stated": [
+        0.986,
+        0.984
+      ],
+      "derived": [
+        0.986,
+        0.984
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "42 holds per arm",
+      "stated": [
+        42,
+        42
+      ],
+      "derived": [
+        42,
+        42
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "III-B",
+      "claim": "zero runs carry the SVM latency column",
+      "stated": 0,
+      "derived": 0,
+      "status": "MATCH"
+    },
+    {
+      "section": "III-B",
+      "claim": "16 runs carry the rule latency column",
+      "stated": 16,
+      "derived": 16,
+      "status": "MATCH"
+    },
+    {
+      "section": "III-B",
+      "claim": "27 compound labels in flight",
+      "stated": 27,
+      "derived": 27,
+      "status": "MATCH"
+    },
+    {
+      "section": "contrib",
+      "claim": "ladder quoted in the contributions bullet",
+      "stated": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "derived": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "concl",
+      "claim": "B->D strongest pairing at 0.977",
+      "stated": 0.977,
+      "derived": 0.977,
+      "status": "MATCH"
+    },
+    {
+      "section": "concl",
+      "claim": "ladder quoted in the conclusion",
+      "stated": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "derived": [
+        0.997,
+        0.91,
+        0.783
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-L",
+      "claim": "199 calls across 490 records",
+      "stated": [
+        199,
+        490
+      ],
+      "derived": [
+        199,
+        490
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-L",
+      "claim": "11 timeout calls, 5.5% of calls",
+      "stated": [
+        11,
+        5.5
+      ],
+      "derived": [
+        11,
+        5.5
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-L",
+      "claim": "35 timeout records, 7.1% of records",
+      "stated": [
+        35,
+        7.1
+      ],
+      "derived": [
+        35,
+        7.1
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-L",
+      "claim": "warning at charges up to 94%",
+      "stated": 94,
+      "derived": 94.0,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "6.2% of gesture frames carry an uncommanded depth component",
+      "stated": 6.2,
+      "derived": 6.2,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "LOSO gesture accuracy 0.872",
+      "stated": 0.872,
+      "derived": 0.91,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "within-session gesture accuracy 0.997",
+      "stated": 0.997,
+      "derived": 0.997,
+      "status": "MATCH"
+    },
+    {
+      "section": "abstract",
+      "claim": "in-flight face FRR 19.3%",
+      "stated": 19.3,
+      "derived": 19.3,
+      "status": "MATCH"
+    },
+    {
+      "section": "IV-B",
+      "claim": "mean grey 114 / 118 / 116 / 123",
+      "stated": [
+        114,
+        118,
+        116,
+        123
+      ],
+      "derived": [
+        114,
+        118,
+        116,
+        123
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "IV-B",
+      "claim": "blue-red 74 / 2 / 0 / -27",
+      "stated": [
+        74,
+        2,
+        0,
+        -27
+      ],
+      "derived": [
+        74,
+        2,
+        0,
+        -27
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "IV-B",
+      "claim": "usable samples 2715 / 2345 / 2613 / 2784",
+      "stated": [
+        2715,
+        2345,
+        2613,
+        2784
+      ],
+      "derived": [
+        2715,
+        2345,
+        2613,
+        2784
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-A",
+      "claim": "149 valid in-flight trials, all passed",
+      "stated": [
+        149,
+        149
+      ],
+      "derived": [
+        149,
+        149
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-B",
+      "claim": "median camera-to-command 18.6 ms",
+      "stated": 18.6,
+      "derived": 18.6,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-B",
+      "claim": "p95 camera-to-command 55.2 ms",
+      "stated": 55.2,
+      "derived": 55.2,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-B",
+      "claim": "frame age median 4.0 ms, p95 30.5 ms",
+      "stated": [
+        4.0,
+        30.5
+      ],
+      "derived": [
+        4.0,
+        30.5
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-B",
+      "claim": "22.3 fps over 557 s and 12,419 frames",
+      "stated": [
+        22.3,
+        557,
+        12419
+      ],
+      "derived": [
+        22.3,
+        557,
+        12419
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "within-session 0.997 / 0.988 / 1.000",
+      "stated": [
+        0.997,
+        0.988,
+        1.0
+      ],
+      "derived": [
+        0.997,
+        0.988,
+        1.0
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "held-out 0.756 / 0.878 / 0.981",
+      "stated": [
+        0.756,
+        0.878,
+        0.981
+      ],
+      "derived": [
+        0.793,
+        0.882,
+        0.978
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "sweep 0.9486 / 0.9840 / 0.9971",
+      "stated": [
+        0.9486,
+        0.984,
+        0.9971
+      ],
+      "derived": [
+        0.9486,
+        0.984,
+        0.9971
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "A->B 0.815, A->C 0.842",
+      "stated": [
+        0.815,
+        0.842
+      ],
+      "derived": [
+        0.815,
+        0.842
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "C->A 0.471, C->B 0.509",
+      "stated": [
+        0.471,
+        0.509
+      ],
+      "derived": [
+        0.471,
+        0.509
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-C",
+      "claim": "B->C 0.969",
+      "stated": 0.969,
+      "derived": 0.969,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "offline EER 0.32% on 76 vs 13,410 images",
+      "stated": 0.32,
+      "derived": null,
+      "status": "EXTERNAL",
+      "source": "I. Chaabeni; offline still-image benchmark, generator not in this repo"
+    },
+    {
+      "section": "V-H",
+      "claim": "live webcam FRR 1.1% (n=91)",
+      "stated": [
+        1.1,
+        91
+      ],
+      "derived": [
+        1.1,
+        91
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "drone in flight FRR 19.3% (n=684)",
+      "stated": [
+        19.3,
+        684
+      ],
+      "derived": [
+        19.3,
+        684
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-H",
+      "claim": "on-ground FRR in envelope 16.7% per frame, 9.2% gated, n=2792",
+      "stated": [
+        16.7,
+        9.2,
+        2792
+      ],
+      "derived": [
+        16.7,
+        9.2,
+        2792
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "genuine cluster 0.770 (sd 0.109)",
+      "stated": [
+        0.77,
+        0.109
+      ],
+      "derived": [
+        0.77,
+        0.11
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "background cluster 0.193 (sd 0.033)",
+      "stated": [
+        0.193,
+        0.033
+      ],
+      "derived": [
+        0.193,
+        0.033
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "background share 56% -> 20%",
+      "stated": [
+        56,
+        20
+      ],
+      "derived": [
+        56,
+        20
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "authorized share 41% -> 68%",
+      "stated": [
+        41,
+        68
+      ],
+      "derived": [
+        41,
+        68
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "search_360 decisions 130 -> 4",
+      "stated": [
+        130,
+        4
+      ],
+      "derived": [
+        130,
+        4
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-I",
+      "claim": "face decisions 72 -> 82",
+      "stated": [
+        72,
+        82
+      ],
+      "derived": [
+        72,
+        82
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "mode-switch rate 15.7 / 78.5 / 9.7 per min",
+      "stated": [
+        15.7,
+        78.5,
+        9.7
+      ],
+      "derived": [
+        15.7,
+        78.5,
+        9.7
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "impostor authorization 0.0% -> 5.6%, 20 trials rejected",
+      "stated": [
+        0.0,
+        5.6,
+        20
+      ],
+      "derived": [
+        0.0,
+        5.6,
+        20
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "hand raised 2.08 s, preemption 4.20 s, median 1.53 s",
+      "stated": [
+        2.08,
+        4.2,
+        1.53
+      ],
+      "derived": [
+        2.08,
+        4.2,
+        1.53
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "replay gives 13 of 15 authorized, not 5",
+      "stated": [
+        13,
+        15,
+        5
+      ],
+      "derived": [
+        13,
+        15,
+        5
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "replay preempts at 2.08 s",
+      "stated": 2.08,
+      "derived": 2.08,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-J",
+      "claim": "score trace 0.675, 0.479, 0.507, 0.513, 0.423, 0.414, 0.440, 0.455",
+      "stated": [
+        0.675,
+        0.479,
+        0.507,
+        0.513,
+        0.423,
+        0.414,
+        0.44,
+        0.455
+      ],
+      "derived": [
+        0.675,
+        0.479,
+        0.507,
+        0.513,
+        0.423,
+        0.414,
+        0.44,
+        0.455
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-F",
+      "claim": "64 active gesture frames in 22 trials, 4 contaminated (6.2%)",
+      "stated": [
+        64,
+        22,
+        4,
+        6.2
+      ],
+      "derived": [
+        64,
+        22,
+        4,
+        6.2
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "search covers median 60 deg over 5 episodes",
+      "stated": [
+        60,
+        5
+      ],
+      "derived": [
+        60,
+        5
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "retuned search 318 deg over 22 episodes, median 19.9 s",
+      "stated": [
+        318,
+        22,
+        19.9
+      ],
+      "derived": [
+        318,
+        22,
+        19.9
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "11 landings from 91% to 21% over 580 s",
+      "stated": [
+        11,
+        91,
+        21,
+        580
+      ],
+      "derived": [
+        11,
+        91.0,
+        21.0,
+        580
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "4-24 fps across 31 runs",
+      "stated": [
+        4,
+        24,
+        31
+      ],
+      "derived": [
+        4,
+        24,
+        31
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "pooled r = -0.08 between fps and battery",
+      "stated": -0.08,
+      "derived": -0.076,
+      "status": "MATCH"
+    },
+    {
+      "section": "V-K",
+      "claim": "8.4 fps with 48 reconnections",
+      "stated": [
+        8.4,
+        48
+      ],
+      "derived": [
+        8.4,
+        48
+      ],
+      "status": "MATCH"
+    },
+    {
+      "section": "V-L",
+      "claim": "latency mean 1766 ms, p95 4002 ms",
+      "stated": [
+        1766,
+        4002
+      ],
+      "derived": [
+        1766,
+        4002
+      ],
+      "status": "MATCH"
+    }
+  ],
+  "derived": {
+    "d_counts": {
+      "n_runs": 43,
+      "n_ground_runs": 9,
+      "n_flight_runs": 57,
+      "n_empty_dirs": 0,
+      "n_trials": 270,
+      "n_flight_trials": 149,
+      "n_flight_passed": 149
+    },
+    "d_protocol_ladder": {
+      "within_A": 0.997,
+      "loso_mean": 0.91,
+      "operational": 0.783,
+      "gap_within_minus_loso": 0.087,
+      "gap_within_minus_operational": 0.214
+    },
+    "d_pair_factors": {
+      "nothing_varies": 0.7391,
+      "background_varies": 0.7838,
+      "illumination_varies": 0.8803,
+      "both_vary": 0.7093
+    },
+    "d_classifier_deployed": {
+      "manifest_classifier_values": [
+        "rule_based"
+      ],
+      "runs_with_svm_latency_column": 0,
+      "runs_with_rule_latency_column": 16,
+      "compound_labels_in_flight": 27
+    },
+    "d_rule_operational": {
+      "accuracy": 0.584,
+      "hold_accuracy": 0.611,
+      "frames": 2625,
+      "holds": 36,
+      "f1": {
+        "CENTER": 0.672,
+        "LEFT": 0.921,
+        "RIGHT": 0.937,
+        "UP": 0.635,
+        "DOWN": 0.855,
+        "FORWARD": 0.008,
+        "BACK": 0.066
+      },
+      "gate_delta": 0.004,
+      "depth_hit_rate": 1.0,
+      "depth_frame_share": 0.092,
+      "back_opposite_rate": 0.667,
+      "excluded_holds": 6,
+      "excluded_frames_left": 211,
+      "excluded_frames_right": 216
+    },
+    "d_generalisations": {
+      "svm_static_ge_092": 5,
+      "rule_static_ge_092": 2,
+      "svm_static_f1_ge_092": 3,
+      "rule_static_below_092": 3,
+      "svm_static_min_recall": 0.92,
+      "ground_svm_detection_rate": 1.0,
+      "ground_svm_offdiag_gt_010": 2,
+      "folds_CD_max_offdiag": 0.119,
+      "gap": 0.199,
+      "depth_share_own": 0.816,
+      "remainder_own": 0.037,
+      "depth_share_pooled": 0.81,
+      "remainder_pooled": 0.038,
+      "gap_decomposition_own": {
+        "DOWN": 0.0041,
+        "BACK": 0.0488,
+        "FORWARD": 0.1133,
+        "UP": 0.0247,
+        "CENTER": 0.0003,
+        "LEFT": 0.0043,
+        "RIGHT": 0.0032
+      }
+    },
+    "d_cross_section": {
+      "back_hold_recall": 0.333,
+      "back_frame_recall": 0.336,
+      "back_hold_minus_frame": -0.003,
+      "back_majority_counts": {
+        "BACK": 2,
+        "LEFT": 2,
+        "RIGHT": 2
+      },
+      "back_split": {
+        "BACK": 0.336,
+        "LEFT": 0.331,
+        "RIGHT": 0.298,
+        "CENTER": 0.035
+      },
+      "back_split_sums_to_one": 1.0,
+      "table_I_cell": 0.85,
+      "table_VII_frame_accuracy": 0.85
+    },
+    "d_design_table": {
+      "rows": 15,
+      "params_matching_code": 14,
+      "params_checked": 14,
+      "mismatched": [],
+      "standoff_row_present": true
+    },
+    "d_follow_standoff": {
+      "target_area_frac": 0.075,
+      "deadband_area": 0.008,
+      "n_frames_in_envelope": 4861,
+      "k_sqrt_area_m": 0.2579,
+      "k_bbox_h_px_m": 214.4,
+      "standoff_m": 0.94,
+      "band_near_m": 0.9,
+      "band_far_m": 1.0,
+      "inside_envelope": true
+    },
+    "d_inflight": {
+      "svm": {
+        "frames": 5219,
+        "accuracy": 0.85,
+        "holds": 42,
+        "hold_accuracy": 0.905,
+        "detection": 0.986,
+        "per_class": {
+          "BACK": 0.336,
+          "CENTER": 0.988,
+          "DOWN": 0.92,
+          "FORWARD": 0.777,
+          "LEFT": 0.98,
+          "RIGHT": 0.985,
+          "UP": 0.999
+        },
+        "precision": {
+          "BACK": 0.859,
+          "CENTER": 0.941,
+          "DOWN": 1.0,
+          "FORWARD": 1.0,
+          "LEFT": 0.736,
+          "RIGHT": 0.685,
+          "UP": 1.0
+        },
+        "f1": {
+          "BACK": 0.483,
+          "CENTER": 0.964,
+          "DOWN": 0.958,
+          "FORWARD": 0.874,
+          "LEFT": 0.841,
+          "RIGHT": 0.808,
+          "UP": 0.999
+        },
+        "per_class_hold": {
+          "BACK": 0.333,
+          "CENTER": 1.0,
+          "DOWN": 1.0,
+          "FORWARD": 1.0,
+          "LEFT": 1.0,
+          "RIGHT": 1.0,
+          "UP": 1.0
+        },
+        "hold_majorities": {
+          "BACK": [
+            "BACK",
+            "BACK",
+            "LEFT",
+            "LEFT",
+            "RIGHT",
+            "RIGHT"
+          ],
+          "CENTER": [
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER"
+          ],
+          "DOWN": [
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN"
+          ],
+          "FORWARD": [
+            "FORWARD",
+            "FORWARD",
+            "FORWARD",
+            "FORWARD",
+            "FORWARD",
+            "FORWARD"
+          ],
+          "LEFT": [
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT"
+          ],
+          "RIGHT": [
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT"
+          ],
+          "UP": [
+            "UP",
+            "UP",
+            "UP",
+            "UP",
+            "UP",
+            "UP"
+          ]
+        },
+        "back_frame_split": {
+          "BACK": 0.336,
+          "LEFT": 0.331,
+          "RIGHT": 0.298,
+          "CENTER": 0.035
+        }
+      },
+      "rule": {
+        "frames": 5111,
+        "accuracy": 0.651,
+        "holds": 42,
+        "hold_accuracy": 0.714,
+        "detection": 0.984,
+        "per_class": {
+          "BACK": 0.008,
+          "CENTER": 0.881,
+          "DOWN": 0.908,
+          "FORWARD": 0.0,
+          "LEFT": 0.999,
+          "RIGHT": 0.968,
+          "UP": 0.854
+        },
+        "precision": {
+          "BACK": 0.75,
+          "CENTER": 0.567,
+          "DOWN": 1.0,
+          "FORWARD": 0.0,
+          "LEFT": 1.0,
+          "RIGHT": 0.997,
+          "UP": 0.548
+        },
+        "f1": {
+          "BACK": 0.017,
+          "CENTER": 0.69,
+          "DOWN": 0.952,
+          "FORWARD": 0.0,
+          "LEFT": 0.999,
+          "RIGHT": 0.982,
+          "UP": 0.668
+        },
+        "per_class_hold": {
+          "BACK": 0.0,
+          "CENTER": 1.0,
+          "DOWN": 1.0,
+          "FORWARD": 0.0,
+          "LEFT": 1.0,
+          "RIGHT": 1.0,
+          "UP": 1.0
+        },
+        "hold_majorities": {
+          "BACK": [
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "HOVER",
+            "NOHAND"
+          ],
+          "CENTER": [
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER",
+            "CENTER"
+          ],
+          "DOWN": [
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN",
+            "DOWN"
+          ],
+          "FORWARD": [
+            "CENTER",
+            "NOHAND",
+            "UP",
+            "UP",
+            "UP",
+            "UP"
+          ],
+          "LEFT": [
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT",
+            "LEFT"
+          ],
+          "RIGHT": [
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT",
+            "RIGHT"
+          ],
+          "UP": [
+            "UP",
+            "UP",
+            "UP",
+            "UP",
+            "UP",
+            "UP"
+          ]
+        }
+      }
+    },
+    "d_transfer": {
+      "A->B": 0.815,
+      "A->C": 0.842,
+      "A->D": 0.93,
+      "B->A": 0.709,
+      "B->C": 0.969,
+      "B->D": 0.977,
+      "C->A": 0.471,
+      "C->B": 0.509,
+      "C->D": 0.842,
+      "D->A": 0.638,
+      "D->B": 0.737,
+      "D->C": 0.966
+    },
+    "d_llm_denominators": {
+      "records": 490,
+      "calls": 199,
+      "timeout_records": 35,
+      "timeout_calls": 11,
+      "timeout_pct_of_records": 7.1,
+      "timeout_pct_of_calls": 5.5,
+      "latency_mean_ms": 1766,
+      "latency_p95_ms": 4002,
+      "max_spurious_warning_charge_any_run": 94.0
+    },
+    "d_depth_contamination": {
+      "trials": 22,
+      "active_frames": 64,
+      "contaminated": 4,
+      "pct": 6.2
+    },
+    "d_loso": {
+      "A": 0.793,
+      "B": 0.882,
+      "C": 0.978,
+      "D": 0.988,
+      "mean": 0.91,
+      "test_n": {
+        "A": 2715,
+        "B": 2345,
+        "C": 2613,
+        "D": 2784
+      }
+    },
+    "d_within_session": {
+      "A": 0.997,
+      "B": 0.988,
+      "C": 1.0,
+      "D": 1.0
+    },
+    "d_auth_rates": {
+      "webcam": {
+        "n": 91,
+        "frr_pct": 1.1
+      },
+      "drone_ground": {
+        "n": 122,
+        "frr_pct": 32.0
+      },
+      "drone_flight": {
+        "n": 684,
+        "frr_pct": 19.3
+      }
+    },
+    "d_capture_conditions": {
+      "A": {
+        "frames_sampled": 280,
+        "grey": 114,
+        "blue": 150,
+        "green": 127,
+        "red": 75,
+        "blue_minus_red": 74
+      },
+      "B": {
+        "frames_sampled": 286,
+        "grey": 118,
+        "blue": 119,
+        "green": 118,
+        "red": 117,
+        "blue_minus_red": 2
+      },
+      "C": {
+        "frames_sampled": 280,
+        "grey": 116,
+        "blue": 117,
+        "green": 115,
+        "red": 118,
+        "blue_minus_red": 0
+      },
+      "D": {
+        "frames_sampled": 280,
+        "grey": 123,
+        "blue": 105,
+        "green": 121,
+        "red": 133,
+        "blue_minus_red": -27
+      },
+      "_from": "outputs/metrics/capture_conditions.json"
+    },
+    "d_runtime": {
+      "run": "20260920-013558_drone_n1-scenarios-6-7",
+      "airborne_s": 557,
+      "frames": 12419,
+      "fps": 22.3,
+      "camera_to_command_ms": {
+        "median": 18.6,
+        "p95": 55.2
+      },
+      "frame_age_ms": {
+        "median": 4.0,
+        "p95": 30.5
+      },
+      "hand_detect_ms": {
+        "median": 25.2,
+        "p95": 36.9
+      },
+      "face_id_ms": {
+        "median": 13.4,
+        "p95": 16.6
+      }
+    },
+    "d_sweep": {
+      "100": 0.9486,
+      "250": 0.984,
+      "400": 0.9971
+    },
+    "d_ground_envelope_frr": {
+      "n": 2792,
+      "frr_pct_per_frame": 16.7,
+      "frr_pct_gated": 9.2,
+      "threshold": 0.55
+    },
+    "d_stale_crop": {
+      "bench": {
+        "n": 201,
+        "below_0.4_pct": 56,
+        "authorized_pct": 41.29,
+        "genuine_mean": 0.77,
+        "genuine_sd": 0.11,
+        "background_mean": 0.193,
+        "background_sd": 0.033,
+        "modes": {
+          "hover": 274,
+          "search_360": 130,
+          "face": 72,
+          "gesture": 17
+        }
+      },
+      "bench2": {
+        "n": 122,
+        "below_0.4_pct": 20,
+        "authorized_pct": 68.03,
+        "genuine_mean": 0.717,
+        "genuine_sd": 0.152,
+        "background_mean": 0.233,
+        "background_sd": 0.107,
+        "modes": {
+          "face": 82,
+          "hover": 26,
+          "gesture": 21,
+          "search_360": 4
+        }
+      }
+    },
+    "d_ablation": {
+      "no_gate": 9.7,
+      "no_auth_hysteresis": 78.5,
+      "deployed": 15.7
+    },
+    "d_impostor": {
+      "bare": {
+        "trials": 20,
+        "passed": 20,
+        "frames": 149,
+        "authorized_pct": 0.0
+      },
+      "hysteresis": {
+        "trials": 20,
+        "passed": 20,
+        "frames": 54,
+        "authorized_pct": 5.6
+      }
+    },
+    "d_hysteresis_trial": {
+      "run": "20260828-161355_webcam_d1-arbitration",
+      "frames": 15,
+      "scores": [
+        0.675,
+        0.479,
+        0.507,
+        0.513,
+        0.423,
+        0.414,
+        0.44,
+        0.455,
+        0.746,
+        0.765,
+        0.687,
+        0.553,
+        0.449,
+        0.49,
+        0.485
+      ],
+      "hand_raised_at_s": 2.08,
+      "preempted_at_s": 4.2,
+      "median_preemption_s_successful_trials": 1.53,
+      "n_successful_same_arm": 17,
+      "authorized_as_logged": 5,
+      "authorized_under_replay": 13,
+      "replay_preemption_s": 2.08
+    },
+    "d_search": {
+      "before": {
+        "episodes": 5,
+        "runs": [
+          "20260903-195417_drone_home-flight-1"
+        ],
+        "median_deg": 60,
+        "median_duration_s": 4.4
+      },
+      "after": {
+        "episodes": 22,
+        "runs": [
+          "20260920-013558_drone_n1-scenarios-6-7",
+          "20260920-015011_drone_n1-scenarios-6-7"
+        ],
+        "median_deg": 318,
+        "median_duration_s": 19.9
+      }
+    },
+    "d_failsafe": {
+      "landings": 11,
+      "battery_first": 91.0,
+      "battery_last": 21.0,
+      "airborne_s": 580
+    },
+    "d_radio": {
+      "runs": 31,
+      "fps_min": 4.2,
+      "fps_max": 23.9,
+      "pearson_r_fps_battery": -0.076,
+      "worst": {
+        "run": "20260828-164612_drone_d1-flight-1",
+        "fps": 4.220892449485017,
+        "reopen": 0,
+        "bat": 56.125
+      },
+      "most_reopens": {
+        "run": "20260828-170904_drone_d1-scenario-3",
+        "fps": 8.44957238833009,
+        "reopen": 48,
+        "bat": 67.39583333333333
+      }
+    },
+    "d_llm": {
+      "decision_rows_with_reason": 490,
+      "explanations_logged": 199,
+      "hard_error_rows": 35,
+      "hard_error_pct_of_rows": 7,
+      "latency_mean_ms": 1766,
+      "latency_p95_ms": 4002,
+      "spurious_battery_warning_charges_this_run": [
+        43.0,
+        47.0,
+        50.0
+      ],
+      "spurious_battery_warning_max_charge_any_run": 94.0
+    }
+  }
+}

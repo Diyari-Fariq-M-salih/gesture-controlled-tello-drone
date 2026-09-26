@@ -1,0 +1,16 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying,seq,t_any
+1790071703.5855746,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,False,False,False,False,7.0,0.0,,0.0,False,,,False,False,0/40,-1.0,False,11,5.687969923019409
+1790071704.6263096,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,False,False,True,False,7.0,0.0,,0.0,False,,,False,False,0/40,-1.0,False,143,6.707761526107788
+1790071705.6159012,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,False,False,True,False,7.0,0.0,,0.0,False,,,False,False,0/40,-1.0,False,167,7.718296527862549
+1790071706.643791,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,True,False,7.0,0.0,,0.0,False,329,329,False,False,0/40,-1.0,False,192,8.746186256408691
+1790071707.6518226,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,True,False,7.0,0.0,,0.0,False,369,369,False,False,0/40,-1.0,False,216,9.754217863082886
+1790071707.8675518,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,True,False,7.0,0.0,LLM error (ReadTimeout),4234.718100051396,False,369,369,False,False,0/40,-1.0,False,221,9.943596601486206
+1790071708.5303617,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,...,704.3475999962538,False,369,369,False,False,0/40,-1.0,False,237,10.609152555465698
+1790071709.5764515,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,20.0,...,704.3475999962538,False,544,544,False,False,0/40,-1.0,False,262,11.678772211074829
+1790071710.6100376,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,...,704.3475999962538,True,272,272,False,False,0/40,-1.0,False,287,12.712432861328125
+1790071710.9255924,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,Safety: battery 7.0% <= 15,2147.1389000071213,True,238,238,False,False,0/40,-1.0,False,294,13.003171443939209
+1790071711.9315693,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,Safety: battery 7.0% <= 15,2147.1389000071213,True,246,182,False,False,0/40,-1.0,False,318,14.008809566497803
+1790071712.4309435,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,Do not invent battery warnings unless battery <= 15.,1525.6216999841854,False,246,182,False,False,0/40,-1.0,False,330,14.511355876922607
+1790071713.4587135,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,-10.0,Do not invent battery warnings unless battery <= 15.,1525.6216999841854,True,209,209,False,False,0/40,-1.0,False,355,15.561108827590942
+1790071713.9377692,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,True,False,False,False,7.0,0.0,"Battery voltage is low, drone must land",1475.2662999089807,False,209,209,False,False,0/40,-1.0,False,366,16.013416528701782
+1790071716.9792414,land,ground,Safety: battery 7.0% <= 15% -> land,LAND,,False,False,False,False,7.0,0.0,The drone is within the safety zone of not having a battery above 15%.,2394.9857000261545,False,209,209,False,False,0/40,-1.0,False,375,19.081636667251587

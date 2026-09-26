@@ -1,0 +1,340 @@
+{
+  "runs": [
+    "20260920-113736_capture_gesture-svm"
+  ],
+  "hold_frames": 2947,
+  "classifiers": [
+    {
+      "classifier": "RBF-SVM",
+      "frames": 2947,
+      "holds": 42,
+      "hold_accuracy": 0.8095,
+      "hold_accuracy_ci95": [
+        0.667,
+        0.9002
+      ],
+      "holds_with_no_detection": 0,
+      "detection_rate": 1.0,
+      "detection_rate_ci95": [
+        0.9987,
+        1.0
+      ],
+      "accuracy_all_frames": 0.7835,
+      "accuracy_all_frames_ci95": [
+        0.7683,
+        0.798
+      ],
+      "accuracy_given_detected": 0.7835,
+      "accuracy_given_detected_ci95": [
+        0.7683,
+        0.798
+      ],
+      "detection_failures": 0,
+      "misclassifications": 638,
+      "macro_f1": 0.7721,
+      "per_class": {
+        "CENTER": {
+          "n": 421,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "LEFT": {
+          "n": 421,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "RIGHT": {
+          "n": 427,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 0.2763,
+          "f1": 0.433
+        },
+        "UP": {
+          "n": 422,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 0.9194,
+          "f1": 0.958
+        },
+        "DOWN": {
+          "n": 424,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0
+        },
+        "FORWARD": {
+          "n": 414,
+          "detection_rate": 1.0,
+          "precision": 1.0,
+          "recall": 0.2874,
+          "f1": 0.4465
+        },
+        "BACK": {
+          "n": 418,
+          "detection_rate": 1.0,
+          "precision": 0.3958,
+          "recall": 1.0,
+          "f1": 0.5672
+        }
+      },
+      "confusion_matrix_with_nodetect": [
+        [
+          421,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          421,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          118,
+          0,
+          0,
+          0,
+          309,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          388,
+          0,
+          0,
+          34,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          424,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          119,
+          295,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          418,
+          0
+        ]
+      ]
+    },
+    {
+      "classifier": "Rule-based (deployed path)",
+      "frames": 2947,
+      "holds": 42,
+      "hold_accuracy": 0.2857,
+      "hold_accuracy_ci95": [
+        0.1717,
+        0.4357
+      ],
+      "holds_with_no_detection": 0,
+      "detection_rate": 1.0,
+      "detection_rate_ci95": [
+        0.9987,
+        1.0
+      ],
+      "accuracy_all_frames": 0.2871,
+      "accuracy_all_frames_ci95": [
+        0.271,
+        0.3037
+      ],
+      "accuracy_given_detected": 0.2871,
+      "accuracy_given_detected_ci95": [
+        0.271,
+        0.3037
+      ],
+      "detection_failures": 0,
+      "misclassifications": 2101,
+      "macro_f1": 0.152,
+      "per_class": {
+        "CENTER": {
+          "n": 421,
+          "detection_rate": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "LEFT": {
+          "n": 421,
+          "detection_rate": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "RIGHT": {
+          "n": 427,
+          "detection_rate": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "UP": {
+          "n": 422,
+          "detection_rate": 1.0,
+          "precision": 0.5006,
+          "recall": 1.0,
+          "f1": 0.6672
+        },
+        "DOWN": {
+          "n": 424,
+          "detection_rate": 1.0,
+          "precision": 0.2475,
+          "recall": 1.0,
+          "f1": 0.3968
+        },
+        "FORWARD": {
+          "n": 414,
+          "detection_rate": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "BACK": {
+          "n": 418,
+          "detection_rate": 1.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "confusion_matrix_with_nodetect": [
+        [
+          0,
+          0,
+          0,
+          421,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          391,
+          0,
+          0,
+          0,
+          30,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          427,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          422,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          424,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          414,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          418,
+          0,
+          0,
+          0
+        ]
+      ]
+    }
+  ],
+  "depth_contamination": {
+    "cued_lateral_frames": 1694,
+    "contaminated": 0,
+    "pct": 0.0,
+    "ci95_pct": [
+      0.0,
+      0.23
+    ],
+    "any_depth_component": 0,
+    "any_depth_pct": 0.0,
+    "delta_s_abs_median": 0.0023,
+    "delta_s_abs_p95": 0.0177,
+    "scale_threshold": 0.18,
+    "delta_s_over_threshold_pct": 0.0
+  },
+  "result_provenance": {
+    "platform_specific": [
+      "detection_rate -- depends on this camera, its H.264 encoder and the link rate",
+      "accuracy_all_frames -- inherits the detection rate, so it moves with the platform",
+      "delta_s magnitude -- scales with the frame interval this link delivers"
+    ],
+    "structural": [
+      "hold_accuracy vs accuracy_all_frames -- the gap between the independent unit and the frame count is the same near-duplicate effect the paper identifies in within-session splitting, reproduced in its own measurement",
+      "accuracy_given_detected vs the offline within-session figure -- the gap is the evaluation protocol, not the hardware",
+      "spurious FORWARD/BACK on cued lateral frames -- delta_s is differenced between frames without normalising by delta_t, so it is wrong wherever the rate varies",
+      "rule-vs-SVM disagreement on identical frames -- a property of the two classifiers"
+    ]
+  }
+}

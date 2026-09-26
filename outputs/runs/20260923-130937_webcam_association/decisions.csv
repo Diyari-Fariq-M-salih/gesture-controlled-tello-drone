@@ -1,0 +1,133 @@
+t,mode,command,det_reason,gesture,gesture_conf,face_raw,face_auth,hand_raw,hand_auth,battery,altitude_cm,llm_reason,llm_latency_ms,assoc_d,assoc_hands,assoc_mode,assoc_ok,assoc_reason,assoc_skeleton_hits,crop_ok,face_bbox_h,face_bbox_w,faceid_enrolled,faceid_enrolling,faceid_progress,faceid_score,flying
+1790161781.0711033,hover,ground,Autonomy: no intent -> hover,HOVER,,False,False,False,False,,,,,,0,,0,no_face,0,False,,,False,False,0/20,-1.0,False
+1790161781.6141083,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,False,False,,,,,,0,,0,no_face,0,True,133,133,False,False,0/20,-1.0,False
+1790161782.1316278,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,False,False,,,,,,0,,0,no_face,0,True,134,134,False,False,0/20,-1.0,False
+1790161782.6949916,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,False,False,,,,,,0,,0,no_face,0,True,159,159,False,True,2/20,-1.0,False
+1790161783.2030094,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,False,False,,,,,,0,,0,no_face,0,True,166,166,False,True,12/20,-1.0,False
+1790161783.7827456,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,165,165,True,False,0/20,0.9823479652404785,False
+1790161784.3283093,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,164,164,True,False,0/20,0.9697305560112,False
+1790161784.8158822,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,160,160,True,False,0/20,0.8589591979980469,False
+1790161785.4570901,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,145,145,True,False,0/20,0.9392106533050537,False
+1790161786.1779382,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,2,pose,0,handedness=Left(0.99);handedness=Left(0.97),8,True,143,143,True,False,0/20,0.9036880731582642,False
+1790161786.4822626,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,148,148,True,False,0/20,0.8926876783370972,False
+1790161787.1827774,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,2,pose,0,handedness=Left(0.99);handedness=Left(0.99),8,True,159,159,True,False,0/20,0.9005677700042725,False
+1790161787.6806438,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,2,pose,0,handedness=Left(0.99);handedness=Left(0.98),8,True,152,152,True,False,0/20,0.8461411595344543,False
+1790161788.149948,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,pose,0,handedness=Left(0.99),8,True,156,156,True,False,0/20,0.8866716623306274,False
+1790161788.6317024,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,158,158,True,False,0/20,0.9255531430244446,False
+1790161789.306816,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,pose,0,handedness=Left(0.98),8,True,152,152,True,False,0/20,0.9255120158195496,False
+1790161789.818908,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,158,158,True,False,0/20,0.7757103443145752,False
+1790161790.3225322,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,157,157,True,False,0/20,0.8108406066894531,False
+1790161791.0052972,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,pose,0,handedness=Left(0.99),8,True,160,160,True,False,0/20,0.7191227674484253,False
+1790161791.5546806,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,157,157,True,False,0/20,0.8028329610824585,False
+1790161792.09047,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,160,160,True,False,0/20,0.927858293056488,False
+1790161792.6794486,gesture,ground,Perception: hand_detected -> gesture (preempts face),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,161,161,True,False,0/20,0.7983372211456299,False
+1790161793.1169224,gesture,ground,Perception: hand_detected -> gesture (preempts face),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,158,158,True,False,0/20,0.9529956579208374,False
+1790161793.651248,gesture,ground,Perception: hand_detected -> gesture (preempts face),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,157,157,True,False,0/20,0.8962438106536865,False
+1790161794.156267,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,144,144,True,False,0/20,0.22546982765197754,False
+1790161794.6636477,gesture,ground,Perception: hand_detected -> gesture (preempts face),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,147,147,True,False,0/20,0.2269233763217926,False
+1790161795.169573,gesture,ground,Perception: hand_detected -> gesture (preempts face),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,139,139,True,False,0/20,0.8729286193847656,False
+1790161795.7076032,gesture,ground,Perception: hand_detected -> gesture (preempts face),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,138,138,True,False,0/20,0.8920782804489136,False
+1790161796.2899582,gesture,ground,Perception: hand_detected -> gesture (preempts face),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,139,139,True,False,0/20,0.8836528658866882,False
+1790161796.8486583,gesture,ground,Perception: hand_detected -> gesture (preempts face),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,140,140,True,False,0/20,0.909445583820343,False
+1790161797.384515,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,138,138,True,False,0/20,0.33947163820266724,False
+1790161797.9109533,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,130,130,True,False,0/20,0.3100481331348419,False
+1790161798.4572861,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,129,129,True,False,0/20,0.24549800157546997,False
+1790161799.0188687,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,120,120,True,False,0/20,0.24898789823055267,False
+1790161799.5751655,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,121,121,True,False,0/20,0.18246883153915405,False
+1790161800.2015896,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,0.149,1,pose,1,ok,8,True,136,136,True,False,0/20,0.6531051397323608,False
+1790161800.603034,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,140,140,True,False,0/20,0.7368065118789673,False
+1790161801.1506765,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,144,144,True,False,0/20,0.7488964796066284,False
+1790161801.7290125,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,144,144,True,False,0/20,0.7387040853500366,False
+1790161802.295135,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,148,148,True,False,0/20,0.7020653486251831,False
+1790161802.8566062,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,iou,1,ok,0,True,148,148,True,False,0/20,0.742631196975708,False
+1790161803.3531535,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,152,152,True,False,0/20,0.6705038547515869,False
+1790161803.9088233,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,150,150,True,False,0/20,0.6668317317962646,False
+1790161804.538877,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,True,True,False,,,,,,1,pose,0,far(0.95>0.70),8,True,153,153,True,False,0/20,0.6199315190315247,False
+1790161805.0462067,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,True,True,False,,,,,,1,pose,0,far(2.27>0.70),8,True,152,152,True,False,0/20,0.6147102117538452,False
+1790161805.524779,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,152,152,True,False,0/20,0.5753897428512573,False
+1790161806.158079,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,pose,0,far(2.00>0.70),8,True,152,152,True,False,0/20,0.5544938445091248,False
+1790161806.653881,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,154,154,True,False,0/20,0.5603480339050293,False
+1790161807.2701764,face,ground,Perception: face_detected -> face,FACE,,True,True,True,False,,,,,,1,held,0,held,0,True,150,150,True,False,0/20,0.5066103935241699,False
+1790161807.8423388,face,ground,Perception: face_detected -> face,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,153,153,True,False,0/20,0.4726482331752777,False
+1790161808.3225334,face,ground,Perception: face_detected -> face,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,155,155,True,False,0/20,0.5205712914466858,False
+1790161808.844336,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,146,146,True,False,0/20,0.565752387046814,False
+1790161809.356426,gesture,ground,Perception: hand_detected -> gesture (priority),CENTER,,True,True,True,True,,,,,,1,held,1,held,0,True,146,146,True,False,0/20,0.5335006713867188,False
+1790161809.9167838,gesture,ground,Perception: hand_detected -> gesture (priority),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,146,146,True,False,0/20,0.5412949323654175,False
+1790161810.4926634,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,146,146,True,False,0/20,0.43032240867614746,False
+1790161811.0565932,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,146,146,True,False,0/20,0.43011194467544556,False
+1790161811.5537558,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,147,147,True,False,0/20,0.4575009047985077,False
+1790161812.0590975,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,147,147,True,False,0/20,0.3981117010116577,False
+1790161812.6059904,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,150,150,True,False,0/20,0.3720088601112366,False
+1790161813.0695724,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,159,159,True,False,0/20,0.3649321496486664,False
+1790161813.6168368,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,163,163,True,False,0/20,0.4126684069633484,False
+1790161814.1125412,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,171,171,True,False,0/20,0.39300525188446045,False
+1790161814.669112,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,163,163,True,False,0/20,0.4121987819671631,False
+1790161815.174247,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,168,168,True,False,0/20,0.2515530586242676,False
+1790161815.6793635,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,166,166,True,False,0/20,0.4290432333946228,False
+1790161816.2368474,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,172,172,True,False,0/20,0.33270978927612305,False
+1790161816.7509797,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,165,165,True,False,0/20,0.46436595916748047,False
+1790161817.2591395,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,164,164,True,False,0/20,0.43439745903015137,False
+1790161817.7328317,gesture,ground,Perception: hand_detected -> gesture (priority),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,164,164,True,False,0/20,0.5756529569625854,False
+1790161818.2508411,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,158,158,True,False,0/20,0.3318350613117218,False
+1790161818.7954593,gesture,ground,Perception: hand_detected -> gesture (priority),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,162,162,True,False,0/20,0.39813172817230225,False
+1790161819.316093,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,163,163,True,False,0/20,0.43506065011024475,False
+1790161819.9012878,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,162,162,True,False,0/20,0.33954742550849915,False
+1790161820.4758644,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,167,167,True,False,0/20,0.4546430706977844,False
+1790161820.9836848,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,161,161,True,False,0/20,0.416498601436615,False
+1790161821.5495708,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,174,174,True,False,0/20,0.5332902669906616,False
+1790161822.1862988,gesture,ground,Perception: hand_detected -> gesture (preempts face),LEFT,,True,True,True,True,,,,,0.211,1,pose,1,ok,8,True,166,166,True,False,0/20,0.480380117893219,False
+1790161822.629685,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,172,172,True,False,0/20,0.3456920385360718,False
+1790161823.1365836,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,172,172,True,False,0/20,0.40487730503082275,False
+1790161823.6305633,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,170,170,True,False,0/20,0.4280446469783783,False
+1790161824.185791,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,169,169,True,False,0/20,0.4672969579696655,False
+1790161824.7361028,gesture,ground,Perception: hand_detected -> gesture (preempts face),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,171,171,True,False,0/20,0.6779282689094543,False
+1790161825.2882679,gesture,ground,Perception: hand_detected -> gesture (preempts face),NOHAND,,True,False,True,False,,,,,,1,,0,no_face,0,True,174,174,True,False,0/20,0.25196564197540283,False
+1790161825.8475566,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,175,175,True,False,0/20,0.3021066188812256,False
+1790161826.3693612,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,174,174,True,False,0/20,0.4416615068912506,False
+1790161826.8849971,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,172,172,True,False,0/20,0.4921058714389801,False
+1790161827.433507,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,178,178,True,False,0/20,0.27096471190452576,False
+1790161827.9495196,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,173,173,True,False,0/20,0.4061649441719055,False
+1790161828.5049462,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,176,176,True,False,0/20,0.33416005969047546,False
+1790161829.0009174,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,170,170,True,False,0/20,0.27455252408981323,False
+1790161829.5567603,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,165,165,True,False,0/20,0.26973897218704224,False
+1790161830.0725489,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,162,162,True,False,0/20,0.2964816093444824,False
+1790161830.567092,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,165,165,True,False,0/20,0.3147924840450287,False
+1790161831.072448,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,171,171,True,False,0/20,0.2702762484550476,False
+1790161831.5959198,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,166,166,True,False,0/20,0.3211023807525635,False
+1790161832.1133375,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,157,157,True,False,0/20,0.36221766471862793,False
+1790161832.6698616,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,168,168,True,False,0/20,0.30941733717918396,False
+1790161833.1737325,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,160,160,True,False,0/20,0.40361160039901733,False
+1790161833.6926882,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,168,168,True,False,0/20,0.21527855098247528,False
+1790161834.2599406,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,162,162,True,False,0/20,0.38979101181030273,False
+1790161834.776088,hover,ground,Autonomy: no intent -> hover,HOVER,,True,False,True,False,,,,,,1,,0,no_face,0,True,176,176,True,False,0/20,0.27966415882110596,False
+1790161835.2824357,search_360,ground,Autonomy: no human for 10.0s -> search_360,SEARCH,,True,False,True,False,,,,,,1,,0,no_face,0,True,168,168,True,False,0/20,0.4883221983909607,False
+1790161835.7890055,search_360,ground,Autonomy: no human for 10.0s -> search_360,SEARCH,,True,False,True,False,,,,,,1,,0,no_face,0,True,168,168,True,False,0/20,0.4362512230873108,False
+1790161836.3666716,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,175,175,True,False,0/20,0.8076498508453369,False
+1790161836.9238014,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,169,169,True,False,0/20,0.8389819860458374,False
+1790161837.4280345,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,167,167,True,False,0/20,0.8334043025970459,False
+1790161837.9470508,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,168,168,True,False,0/20,0.827815055847168,False
+1790161838.4934764,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,172,172,True,False,0/20,0.8169784545898438,False
+1790161839.0611792,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,176,176,True,True,3/20,0.8505339622497559,False
+1790161839.5672405,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,177,177,True,True,11/20,0.862439751625061,False
+1790161840.1314797,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,174,174,True,False,0/20,0.991557240486145,False
+1790161840.6903799,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,0.188,1,pose,1,ok,8,True,174,174,True,False,0/20,0.9275107383728027,False
+1790161841.1252146,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,175,175,True,False,0/20,0.9104465246200562,False
+1790161841.681835,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,178,178,True,False,0/20,0.9156150817871094,False
+1790161842.1945322,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,171,171,True,False,0/20,0.4778706431388855,False
+1790161842.8139088,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,0.214,1,pose,1,ok,8,True,177,177,True,False,0/20,0.8714302182197571,False
+1790161843.217509,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,182,182,True,False,0/20,0.6730207800865173,False
+1790161843.7643204,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,176,176,True,False,0/20,0.7005575895309448,False
+1790161844.2673047,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,182,182,True,False,0/20,0.5719089508056641,False
+1790161844.8931887,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,0.212,1,pose,1,ok,8,True,181,181,True,False,0/20,0.6416070461273193,False
+1790161845.2759953,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,held,1,held,0,True,183,183,True,False,0/20,0.6744543313980103,False
+1790161845.8822758,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,1,iou,1,ok,0,True,184,184,True,False,0/20,0.6039143800735474,False
+1790161846.396501,gesture,ground,Search: hand_detected -> gesture (exit search),LEFT,,True,True,True,True,,,,,,2,iou,1,ok,0,True,184,184,True,False,0/20,0.7055015563964844,False
+1790161846.8319516,gesture,ground,Search: hand_detected -> gesture (exit search),NOHAND,,True,True,False,False,,,,,,0,,0,no_hand,0,True,190,190,True,False,0/20,0.6998646855354309,False
+1790161847.3888113,gesture,ground,Search: hand_detected -> gesture (exit search),NOHAND,,True,True,False,False,,,,,,0,,0,no_hand,0,True,232,232,True,False,0/20,0.4942058026790619,False
+1790161847.8945646,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,252,252,True,False,0/20,0.7483383417129517,False
+1790161848.3999238,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,256,256,True,False,0/20,0.8228130340576172,False
+1790161848.9213424,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,256,256,True,False,0/20,0.6380890607833862,False
+1790161849.4691305,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,250,250,True,False,0/20,0.5710324048995972,False
+1790161850.030438,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,261,261,True,False,0/20,0.6255085468292236,False
+1790161850.5545442,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,264,264,True,False,0/20,0.6253598928451538,False
+1790161851.0161974,face,ground,Perception: face_detected -> face,FACE,,True,True,False,False,,,,,,0,,0,no_hand,0,True,256,256,True,False,0/20,0.5345829725265503,False
