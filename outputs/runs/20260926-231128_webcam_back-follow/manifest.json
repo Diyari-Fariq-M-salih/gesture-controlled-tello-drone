@@ -1,0 +1,70 @@
+{
+  "run_id": "webcam_back-follow",
+  "name": "20260926-231128_webcam_back-follow",
+  "note": "",
+  "started_at": 1790457088.6169524,
+  "started_at_iso": "2026-09-26T23:11:28",
+  "git_sha": "0042e6a786df9952e0d11f4d00a763c759731d2e",
+  "git_dirty": true,
+  "libraries": {
+    "python": "3.12.3",
+    "cv2": "4.11.0",
+    "mediapipe": "0.10.14",
+    "numpy": "1.26.4",
+    "sklearn": "1.5.2",
+    "onnxruntime": "1.19.2",
+    "joblib": "1.4.2"
+  },
+  "host": {
+    "platform": "Windows-10-10.0.19045-SP0",
+    "processor": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "machine": "AMD64"
+  },
+  "argv": [
+    "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\tello_gesture_py\\scripts\\back_follow_demo.py"
+  ],
+  "back_follow": {
+    "reid_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\models\\third_party\\osnet_x0_25_msmt17.onnx",
+    "pose_model": "C:\\Users\\deary\\Desktop\\Diyari_Fariq\\projects\\gesture-controlled-tello-drone\\models\\mediapipe\\pose_landmarker_full.task",
+    "num_poses": 2,
+    "pose_every_n": 1,
+    "enroll_delay_s": 6.0,
+    "enroll_samples": 20,
+    "enroll_every_s": 0.12,
+    "enroll_timeout_s": 20.0,
+    "enroll_min_samples": 8,
+    "match_on": 0.65,
+    "match_off": 0.5,
+    "hold_s": 0.7,
+    "vis_thresh": 0.5,
+    "min_torso_px": 40.0,
+    "follow_distance_m": 2.0,
+    "follow_height_m": 2.0,
+    "torso_m": 0.5,
+    "focal_px_960": 680.0,
+    "kp_yaw": 0.12,
+    "max_yaw": 30,
+    "deadband_px": 30,
+    "kp_fb_per_m": 25.0,
+    "max_fb": 30,
+    "deadband_m": 0.25,
+    "kp_ud_per_m": 60.0,
+    "max_ud": 30,
+    "deadband_h_m": 0.1
+  },
+  "recording": {
+    "fps": 20.0,
+    "start_time": 1790457094.8986356,
+    "files": {
+      "session": {
+        "path": "session.mp4",
+        "frames": 1248,
+        "seconds": 62.4
+      }
+    },
+    "mean_write_ms_per_frame": 3.7,
+    "slots_skipped": 0
+  },
+  "ended_at": 1790457157.5784335,
+  "duration_s": 68.96148109436035
+}

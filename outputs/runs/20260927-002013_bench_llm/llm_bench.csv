@@ -1,0 +1,41 @@
+model,i,mode,battery,ms,error,reason,timeout,valid,on_mode,false_bat,short
+phi4-mini,0,hover,94.0,1379,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,1,hover,63.0,1166,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,2,land,15.0,978,,Safety: battery low,0,1,1,0,1
+phi4-mini,3,face,75.0,797,,Face detected,0,1,1,0,1
+phi4-mini,4,gesture,80.0,1090,,Hand detected; gesture command issued.,0,1,1,0,1
+phi4-mini,5,gesture,78.0,1122,,Hand detected; gesture command issued.,0,1,1,0,1
+phi4-mini,6,land,3.0,1091,,Safety: battery low -> land,0,1,1,0,1
+phi4-mini,7,gesture,79.0,845,,No gesture detected,0,1,1,0,1
+phi4-mini,8,hover,48.0,1090,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,9,land,28.0,878,,Safety: battery low,0,1,1,1,1
+phi4-mini,10,land,15.0,915,,Safety: battery low,0,1,1,0,1
+phi4-mini,11,search_360,81.0,1024,,Executing search_360 maneuver,0,1,1,0,1
+phi4-mini,12,search_360,59.0,968,,Executing search_360 maneuver,0,1,1,0,1
+phi4-mini,13,face,45.0,760,,Face detected,0,1,1,0,1
+phi4-mini,14,search_360,94.0,938,,Executing search_360 maneuver,0,1,1,0,1
+phi4-mini,15,land,7.0,1010,,Safety: battery low -> land,0,1,1,0,1
+phi4-mini,16,search_360,68.0,1423,,Autonomy: no human for 48.0s,0,1,0,0,1
+phi4-mini,17,hover,36.0,1176,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,18,search_360,38.0,998,,Executing search_360 maneuver,0,1,1,0,1
+phi4-mini,19,gesture,91.0,1242,,Adjusting drone's position and orientation.,0,1,0,0,1
+phi4-mini,20,gesture,45.0,1167,,Hand detected; gesture command issued.,0,1,1,0,1
+phi4-mini,21,face,81.0,832,,Face tracking initiated,0,1,1,0,1
+phi4-mini,22,hover,83.0,1134,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,23,gesture,53.0,1410,,Hand detected; preempting facial gesture command.,0,1,1,0,1
+phi4-mini,24,search_360,60.0,1746,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+phi4-mini,25,face,79.0,905,,Face detected: Face,0,1,1,0,1
+phi4-mini,26,search_360,87.0,1680,,Autonomy: no human for 10.1s -> search_360,0,1,1,0,1
+phi4-mini,27,face,89.0,985,,Face detected on ground.,0,1,1,0,1
+phi4-mini,28,land,28.0,925,,Safety: battery low,0,1,1,1,1
+phi4-mini,29,gesture,47.0,1009,,Hand detected - move forward slightly,0,1,1,0,1
+phi4-mini,30,land,3.0,1071,,Safety: battery low -> land,0,1,1,0,1
+phi4-mini,31,land,15.0,1090,,Safety: battery low -> land,0,1,1,0,1
+phi4-mini,32,face,57.0,783,,Face detected,0,1,1,0,1
+phi4-mini,33,hover,61.0,1112,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,34,hover,55.0,1085,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,35,hover,19.0,1123,,Autonomy: no intent -> hover,0,1,1,0,1
+phi4-mini,36,gesture,93.0,1223,,Preempting hand gesture with facial recognition,0,1,1,0,1
+phi4-mini,37,search_360,23.0,1034,,Executing search_360 maneuver,0,1,1,0,1
+phi4-mini,38,face,88.0,1023,,Face detected: exit search mode,0,1,1,0,1
+phi4-mini,39,face,66.0,713,,Face detected,0,1,1,0,1

@@ -1,0 +1,201 @@
+model,i,mode,battery,ms,error,reason,timeout,valid,on_mode,false_bat,short
+qwen2.5:0.5b-instruct,0,hover,94.0,1039,,The drone is hovering without any visible actions or intentions,0,1,1,0,1
+qwen2.5:0.5b-instruct,1,hover,63.0,1512,,The drone is hovering at a safe altitude without any visible obstacles or battery warning signs.,0,1,1,1,1
+qwen2.5:0.5b-instruct,2,land,15.0,2337,,Safety: battery 15.0% <= 15%,0,1,1,0,1
+qwen2.5:0.5b-instruct,3,face,75.0,1369,,The drone is flying and has detected a human face with low battery level.,0,1,1,1,1
+qwen2.5:0.5b-instruct,4,gesture,80.0,3584,JSONDecodeError,,0,0,0,0,0
+qwen2.5:0.5b-instruct,5,gesture,78.0,1121,,The drone should not fly if the battery is below 25%,0,1,0,1,1
+qwen2.5:0.5b-instruct,6,land,3.0,1209,,Safety: battery <= 15% -> land,0,1,1,0,1
+qwen2.5:0.5b-instruct,7,gesture,79.0,1437,,The drone is flying at a safe altitude and the battery level is within acceptable limits.,0,1,0,1,1
+qwen2.5:0.5b-instruct,8,hover,48.0,1671,,The drone is hovering at an altitude of 0 meters and has not detected any objects or users.,0,1,1,0,1
+qwen2.5:0.5b-instruct,9,land,28.0,1613,,Safety: battery <= 15,0,1,1,1,1
+qwen2.5:0.5b-instruct,10,land,15.0,1362,,Safety: battery <= 15% -> land,0,1,1,0,1
+qwen2.5:0.5b-instruct,11,search_360,81.0,1574,,Autonomy: no human for 23.6s -> search_360,0,1,1,0,1
+qwen2.5:0.5b-instruct,12,search_360,59.0,1323,,The drone is searching for a human to avoid battery warnings.,0,1,1,1,1
+qwen2.5:0.5b-instruct,13,face,45.0,1547,,The drone is flying at a safe altitude and within the specified range of battery levels.,0,1,0,1,1
+qwen2.5:0.5b-instruct,14,search_360,94.0,1521,,The drone is flying at a distance of 60 cm from the camera.,0,1,0,0,1
+qwen2.5:0.5b-instruct,15,land,7.0,1332,,Safety: battery <= 15% -> land,0,1,1,0,1
+qwen2.5:0.5b-instruct,16,search_360,68.0,1545,,Autonomy: no human for 48.0s -> search_360,0,1,1,0,1
+qwen2.5:0.5b-instruct,17,hover,36.0,1819,,The drone is hovering at an altitude of 30 cm with a battery level of 36% and no detected faces or objects.,0,1,1,1,1
+qwen2.5:0.5b-instruct,18,search_360,38.0,1468,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:0.5b-instruct,19,gesture,91.0,1569,,"The drone is flying and has detected a hand and face, which are battery critical conditions.",0,1,1,1,1
+qwen2.5:0.5b-instruct,20,gesture,45.0,3865,JSONDecodeError,,0,0,0,0,0
+qwen2.5:0.5b-instruct,21,face,81.0,1215,,The drone is flying at a safe altitude and within its range.,0,1,0,0,1
+qwen2.5:0.5b-instruct,22,hover,83.0,1339,,The drone is hovering in the ground position without any visible actions or intentions,0,1,1,0,1
+qwen2.5:0.5b-instruct,23,gesture,53.0,3555,JSONDecodeError,,0,0,0,0,0
+qwen2.5:0.5b-instruct,24,search_360,60.0,1313,,The drone is currently flying and has not detected any objects or humans.,0,1,0,0,1
+qwen2.5:0.5b-instruct,25,face,79.0,1968,,The drone is flying at an altitude of 50 cm and has detected a face with a battery level of 79%.,0,1,1,1,1
+qwen2.5:0.5b-instruct,26,search_360,87.0,1083,,The drone is currently flying and the battery level is low.,0,1,0,1,1
+qwen2.5:0.5b-instruct,27,face,89.0,1004,,The drone is flying and has not detected any objects in its path.,0,1,0,0,1
+qwen2.5:0.5b-instruct,28,land,28.0,1927,,Safety: battery <= 15,0,1,1,1,1
+qwen2.5:0.5b-instruct,29,gesture,47.0,1620,,"The drone is flying and the battery level is low, indicating a need to recharge.",0,1,0,1,1
+qwen2.5:0.5b-instruct,30,land,3.0,1407,,Safety: battery <= 15% -> land,0,1,1,0,1
+qwen2.5:0.5b-instruct,31,land,15.0,1331,,"Safety: battery 15.0% <= 15%, land",0,1,1,0,1
+qwen2.5:0.5b-instruct,32,face,57.0,1384,,The drone is flying at a safe altitude and distance from the user's face.,0,1,1,0,1
+qwen2.5:0.5b-instruct,33,hover,61.0,1982,,The drone is hovering at an altitude of 80 cm with a battery reading of 61.0 V and no detected faces or hands.,0,1,1,1,1
+qwen2.5:0.5b-instruct,34,hover,55.0,1065,,The drone is hovering due to low battery and no intent,0,1,1,1,1
+qwen2.5:0.5b-instruct,35,hover,19.0,2659,,The drone is hovering at an altitude of 130 cm with a battery level of 19.0% and no visible landmarks or objects to detect.,0,1,1,1,1
+qwen2.5:0.5b-instruct,36,gesture,93.0,1346,,The drone is performing a gesture to avoid the face and maintain altitude while detecting the hand.,0,1,1,0,1
+qwen2.5:0.5b-instruct,37,search_360,23.0,1371,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:0.5b-instruct,38,face,88.0,1968,,"The drone is flying normally with a battery of 88%, altitude of 180 cm, and no detected objects.",0,1,0,1,1
+qwen2.5:0.5b-instruct,39,face,66.0,1458,,The drone is flying and has detected a person in the image.,0,1,1,0,1
+qwen2.5:1.5b-instruct,0,hover,94.0,518,,hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,1,hover,63.0,807,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,2,land,15.0,1200,,Safety: battery 15.0% <= 15%,0,1,1,0,1
+qwen2.5:1.5b-instruct,3,face,75.0,537,,Face detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,4,gesture,80.0,597,,Gesture command received,0,1,1,0,1
+qwen2.5:1.5b-instruct,5,gesture,78.0,542,,Gesture recognized,0,1,1,0,1
+qwen2.5:1.5b-instruct,6,land,3.0,581,,Battery warning,0,1,1,0,1
+qwen2.5:1.5b-instruct,7,gesture,79.0,770,,Battery is above warning threshold,0,1,0,1,1
+qwen2.5:1.5b-instruct,8,hover,48.0,882,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,9,land,28.0,1381,,Safety: battery 28.0% <= 30% -> land,0,1,1,1,1
+qwen2.5:1.5b-instruct,10,land,15.0,1383,,Safety: battery 15.0% <= 15%,0,1,1,0,1
+qwen2.5:1.5b-instruct,11,search_360,81.0,1595,,Autonomy: no human for 23.6s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,12,search_360,59.0,1625,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,13,face,45.0,883,,Face detected but no face action,0,1,1,0,1
+qwen2.5:1.5b-instruct,14,search_360,94.0,1583,,Autonomy: no human for 10.1s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,15,land,7.0,1255,,Safety: battery 7.0% <= 15%,0,1,1,0,1
+qwen2.5:1.5b-instruct,16,search_360,68.0,1565,,Autonomy: no human for 48.0s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,17,hover,36.0,928,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,18,search_360,38.0,1452,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,19,gesture,91.0,590,,Gesture detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,20,gesture,45.0,645,,Gesture detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,21,face,81.0,953,,"Face detected, proceeding with face mode",0,1,1,0,1
+qwen2.5:1.5b-instruct,22,hover,83.0,666,,Ground mode,0,1,0,0,1
+qwen2.5:1.5b-instruct,23,gesture,53.0,930,,Gesture detected - preempts face,0,1,1,0,1
+qwen2.5:1.5b-instruct,24,search_360,60.0,1571,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,25,face,79.0,610,,Face detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,26,search_360,87.0,1451,,Autonomy: no human for 10.1s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,27,face,89.0,558,,Face detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,28,land,28.0,1416,,Safety: battery 28.0% <= 30% -> land,0,1,1,1,1
+qwen2.5:1.5b-instruct,29,gesture,47.0,698,,Gesture detected: waving,0,1,1,0,1
+qwen2.5:1.5b-instruct,30,land,3.0,1286,,Safety: battery 3.0% <= 15%,0,1,1,0,1
+qwen2.5:1.5b-instruct,31,land,15.0,1219,,Safety: battery 15.0% <= 15%,0,1,1,0,1
+qwen2.5:1.5b-instruct,32,face,57.0,587,,Face detected,0,1,1,0,1
+qwen2.5:1.5b-instruct,33,hover,61.0,866,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,34,hover,55.0,827,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,35,hover,19.0,854,,Autonomy: no intent -> hover,0,1,1,0,1
+qwen2.5:1.5b-instruct,36,gesture,93.0,904,,Gesture mode preempted by hand detection,0,1,1,0,1
+qwen2.5:1.5b-instruct,37,search_360,23.0,1513,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+qwen2.5:1.5b-instruct,38,face,88.0,834,,Face detected and moving towards it,0,1,1,0,1
+qwen2.5:1.5b-instruct,39,face,66.0,887,,"Face detected, proceeding with face mode",0,1,1,0,1
+qwen2.5:3b-instruct,0,hover,94.0,1497,,...hovering to conserve battery...,0,1,1,1,1
+qwen2.5:3b-instruct,1,hover,63.0,1005,,Battery level is too low to continue flying.,0,1,0,1,1
+qwen2.5:3b-instruct,2,land,15.0,837,,Battery level reached safety threshold.,0,1,1,0,1
+qwen2.5:3b-instruct,3,face,75.0,1232,,Moved drone upwards to get a better view of the face.,0,1,1,0,1
+qwen2.5:3b-instruct,4,gesture,80.0,1058,,Moving right to execute a rightward gesture.,0,1,1,0,1
+qwen2.5:3b-instruct,5,gesture,78.0,1029,,Gesture command received to perform a left turn,0,1,1,0,1
+qwen2.5:3b-instruct,6,land,3.0,2313,,"Battery level is at 3.0% which is less than or equal to 15%, triggering landing.",0,1,1,0,1
+qwen2.5:3b-instruct,7,gesture,79.0,1992,,No actions performed as battery is above 15% and no gestures detected.,0,1,1,1,1
+qwen2.5:3b-instruct,8,hover,48.0,988,,... hovering to conserve battery...,0,1,1,1,1
+qwen2.5:3b-instruct,9,land,28.0,1700,,Battery level 28.0% reached safety threshold.,0,1,1,1,1
+qwen2.5:3b-instruct,10,land,15.0,1755,,"Battery level at 15% or less, triggering automatic landing for safety.",0,1,1,0,1
+qwen2.5:3b-instruct,11,search_360,81.0,1529,,Continuing search in a clockwise direction to cover more area.,0,1,1,0,1
+qwen2.5:3b-instruct,12,search_360,59.0,1898,,Continuing search in a clockwise direction to locate any potential hand or face detections.,0,1,1,0,1
+qwen2.5:3b-instruct,13,face,45.0,1365,,Stopped all movements as no face was detected.,0,1,1,0,1
+qwen2.5:3b-instruct,14,search_360,94.0,1612,,Continuing search in a clockwise direction to locate any potential objects or threats.,0,1,1,0,1
+qwen2.5:3b-instruct,15,land,7.0,1865,,"Battery level is 7.0%, which is less than or equal to 15%.",0,1,1,0,1
+qwen2.5:3b-instruct,16,search_360,68.0,1793,,Battery level is low (68.0%) and drone is grounded for safety.,0,1,0,1,1
+qwen2.5:3b-instruct,17,hover,36.0,1594,,"Battery level is above 15%, drone is in hover mode.",0,1,1,1,1
+qwen2.5:3b-instruct,18,search_360,38.0,1618,,Continuing search in a random direction to find potential objects or threats.,0,1,1,0,1
+qwen2.5:3b-instruct,19,gesture,91.0,1137,,Moving right to maintain hand gesture detection.,0,1,1,0,1
+qwen2.5:3b-instruct,20,gesture,45.0,1113,,Performed a left gesture to adjust camera orientation.,0,1,1,0,1
+qwen2.5:3b-instruct,21,face,81.0,1300,,Moved drone to the right and up to face a detected face.,0,1,1,0,1
+qwen2.5:3b-instruct,22,hover,83.0,1016,,... hovering to conserve battery...,0,1,1,1,1
+qwen2.5:3b-instruct,23,gesture,53.0,1231,,Gesture command received to move drone left and down.,0,1,1,0,1
+qwen2.5:3b-instruct,24,search_360,60.0,1611,,Altitude too low for search_360 action; drone is on the ground.,0,1,1,0,1
+qwen2.5:3b-instruct,25,face,79.0,1958,,Moved the drone to the left and up while turning it slightly to the right to observe a face.,0,1,1,0,1
+qwen2.5:3b-instruct,26,search_360,87.0,1725,,Searching in a 360-degree pattern due to no recent detections and sufficient battery.,0,1,1,1,1
+qwen2.5:3b-instruct,27,face,89.0,1650,,"Battery level is too high (89%), no action required.",0,1,0,1,1
+qwen2.5:3b-instruct,28,land,28.0,1952,,Battery level (28.0%) is below the safe threshold (30%) for continued flight.,0,1,1,1,1
+qwen2.5:3b-instruct,29,gesture,47.0,1836,,Gesture detected: lr=0 fb=30 ud=0 yaw=0,0,1,1,0,1
+qwen2.5:3b-instruct,30,land,3.0,2519,,"Battery level is at 3.0%, which is less than or equal to 15% and the drone is on the ground.",0,1,1,0,1
+qwen2.5:3b-instruct,31,land,15.0,1122,,Battery level reached safety threshold (15%),0,1,1,0,1
+qwen2.5:3b-instruct,32,face,57.0,1066,,Moved left to center the face in view.,0,1,1,0,1
+qwen2.5:3b-instruct,33,hover,61.0,1273,,"Battery level is above 15%, no action required.",0,1,0,1,1
+qwen2.5:3b-instruct,34,hover,55.0,1226,,Battery level is above threshold and no other actions are required.,0,1,1,1,1
+qwen2.5:3b-instruct,35,hover,19.0,1298,,"Battery level is above 15%, continuing to hover.",0,1,1,1,1
+qwen2.5:3b-instruct,36,gesture,93.0,1316,,Hand detected: Preempts gesture command due to hand movement.,0,1,1,0,1
+qwen2.5:3b-instruct,37,search_360,23.0,1461,,Continuing search in a random direction to find any potential hand or face detections.,0,1,1,0,1
+qwen2.5:3b-instruct,38,face,88.0,1266,,Continuing the search for a face detected in the current direction.,0,1,1,0,1
+qwen2.5:3b-instruct,39,face,66.0,1121,,Face detected: adjusting yaw for better face tracking.,0,1,1,0,1
+llama3.2:3b,0,hover,94.0,997,,No intent to land or move on ground.,0,1,0,0,1
+llama3.2:3b,1,hover,63.0,913,,No intent to move from hover state,0,1,1,0,1
+llama3.2:3b,2,land,15.0,1266,,Safety: battery 15.0% <= 15% -> land,0,1,1,0,1
+llama3.2:3b,3,face,75.0,783,,Face detection updated successfully,0,1,1,0,1
+llama3.2:3b,4,gesture,80.0,955,,Executing gesture mode with hand detected and face detected,0,1,1,0,1
+llama3.2:3b,5,gesture,78.0,923,,Executing gesture mode due to hand detection.,0,1,1,0,1
+llama3.2:3b,6,land,3.0,1156,,Safety: battery 3.0% <= 15%,0,1,1,0,1
+llama3.2:3b,7,gesture,79.0,993,,Executing gesture command with no hand or face detected,0,1,1,0,1
+llama3.2:3b,8,hover,48.0,1119,,No hand detected to transition from hover to ground mode.,0,1,1,0,1
+llama3.2:3b,9,land,28.0,977,,Battery level is below the safe threshold.,0,1,1,1,1
+llama3.2:3b,10,land,15.0,1447,,Safety: battery 15.0% <= 15%,0,1,1,0,1
+llama3.2:3b,11,search_360,81.0,1043,,No human detected within search area,0,1,1,0,1
+llama3.2:3b,12,search_360,59.0,1369,,Executing search_360 mode for 10 seconds without human intervention.,0,1,1,0,1
+llama3.2:3b,13,face,45.0,940,,Perception: face_detected -> face,0,1,1,0,1
+llama3.2:3b,14,search_360,94.0,1398,,Autonomy: no human for 10.1s -> search_360,0,1,1,0,1
+llama3.2:3b,15,land,7.0,1288,,Safety: battery 7.0% <= 15% -> land,0,1,1,0,1
+llama3.2:3b,16,search_360,68.0,925,,No hand detected to transition to ground mode,0,1,0,0,1
+llama3.2:3b,17,hover,36.0,1064,,Autonomy: no intent -> hover,0,1,1,0,1
+llama3.2:3b,18,search_360,38.0,838,,Executing search_360 mode,0,1,1,0,1
+llama3.2:3b,19,gesture,91.0,706,,Executing gesture command,0,1,1,0,1
+llama3.2:3b,20,gesture,45.0,909,,Executing gesture command to track hand movement,0,1,1,0,1
+llama3.2:3b,21,face,81.0,740,,Face detection updated successfully,0,1,1,0,1
+llama3.2:3b,22,hover,83.0,968,,No hand detected to transition from hover mode,0,1,1,0,1
+llama3.2:3b,23,gesture,53.0,993,,Preempting face detection to track hand gesture,0,1,1,0,1
+llama3.2:3b,24,search_360,60.0,1039,,No visual input available for search_360 mode,0,1,1,0,1
+llama3.2:3b,25,face,79.0,895,,Perception: face_detected -> face,0,1,1,0,1
+llama3.2:3b,26,search_360,87.0,1318,,No visual data available for 10.1s.,0,1,0,0,1
+llama3.2:3b,27,face,89.0,1090,,Switching to ground mode due to face detection,0,1,1,0,1
+llama3.2:3b,28,land,28.0,1199,,Battery level is below the recommended threshold for safe flight.,0,1,1,1,1
+llama3.2:3b,29,gesture,47.0,686,,Executing gesture command,0,1,1,0,1
+llama3.2:3b,30,land,3.0,925,,Battery level is critically low.,0,1,1,0,1
+llama3.2:3b,31,land,15.0,1296,,Safety: battery 15.0% <= 15% -> land,0,1,1,0,1
+llama3.2:3b,32,face,57.0,715,,Face detection updated successfully,0,1,1,0,1
+llama3.2:3b,33,hover,61.0,937,,No intent to move from current position,0,1,0,0,1
+llama3.2:3b,34,hover,55.0,955,,Autonomy: no intent -> hover,0,1,1,0,1
+llama3.2:3b,35,hover,19.0,962,,Autonomy: no intent -> hover,0,1,1,0,1
+llama3.2:3b,36,gesture,93.0,1183,,Switching to gesture mode due to hand detection.,0,1,1,0,1
+llama3.2:3b,37,search_360,23.0,1465,,Autonomy: no human for 10.0s -> search_360,0,1,1,0,1
+llama3.2:3b,38,face,88.0,1116,,Search: face_detected -> face (exit search),0,1,1,0,1
+llama3.2:3b,39,face,66.0,716,,Face detection updated successfully,0,1,1,0,1
+gemma3:1b,0,hover,94.0,1320,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,1,hover,63.0,1185,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,2,land,15.0,1194,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,3,face,75.0,1157,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,4,gesture,80.0,863,,"Drone is in a stable, forward-facing position.",0,1,0,0,1
+gemma3:1b,5,gesture,78.0,839,,"Drone is in a stable, forward-facing position.",0,1,0,0,1
+gemma3:1b,6,land,3.0,1164,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,7,gesture,79.0,1183,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,8,hover,48.0,1153,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,9,land,28.0,1157,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,10,land,15.0,1196,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,11,search_360,81.0,1229,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,12,search_360,59.0,858,,"Drone is in a search mode, autonomous, and flying.",0,1,1,0,1
+gemma3:1b,13,face,45.0,861,,Drone is in a face-oriented position and is flying.,0,1,1,0,1
+gemma3:1b,14,search_360,94.0,863,,"Drone is in a search mode, autonomous, and flying.",0,1,1,0,1
+gemma3:1b,15,land,7.0,1202,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,16,search_360,68.0,1166,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,17,hover,36.0,1226,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,18,search_360,38.0,908,,"Drone is in a search mode, autonomous, and flying.",0,1,1,0,1
+gemma3:1b,19,gesture,91.0,1191,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,20,gesture,45.0,797,,Drone operation initiated.,0,1,0,0,1
+gemma3:1b,21,face,81.0,1203,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,22,hover,83.0,1210,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,23,gesture,53.0,1235,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,24,search_360,60.0,1159,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,25,face,79.0,1169,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,26,search_360,87.0,1237,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,27,face,89.0,1267,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,28,land,28.0,1163,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,29,gesture,47.0,1164,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,30,land,3.0,1165,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,31,land,15.0,1122,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,32,face,57.0,842,,Drone is currently facing forward and has a battery level of 57.,0,1,0,1,1
+gemma3:1b,33,hover,61.0,1145,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,34,hover,55.0,1103,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,35,hover,19.0,1096,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,36,gesture,93.0,1139,JSONDecodeError,,0,0,0,0,0
+gemma3:1b,37,search_360,23.0,870,,"Drone is in a search mode, aiming for a specific location with a defined altitude and time.",0,1,1,0,1
+gemma3:1b,38,face,88.0,814,,"Drone is in a face state, initiating a search.",0,1,1,0,1
+gemma3:1b,39,face,66.0,1113,JSONDecodeError,,0,0,0,0,0
