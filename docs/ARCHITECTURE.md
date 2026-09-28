@@ -27,10 +27,12 @@ gesture_classifier.py             select(): --classifier svm|rule, validated bef
                                     DepthStabilityGate (holds FORWARD/BACK until repeated)
   model_classifier.py               TrainedClassifier (RBF-SVM, frozen)
 face_follow.py                    MediaPipe face, every 4th frame; crop freshness; P control
+                                  (forward/back on estimated distance; --follow-law area = v1)
 face_id.py                        ONNX MobileFaceNet embedding, cosine, Schmitt trigger
 hand_association.py               opt-in: pose skeleton binds the hand to the verified face
 association_overlay.py            debug drawing of hands, face, skeleton (keys v, b)
-mode_manager.py                   FSM: failsafe > gesture > face > search > hover; LLMReasoner (log only)
+back_follow.py                    opt-in follow-behind: back enrolment, OSNet re-ID, distance/height hold
+mode_manager.py                   FSM: failsafe > gesture > face > follow_back > search > hover; LLMReasoner (log only)
 controller.py                     the loop; RC out on UDP 8889; telemetry in on 8890
 session_recorder.py               opt-in (--record): the window as session.mp4, real-time, seq-stamped
 ```

@@ -325,7 +325,7 @@ def main():
         if screen.window:
             cv2.destroyAllWindows()
 
-    # ---- write and summarise ----
+    # ----------------------------------------------------------- write, summarise
     rows = []
     for r in probe.results:
         row = {"k": r["k"], "edge": r["edge"], "detected": int(r["detected"]),

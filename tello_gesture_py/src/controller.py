@@ -13,6 +13,7 @@ from .hand_gesture import HandGesture
 from .hand_association import AssociationTracker, HandAssociator
 from .association_overlay import draw_debug
 from .session_recorder import SessionRecorder
+from .back_follow import BackFollowConfig, BackFollower
 from .gesture_logic import DepthStabilityGate, RuleBasedGesture, rc_from_gesture_name
 from .keyboard import rc_from_key, RC
 from .telemetry_logger import TelemetryLogger, DecisionLogger, ScenarioLogger
@@ -273,6 +274,18 @@ class Controller:
                                           record_raw=cfg.record_raw)
                           if cfg.record_video else None)
         self._assoc_det = None
+        self.back = None
+        if cfg.follow_behind:
+            self.back = BackFollower(BackFollowConfig(
+                follow_distance_m=cfg.follow_distance_m,
+                follow_height_m=cfg.follow_height_m,
+                enroll_delay_s=cfg.back_enroll_delay_s))
+            self.run_ctx.record("follow_behind", {
+                "reid_model": self.back.cfg.reid_model,
+                "match_on": self.back.cfg.match_on, "match_off": self.back.cfg.match_off,
+                "torso_m": self.back.cfg.torso_m, "focal_px_960": self.back.cfg.focal_px_960})
+        self._face_was_enrolling = False
+        self._last_back_ts = 0.0
         self.rule = RuleBasedGesture(cfg.dir_thr, cfg.scale_thr, cfg.ema_alpha)
 
         self.face = FaceFollower()
@@ -284,6 +297,7 @@ class Controller:
         # detect_every_n above 1 would compound the two into a much rarer real
         # detection than either setting implies.
         self.face.cfg.detect_every_n = 1
+        self.face.cfg.fb_law = cfg.follow_law
 
         # FaceID (identity lock)
         self.face_id = FaceID(FaceIDConfig(
@@ -314,6 +328,7 @@ class Controller:
             decision_hz=cfg.llm_decision_hz,
             timeout_s=cfg.llm_timeout_s,
         ))
+        self.reasoner.warm()
 
         self.flying = False
 
@@ -562,6 +577,14 @@ class Controller:
         if key == ord("o"):
             self.face_id.clear()
             print("[FaceID] Cleared enrolled template.")
+            if self.back is not None:
+                self.back.clear()
+                print("[back] Cleared back template.")
+        if self.back is not None:
+            msg = self.back.adjust(key)
+            if msg:
+                self.perf.log_event(f"follow_setpoint {msg}")
+                print(f"[back] {msg}")
 
     def run_loop(self) -> int:
         cfg = self.cfg
@@ -649,6 +672,14 @@ class Controller:
 
                     if self.face_id.enrolling and face_crop is not None:
                         self.face_id.add_sample(face_crop)
+                    if self.back is not None:
+                        # face enrolment just finished: count down, then enrol the back
+                        if (self._face_was_enrolling and not self.face_id.enrolling
+                                and self.face_id.enrolled):
+                            self.back.start_enroll(now)
+                            print(f"[back] turn around: back enrolment in "
+                                  f"{self.back.cfg.enroll_delay_s:.0f} s")
+                        self._face_was_enrolling = self.face_id.enrolling
 
                     # is_authorized() returns early without embedding when nothing
                     # is enrolled, so `ran` must reflect real inference or the
@@ -687,7 +718,17 @@ class Controller:
                             det = assoc_det
                         timer.mark("assoc_ms", ran=self.assoc.last.mode in ("pose", "iou", "reacquire"))
 
+                    # --- Follow behind (opt-in): the enrolled back, when no face is seen ---
+                    back_detected = False
+                    if self.back is not None:
+                        bo = self.back.step(frame, now, face_visible=raw_face)
+                        back_detected = bool(bo.detected)
+                        timer.mark("back_ms", ran=bo.ran_pose)
+
                     # Update timers
+                    if back_detected:
+                        self._last_back_ts = now
+                        self._last_any_seen_ts = now
                     if face_detected:
                         self._last_face_ts = now
                         self._last_any_seen_ts = now
@@ -717,6 +758,8 @@ class Controller:
                         "time_since_hand_s": float(time_since_hand),
                         "time_since_face_s": float(time_since_face),
                         "time_since_any_seen_s": float(time_since_any),
+                        "back_detected": bool(back_detected),
+                        "time_since_back_s": float(now - self._last_back_ts),
                         "battery": bat if bat is None else float(bat),
                         "altitude_cm": alt if alt is None else float(alt),
                         "flying": bool(self.flying),
@@ -776,6 +819,13 @@ class Controller:
                             rc = RC(active=True) if self.flying else RC(active=False)
                             gesture_name = "HOVER"
 
+                    elif mode == "follow_back":
+                        if self.flying and self.back is not None:
+                            rc = self.back.command(self.back.last, frame.shape[1], alt)
+                        else:
+                            rc = RC(active=False)
+                        gesture_name = "BACK"
+
                     elif mode == "search_360":
                         rc = RC(lr=0, fb=0, ud=0, yaw=self._search_yaw_cmd, active=True) if self.flying else RC(active=False)
                         gesture_name = "SEARCH"
@@ -825,6 +875,13 @@ class Controller:
                         "time_since_any_seen_s": float(time_since_any),
                         "flying": bool(self.flying),
                     }
+                    if self.back is not None:
+                        b = self.back.last
+                        llm_payload.update({
+                            "operator_back_seen": bool(b.detected),
+                            "operator_distance_m": None if b.dist_m is None else round(b.dist_m, 1),
+                            "follow_distance_m": self.back.cfg.follow_distance_m,
+                        })
                     self.reasoner.tick(llm_payload)
                     llm_reason = self.reasoner.get_reason()
 
@@ -965,6 +1022,9 @@ class Controller:
                         draw_debug(frame, self._last_hand_det, self._assoc_det,
                                    None if self.assoc is None else self.assoc.associator,
                                    self.face.get_last_bbox(), face_detected)
+
+                    if self.back is not None:
+                        self.back.draw(frame, now)
 
                     # --- Overlay (clean HUD) ---
                     draw_hud(
@@ -1189,11 +1249,15 @@ class Controller:
         return 0
 
     # Backwards-compatible alias for existing callers.
+    def _back_fields(self) -> dict:
+        """Follow-behind log columns; empty when it is off."""
+        return {} if self.back is None else self.back.fields()
+
     def _assoc_fields(self) -> dict:
         """Per-frame association outcome for the logs; empty when it is off, so
         the paper's configuration writes exactly the columns it always did."""
         if self.assoc is None:
-            return {}
+            return self._back_fields()
         a = self.assoc.last
         return {
             "assoc_mode": a.mode,
@@ -1202,6 +1266,7 @@ class Controller:
             "assoc_skeleton_hits": a.skeleton_hits,
             "assoc_d": None if a.d_target is None else round(float(a.d_target), 3),
             "assoc_reason": a.reason,
+            **self._back_fields(),
         }
 
     def _assoc_hud(self):

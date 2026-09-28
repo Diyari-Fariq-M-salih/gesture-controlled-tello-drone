@@ -5,35 +5,13 @@ import time
 import threading
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple
+from .config import DeterministicConfig, LLMReasonConfig
 
-MODES = ("keyboard", "gesture", "face", "search_360", "hover", "land")
+MODES = ("keyboard", "gesture", "face", "follow_back", "search_360", "hover", "land")
 
 
 def _norm(m: str) -> str:
     return (m or "").strip().lower()
-
-
-@dataclass
-class DeterministicConfig:
-    """Arbitration parameters.
-
-    The controller always constructs this from `ControllerConfig`, so the
-    defaults below are reachable only by a direct instantiation in a test. The
-    three search values in particular are *not* the deployed ones: the deployed
-    sweep is 28 s after the coverage measurement, against the 5 s originally
-    specified. Read `ControllerConfig` for what flies.
-    """
-
-    battery_land_pct: int = 15
-
-    # Not deployed values -- see the note above; ControllerConfig has 10/28/10.
-    nohuman_search_s: float = 5.0
-    search_duration_s: float = 12.0
-    search_cooldown_s: float = 5.0
-
-    mode_hold_s: float = 1.2
-    hand_release_s: float = 0.8
-    face_release_s: float = 0.8
 
 
 class DeterministicModeManager:
@@ -45,6 +23,7 @@ class DeterministicModeManager:
     Behavior:
       - battery low -> land
       - gesture > face (with hysteresis)
+      - follow_back when only the enrolled operator's back is seen (opt-in)
       - if no human for >= nohuman_search_s -> search_360
       - search_360 exits immediately if hand/face reappears
       - else hover
@@ -77,6 +56,8 @@ class DeterministicModeManager:
 
         hand = bool(state.get("hand_detected", False))
         face = bool(state.get("face_detected", False))
+        back = bool(state.get("back_detected", False))
+        t_back = float(state.get("time_since_back_s", 999.0))
 
         t_hand = float(state.get("time_since_hand_s", 999.0))
         t_face = float(state.get("time_since_face_s", 999.0))
@@ -98,6 +79,9 @@ class DeterministicModeManager:
                 return self.mode, self.reason
             if face:
                 self._set_mode("face", "Search: face_detected -> face (exit search)")
+                return self.mode, self.reason
+            if back:
+                self._set_mode("follow_back", "Search: operator's back seen -> follow_back")
                 return self.mode, self.reason
 
             if (now - self._search_enter_ts) >= float(self.cfg.search_duration_s):
@@ -125,13 +109,23 @@ class DeterministicModeManager:
             if t_face <= self.cfg.face_release_s:
                 return self.mode, self.reason
 
-        # Priority: gesture > face
+        # Follow the operator's back until it is truly gone; a face or a gesture
+        # takes over at once.
+        if self.mode == "follow_back" and not hand and not face:
+            if time_in_mode < self.cfg.mode_hold_s or t_back <= self.cfg.back_release_s:
+                return self.mode, self.reason
+
+        # Priority: gesture > face > follow_back
         if hand:
             self._set_mode("gesture", "Perception: hand_detected -> gesture (priority)")
             return self.mode, self.reason
 
         if face:
             self._set_mode("face", "Perception: face_detected -> face")
+            return self.mode, self.reason
+
+        if back:
+            self._set_mode("follow_back", "Perception: no face, operator's back -> follow_back")
             return self.mode, self.reason
 
         # No human -> search trigger
@@ -143,19 +137,7 @@ class DeterministicModeManager:
         return self.mode, self.reason
 
 
-# -------------------------
-# LLM Reasoner (Reason Only)
-# -------------------------
-
-@dataclass
-class LLMReasonConfig:
-    enabled: bool = True
-    model: str = "qwen2.5:0.5b-instruct"
-    url: str = "http://127.0.0.1:11434/api/chat"
-    decision_hz: float = 1.0
-    timeout_s: float = 4.0
-
-
+# ----------------------------------------------------------- reason-only LLM
 class LLMReasoner:
     def __init__(self, cfg: Optional[LLMReasonConfig] = None):
         self.cfg = cfg or LLMReasonConfig()
@@ -214,33 +196,48 @@ class LLMReasoner:
             self._last_reason = self._call_llm(st)
             self._last_latency_ms = (time.perf_counter() - t0) * 1000.0
 
-    def _call_llm(self, payload: Dict[str, Any]) -> str:
-        system = (
-            "You are generating a SHORT explanation for a drone action.\n"
-            "You do NOT control the drone.\n"
-            "Return ONLY JSON: {\"reason\": \"...\"}\n"
-            "The reason must be 1 short sentence and must match the given command/mode.\n"
-            "Do not invent battery warnings unless battery <= 15.\n"
-        )
+    def warm(self):
+        """Load the model now, off the control loop, so the first call does not time out."""
+        if self.cfg.enabled:
+            threading.Thread(target=self._call_llm, args=({"mode": "hover"},),
+                             kwargs={"timeout_s": 120.0}, daemon=True).start()
 
-        body = {
-            "model": self.cfg.model,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": json.dumps(payload)},
-            ],
-            "stream": False,
-            "format": "json",
-        }
-
+    def _call_llm(self, payload: Dict[str, Any], timeout_s: Optional[float] = None) -> str:
         try:
             import requests
 
-            r = requests.post(self.cfg.url, json=body, timeout=self.cfg.timeout_s)
+            r = requests.post(self.cfg.url, json=llm_request(self.cfg, payload),
+                              timeout=timeout_s or self.cfg.timeout_s)
             r.raise_for_status()
-            msg = r.json().get("message", {}).get("content", "")
-            data = json.loads(msg) if isinstance(msg, str) else msg
-            reason = str(data.get("reason", "")).strip()
-            return reason or "LLM: (no reason)"
+            return parse_reason(r.json())
         except Exception as e:
             return f"LLM error ({type(e).__name__})"
+
+
+def llm_request(cfg: LLMReasonConfig, payload: Dict[str, Any]) -> Dict[str, Any]:
+    """The Ollama chat request the controller sends; scripts/llm_bench.py sends the same."""
+    system = (
+        "You are generating a SHORT explanation for a drone action.\n"
+        "You do NOT control the drone.\n"
+        "Return ONLY JSON: {\"reason\": \"...\"}\n"
+        "The reason must be 1 short sentence and must match the given command/mode.\n"
+        "Do not invent battery warnings unless battery <= 15.\n"
+    )
+    return {
+        "model": cfg.model,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": json.dumps(payload)},
+        ],
+        "stream": False,
+        "format": "json",
+        "keep_alive": cfg.keep_alive,
+        "options": {"num_predict": cfg.max_tokens, "temperature": cfg.temperature},
+    }
+
+
+def parse_reason(response: Dict[str, Any]) -> str:
+    msg = response.get("message", {}).get("content", "")
+    data = json.loads(msg) if isinstance(msg, str) else msg
+    reason = str(data.get("reason", "")).strip()
+    return reason or "LLM: (no reason)"

@@ -435,7 +435,7 @@ def main() -> int:
                 })
                 last_dec_ts = now
 
-            # -------- HUD overlay --------
+            # HUD
             x = 10
             y = 18
             dy = 16

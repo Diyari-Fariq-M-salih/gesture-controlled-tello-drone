@@ -115,11 +115,9 @@ def _run(name: str, script: Callable[[Trial, DeterministicModeManager, FakeClock
     return trial
 
 
-# ---------------------------------------------------------------------------
-# Scenario definitions. Each returns a list of Trial (sub-trials that stress
-# a boundary condition, since the logic is deterministic and repeating an
-# identical run would always give the same result).
-# ---------------------------------------------------------------------------
+# ------------------------------------------------------------------ scenarios
+# Each returns sub-trials that stress a boundary: the logic is deterministic,
+# so repeating one identical run would only ever give the same result.
 
 def scenario_authorized_gesture_accepted() -> List[Trial]:
     trials = []

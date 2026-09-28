@@ -20,9 +20,9 @@ This document explains:
 
 The system uses a **local, lightweight LLM** running fully offline:
 
-- **Model:** Qwen 2.5 – 0.5B (Instruct)
-- **Identifier:** `qwen2.5:0.5b-instruct`
-- **Model size:** ~0.5 billion parameters
+- **Model:** Qwen 2.5 – 1.5B (Instruct); the arXiv v1 runs used the 0.5B
+- **Identifier:** `qwen2.5:1.5b-instruct` (`--llm-model` to change)
+- **Model size:** ~1.5 billion parameters, 1 GB
 - **Runtime:** Ollama
 - **Execution:** Local CPU inference (no GPU required)
 - **Interface:** HTTP (`/api/chat`)
@@ -131,12 +131,12 @@ ollama --version
 
 ### Step 2: Download the model
 ```
-ollama pull qwen2.5:0.5b-instruct
+ollama pull qwen2.5:1.5b-instruct
 ```
 
 ### Step 3: Test
 ```
-ollama run qwen2.5:0.5b-instruct
+ollama run qwen2.5:1.5b-instruct
 ```
 
 ---
@@ -155,3 +155,24 @@ and `i` hides its text on the HUD.
 LLMs are excellent for explanation and transparency, but unsafe for direct control.
 
 This project demonstrates a safe integration strategy for live robotics systems.
+
+## Choosing the model (2026-09-27)
+`scripts/llm_bench.py` replays logged decision moments from every flight through
+each model with the controller's exact request. 40 moments, 8 per mode, laptop
+otherwise idle (in flight perception shares the CPU):
+
+| model | valid | names the mode | invented battery warning | median | size |
+|---|---|---|---|---|---|
+| qwen2.5:0.5b (v1) | 78-93% | 55-72% | 23-42% | 1.4-1.6 s | 0.4 GB |
+| **qwen2.5:1.5b** | 100% | 95-97% | 7% | 0.8-0.9 s | 1.0 GB |
+| phi4-mini | 100% | 95% | 5% | 1.05 s | 2.5 GB |
+| llama3.2:3b | 100% | 82-90% | 5-7% | 0.8-1.0 s | 2.0 GB |
+| qwen2.5:3b | 100% | 90-93% | 33-35% | 1.1-1.4 s | 1.9 GB |
+| gemma3:1b | 20-25% | 10-15% | - | 1.1 s | 0.8 GB |
+
+The v1 timeouts were Ollama unloading the idle model: reloading takes 2-8 s
+against a 4 s timeout. The request now keeps the model loaded (`keep_alive`) and
+the controller loads it at start; no model timed out afterwards. "Names the mode"
+and "invented battery warning" are keyword checks; read `llm_bench.csv` before
+quoting them. Both 1.5B and phi4-mini often repeat the controller's own reason
+verbatim: correct, but not much of an explanation.

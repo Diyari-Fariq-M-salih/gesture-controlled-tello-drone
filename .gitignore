@@ -3,7 +3,7 @@ data/raw/
 __pycache__/
 *.pyc
 # Ignore the large model file
-models/third_party/arcface.onnx
+models/third_party/
 # virtualenv
 .venv/
 

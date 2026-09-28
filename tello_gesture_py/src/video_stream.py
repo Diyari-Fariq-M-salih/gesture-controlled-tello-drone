@@ -6,11 +6,10 @@ from .latest_frame import LatestFrame
 
 
 class VideoStream:
-    """
-    Robust UDP video reader for Tello.
-    - Reads frames in a background thread
-    - Writes latest frame into LatestFrame
-    - If OpenCV/FFmpeg decoder crashes (common on UDP loss), we reopen the capture and continue.
+    """Reads the Tello's UDP video in a background thread into a LatestFrame.
+
+    The FFmpeg decoder dies on sustained UDP loss; the capture is then reopened
+    rather than the run ending.
     """
 
     def __init__(self, latest: LatestFrame, url: str):

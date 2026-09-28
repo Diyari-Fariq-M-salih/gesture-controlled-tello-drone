@@ -55,9 +55,7 @@ def main():
 
     df = pd.read_csv(args.dataset)
 
-    # -----------------------------
-    # Cap samples per class (balanced)
-    # -----------------------------
+    # balanced cap per class
     if args.max_per_class and args.max_per_class > 0:
         rng = 42
         df = (
@@ -70,9 +68,6 @@ def main():
         print(f"Capped dataset to max {args.max_per_class} samples per class")
         print("New dataset size:", len(df))
 
-    # -----------------------------
-    # Prepare X / y
-    # -----------------------------
     y = df["label"].astype(int).values
     X = df.drop(columns=["label"]).values.astype(np.float32)
 

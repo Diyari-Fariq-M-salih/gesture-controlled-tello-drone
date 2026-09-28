@@ -4,50 +4,11 @@ from dataclasses import dataclass
 import mediapipe as mp
 from typing import Optional, Tuple
 from .rc_command import RCCommand
+from .config import FaceFollowConfig
 
 
 def _clamp(v, lo, hi):
     return int(max(lo, min(hi, v)))
-
-
-@dataclass
-class FaceFollowConfig:
-    target_area_frac: float = 0.075
-
-    kp_yaw: float = 0.2
-    kp_ud: float = 0.12
-    kp_fb: float = 0.30
-
-    max_yaw: int = 20
-    max_ud: int = 40
-    max_fb: int = 40
-
-    deadband_px: int = 18
-    deadband_area: float = 0.008
-
-    lost_timeout_s: float = 0.7
-
-    # Cheaper detection -> smoother stream
-    detect_w: int = 960
-    detect_h: int = 720
-    detect_every_n: int = 3
-    control_hz: float = 15.0
-
-    area_ema_alpha: float = 0.25
-
-    # Face-ID crop padding (relative)
-    crop_pad: float = 0.15
-
-    # Identity crops must come from a FRESH detection.
-    #
-    # `lost_timeout_s` deliberately holds face_detected() true across gaps so
-    # mode arbitration does not flicker on a low-frame-rate stream. That hold is
-    # right for arbitration and wrong for identity: re-embedding a stale box
-    # feeds ArcFace whatever is now inside a box the face has already left,
-    # which scores like a stranger and revokes authorization from the real
-    # operator. Identity therefore gets its own, much tighter freshness window.
-    crop_max_age_s: float = 0.35
-    crop_min_px: int = 60
 
 
 class FaceFollower:
@@ -251,14 +212,23 @@ class FaceFollower:
 
             yaw = _clamp(cfg.kp_yaw * ex, -cfg.max_yaw, cfg.max_yaw)
             ud = _clamp(-cfg.kp_ud * ey, -cfg.max_ud, cfg.max_ud)
-            fb = _clamp(cfg.kp_fb * (ez * 1000.0), -cfg.max_fb, cfg.max_fb)
+
+            if cfg.fb_law == "area":
+                fb = _clamp(cfg.kp_fb * (ez * 1000.0), -cfg.max_fb, cfg.max_fb)
+                if abs(ez) < cfg.deadband_area:
+                    fb = 0
+            else:
+                d = cfg.k_dist_m / max(area_frac, 1e-6) ** 0.5
+                d_target = cfg.k_dist_m / cfg.target_area_frac ** 0.5
+                ed = d - d_target                       # positive: too far, fly forward
+                fb = _clamp(cfg.kp_fb_per_m * ed, -cfg.max_fb, cfg.max_fb)
+                if abs(ed) < cfg.deadband_dist_m:
+                    fb = 0
 
             if abs(ex) < cfg.deadband_px:
                 yaw = 0
             if abs(ey) < cfg.deadband_px:
                 ud = 0
-            if abs(ez) < cfg.deadband_area:
-                fb = 0
 
             cmd = RCCommand(lr=0, fb=fb, ud=ud, yaw=yaw, active=True)
         else:

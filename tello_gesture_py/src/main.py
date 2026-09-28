@@ -107,6 +107,23 @@ def build_parser() -> argparse.ArgumentParser:
     tune.add_argument("--nohuman-search", type=float, default=None,
                       help="Seconds without an authorized human before searching.")
     tune.add_argument("--no-llm", action="store_true", help="Disable the reason-only LLM.")
+    tune.add_argument("--llm-model", default=None,
+                      help="Ollama model for the reason-only LLM (default qwen2.5:1.5b-instruct; v1 flew 0.5b); "
+                           "compare models with scripts/llm_bench.py.")
+    tune.add_argument("--llm-timeout", type=float, default=None, help="Seconds per LLM call (default 4).")
+    tune.add_argument("--follow-law", choices=["distance", "area"], default="distance",
+                      help="Face-follow forward/back: steer on estimated distance (symmetric), "
+                           "or on face area as flown for the arXiv v1 runs.")
+    fb = ap.add_argument_group("follow behind (opt-in)")
+    fb.add_argument("--follow-behind", action="store_true",
+                    help="After face enrolment (p), turn round: the back is enrolled after "
+                         "a countdown. With no face in view the aircraft follows the back.")
+    fb.add_argument("--follow-distance", type=float, default=None,
+                    help="Metres behind the operator (default 1.5; keys [ and ]).")
+    fb.add_argument("--follow-height", type=float, default=None,
+                    help="Flying height in metres (default 2; keys - and =).")
+    fb.add_argument("--back-enroll-delay", type=float, default=None,
+                    help="Seconds to turn round before back enrolment (default 6).")
     rec = ap.add_argument_group("recording (into the run directory; git-ignored)")
     rec.add_argument("--record", action="store_true",
                      help="Save what the flight window shows (HUD included) as session.mp4.")
@@ -154,6 +171,18 @@ def main():
     cfg.assoc_live_pose = args.live_pose
     cfg.debug_overlay = args.debug_overlay
     cfg.hud_show_llm = not args.hide_llm_text
+    if args.llm_model:
+        cfg.llm_model = args.llm_model
+    if args.llm_timeout is not None:
+        cfg.llm_timeout_s = args.llm_timeout
+    cfg.follow_law = args.follow_law
+    cfg.follow_behind = args.follow_behind
+    if args.follow_distance is not None:
+        cfg.follow_distance_m = args.follow_distance
+    if args.follow_height is not None:
+        cfg.follow_height_m = args.follow_height
+    if args.back_enroll_delay is not None:
+        cfg.back_enroll_delay_s = args.back_enroll_delay
     cfg.record_video = args.record or args.record_raw
     cfg.record_raw = args.record_raw
     if args.record_fps is not None:

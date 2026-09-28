@@ -69,8 +69,14 @@ Two model files are needed that this repository does not redistribute:
   `buffalo_s` model pack) saved as `models/third_party/arcface.onnx`. InsightFace's
   pretrained models are licensed for non-commercial research use.
 - **Language model (optional)**: [Ollama](https://ollama.com) with
-  `qwen2.5:0.5b-instruct`; see [`docs/learnings/llm-reasoner.md`](docs/learnings/llm-reasoner.md).
+  `qwen2.5:1.5b-instruct` (the arXiv v1 runs used `qwen2.5:0.5b-instruct`); see
+  [`docs/learnings/llm-reasoner.md`](docs/learnings/llm-reasoner.md).
   Run with `--no-llm` to skip it.
+- **Person re-identification (only for `--follow-behind`)**: OSNet (K. Zhou, MIT),
+  converted once to `models/third_party/osnet_x0_25_msmt17.onnx` with
+  [`export_osnet.py`](tello_gesture_py/scripts/export_osnet.py), which lists the
+  weights to download and runs in a separate environment with PyTorch. The
+  weights were trained on MSMT17, research use.
 
 The gesture SVM (`models/production/model.joblib`) and the pose model used by
 hand-face association (`models/mediapipe/`) are included.
@@ -92,6 +98,7 @@ python -m tello_gesture_py.src.main --classifier svm --run-id flight    # or --c
 | `p` / `o` | enrol / clear the operator | `q` | quit (lands first) |
 | `w a s d` `r f` `j k` | manual override while flying | `h` | key help on screen |
 | `v` | landmark overlay | `i` | show / hide the LLM text |
+| `[` `]` | follow distance (follow-behind) | `-` `=` | follow height (follow-behind) |
 
 No drone? `python -m tello_gesture_py.scripts.webcam_demo` runs the same perception,
 gating and arbitration on a webcam.
@@ -100,6 +107,14 @@ gating and arbitration on a webcam.
 end of the verified operator's own arm, so a bystander's hand cannot command.
 Add `--associate-hands --target-side left|right`; see
 [`docs/learnings/hand-association.md`](docs/learnings/hand-association.md).
+
+**Follow behind** (opt-in, beyond the paper): for carrying something for
+someone. After face enrolment (`p`) the operator turns round and their back is
+enrolled after a 6 s countdown; whenever no face is in view, the aircraft trails
+that back at a set distance and height. Add `--follow-behind`, optionally
+`--follow-distance 1.5 --follow-height 2` (the defaults); try it first without a drone with
+`python -m tello_gesture_py.scripts.back_follow_demo`. It matches clothing
+appearance, so someone dressed alike can be mistaken for the operator.
 
 Every launch writes `outputs/runs/<timestamp>_<tag>/`: a manifest (configuration,
 Git commit, model hash) and per-frame logs of telemetry, decisions and latency.

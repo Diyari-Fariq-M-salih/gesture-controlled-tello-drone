@@ -29,6 +29,14 @@ is not a flag: it is the arbitration mode below gesture. Useful: `--no-fly` (RC 
 at zero), `--no-llm`, `--note "<conditions>"`, `--record` (window to `session.mp4`,
 `--record-raw` adds the clean frames; videos are git-ignored).
 
+Face following steers forward/back on estimated distance by default; runs up to
+2026-09-26 (all of arXiv v1) used `--follow-law area`, which approaches slowly and
+backs off hard. The manifest records which law flew (`config.follow_law`).
+
+Follow behind (opt-in): add `--follow-behind`; `p` enrols the face, then after a 6 s
+countdown the back. Try it on a webcam first:
+`python -m tello_gesture_py.scripts.back_follow_demo`. Model setup: README.
+
 Cued, hover-locked gesture capture in flight (the paper's §V-B protocol):
 `--cue-rounds 6 --no-actuate`. Never run cues without `--no-actuate` indoors: a 6 s
 hold travels about 3.9 m.

@@ -8,6 +8,7 @@ import cv2
 import numpy as np
 
 from pathlib import Path
+from .config import FaceIDConfig
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -16,44 +17,6 @@ def _l2norm(x: np.ndarray, eps: float = 1e-12) -> np.ndarray:
     if n < eps:
         return x
     return x / n
-
-
-@dataclass
-class FaceIDConfig:
-    model_path: str = str(PROJECT_ROOT / "models" / "third_party" / "arcface.onnx")
-    input_size: int = 112
-
-    # Many TF-exported ArcFace models expect RGB. If your scores look wrong, flip this.
-    rgb: bool = True
-
-    # Common ArcFace normalization: (x - 127.5) / 128
-    mean: float = 127.5
-    std: float = 128.0
-
-    enroll_samples: int = 20
-    enroll_min_face_px: int = 60
-
-    cosine_thr: float = 0.55
-
-    # --- authorization hysteresis (Schmitt trigger) ---
-    #
-    # A bare per-frame `score >= cosine_thr` chatters whenever the operator sits
-    # near the threshold: consecutive frames of the same person score e.g. 0.56,
-    # 0.49, 0.54, 0.67, and authorization flickers on and off. Everything
-    # downstream -- the hand gate, and through it the whole mode manager -- is
-    # built to arbitrate over a stable signal, so the flicker is amplified into
-    # spurious mode changes and refused commands.
-    #
-    # With hysteresis the gate opens at `cosine_thr` but only closes below
-    # `release_thr`, so marginal frames hold their previous decision instead of
-    # oscillating. Set hysteresis=False to recover the original bare-threshold
-    # behaviour for comparison.
-    hysteresis: bool = True
-    release_thr: float = 0.45
-
-    # Frames below release_thr must accumulate before authorization drops, so a
-    # single bad crop (blink, motion blur, half-turned head) cannot revoke it.
-    release_frames: int = 3
 
 
 class FaceID:
