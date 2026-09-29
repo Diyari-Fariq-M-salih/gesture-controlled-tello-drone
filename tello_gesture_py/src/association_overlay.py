@@ -34,12 +34,27 @@ _TRACK_MODE_COLORS = {"tracking": GREEN, "coasting": YELLOW,
 _prev_track_bbox = weakref.WeakKeyDictionary()
 
 
-def _px(p, w, h):
+def _to_px(p, w, h):
     return int(p.x * w), int(p.y * h)
 
 
 def _inside(p):
     return 0.0 <= p.x <= 1.0 and 0.0 <= p.y <= 1.0
+
+PALM_IDX = (0, 5, 9, 13, 17)
+
+
+def _palm_bbox_from_lm(lm, w, h):
+    """Palm box (wrist + MCPs) in pixels, plus the wrist point for labelling.
+
+    Hand landmarks are a normalized (21, 3) array, unlike Pose's objects with
+    .x/.y, so they cannot go through _to_px.
+    """
+    p = np.asarray(lm, dtype=np.float32)[list(PALM_IDX), :2] * (w, h)
+    x1, y1 = p.min(axis=0).astype(int)
+    x2, y2 = p.max(axis=0).astype(int)
+    wrist = tuple(p[0].astype(int))
+    return int(x1), int(y1), int(x2), int(y2), wrist
 
 
 def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok, assoc_step=None) -> None:
@@ -80,28 +95,29 @@ def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok, assoc_ste
                     continue
                 on_arm = {a, b} <= arm
                 col = (YELLOW if on_arm else WHITE) if mine else GREY
-                cv2.line(frame, _px(pl[a], w, h), _px(pl[b], w, h), col,
+                cv2.line(frame, _to_px(pl[a], w, h), _to_px(pl[b], w, h), col,
                          4 if (mine and on_arm) else 1)
             if not mine:
                 continue
             for i in associator._face_landmarks:
                 if _inside(pl[i]):
-                    cv2.circle(frame, _px(pl[i], w, h), 3, CYAN, -1)
+                    cv2.circle(frame, _to_px(pl[i], w, h), 3, CYAN, -1)
             for name, i in (("shoulder", shoulder_i), ("elbow", elbow_i), ("wrist", wrist_i)):
                 p = pl[i]
                 vis = getattr(p, "visibility", None) or 0.0
                 ok = _inside(p) and vis >= associator.arm_vis_thresh
                 cx = min(max(int(p.x * w), 8), w - 8)
                 cy = min(max(int(p.y * h), 8), h - 8)
-                cv2.circle(frame, (cx, cy), 10, GREEN if ok else RED, 2)
-                label = f"{name} {vis:.2f}" + ("" if _inside(p) else " OFF-FRAME")
-                cv2.putText(frame, label, (min(cx + 12, w - 170), max(cy - 8, 14)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.45, GREEN if ok else RED, 1, cv2.LINE_AA)
-    if associator is not None and associator.last_pose_t is not None:
-        age = time.time() - associator.last_pose_t
-        cv2.putText(frame, f"pose {age:.1f}s ago", (w - 150, h - 12),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, YELLOW, 1, cv2.LINE_AA)
+                cv2.circle(frame, (cx, cy), 10, YELLOW if ok else RED, 2)
+                # label = f"{name} {vis:.2f}" + ("" if _inside(p) else " OFF-FRAME")
+                # cv2.putText(frame, label, (min(cx + 12, w - 170), max(cy - 8, 14)),
+                #             cv2.FONT_HERSHEY_SIMPLEX, 0.45, GREEN if ok else RED, 1, cv2.LINE_AA)
+    # if associator is not None and associator.last_pose_t is not None:
+    #     age = time.time() - associator.last_pose_t
+    #     cv2.putText(frame, f"pose {age:.1f}s ago", (w - 150, h - 12),
+    #                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, YELLOW, 1, cv2.LINE_AA)
 
+    # drawing  detections
     if raw_det is not None and raw_det.has_hand:
         chosen_lm = None if chosen is None else chosen.landmarks
         for lm in raw_det.hands or [raw_det.landmarks]:
@@ -109,14 +125,12 @@ def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok, assoc_ste
                 col, is_chosen = WHITE, False
             else:
                 is_chosen = chosen_lm is not None and np.array_equal(lm, chosen_lm)
-                col = GREEN if is_chosen else RED
-            pts = [(int(q[0] * w), int(q[1] * h)) for q in lm]
-            for a, b in HAND_CONNECTIONS:
-                cv2.line(frame, pts[a], pts[b], col, 2 if is_chosen else 1)
-            for q in pts:
-                cv2.circle(frame, q, 3, col, -1)
+                col = YELLOW if is_chosen else RED
+            # Draw palm bounding box only (no landmarks), in green for operator, in red else.
+            x1, y1, x2, y2, (wx, wy) = _palm_bbox_from_lm(lm, w, h)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), GREEN if is_chosen else col, 2)
             if is_chosen:
-                cv2.putText(frame, "OPERATOR", (pts[0][0] - 30, pts[0][1] + 22),
+                cv2.putText(frame, "OPERATOR", (int(wx) - 30, int(wy) + 22),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.55, GREEN, 2, cv2.LINE_AA)
 
     if associator is not None:
