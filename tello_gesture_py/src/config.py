@@ -73,8 +73,12 @@ class ControllerConfig:
     assoc_dist_thresh: float = 0.7
     assoc_side_margin: float = 0.85     # target arm must beat the other arm by this factor
     assoc_face_frac: float = 0.6        # share of pose face points inside the verified face box
-    assoc_min_iou: float = 0.15         # below this the IoU track counts as lost
     assoc_handedness_conf: float = 0.9  # a handedness label vetoes only above this
+    # Palm tracking between pose re-anchors (hand_association.py).
+    assoc_gate: float = 2.5             # palm-anchor motion allowed per frame, in palm sizes
+    assoc_max_size_ratio: float = 2.0   # reject a candidate whose palm changed size by more
+    assoc_max_coast: int = 4            # frames held with no candidate before the track is lost
+    assoc_amb_margin: float = 0.05      # DIoU gap below which two candidates are too close to call
     # Require the target arm's elbow and wrist in frame with Pose visibility >=
     # assoc_arm_vis. Pose invents out-of-frame limbs, so without this a hand with
     # no arm in shot matches its own guessed arm. Keeps 76% of the operator's

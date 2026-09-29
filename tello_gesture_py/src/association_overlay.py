@@ -5,6 +5,7 @@ thing. Display only: it never feeds back into a decision, and it is drawn after
 the frame's latency is logged, so it does not inflate measured latency.
 """
 import time
+import weakref
 
 import cv2
 import mediapipe as mp
@@ -16,6 +17,22 @@ HAND_CONNECTIONS = mp.solutions.hands.HAND_CONNECTIONS
 # head, shoulders, arms, torso: the legs play no part in the decision
 POSE_CONNECTIONS = [c for c in mp.solutions.pose.POSE_CONNECTIONS if max(c) <= 24]
 
+# AssocStep.mode (see hand_association.AssociationTracker) -> the palm-track
+# mode label drawn over the box. "pose" (first acquisition) reads as
+# "tracking" too: the track it seeds is no different from one carried by
+# update_hand_from_previous(). A track of None always overrides this with
+# "lost", since the tracker itself has given up regardless of what mode the
+# last step reported.
+_TRACK_MODE_LABELS = {"pose": "tracking", "track": "tracking",
+                      "coast": "coasting", "reacquire": "reacquire"}
+_TRACK_MODE_COLORS = {"tracking": GREEN, "coasting": YELLOW,
+                      "reacquire": CYAN, "lost": RED}
+
+# Keyed by HandAssociator instance (identity hash), so the overlay can show
+# the palm box from the frame before this one. Weak so a dropped associator
+# (e.g. between webcam_demo runs) does not pin memory here.
+_prev_track_bbox = weakref.WeakKeyDictionary()
+
 
 def _px(p, w, h):
     return int(p.x * w), int(p.y * h)
@@ -25,7 +42,7 @@ def _inside(p):
     return 0.0 <= p.x <= 1.0 and 0.0 <= p.y <= 1.0
 
 
-def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok) -> None:
+def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok, assoc_step=None) -> None:
     """Draw the face box, hands, and (with association on) the pose skeleton.
 
     Face: the verified box, green when authorized and orange when not, plus
@@ -34,10 +51,15 @@ def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok) -> None:
     skeleton, commanding arm thick yellow, its shoulder/elbow/wrist ringed
     green or red by the in-frame and visibility check with the visibility
     printed; a joint outside the image is pinned to the edge and labelled.
-    Other people's skeletons are grey.
+    Other people's skeletons are grey. Palm track: the current track's bbox
+    (colored by mode: green=tracking, yellow=coasting, cyan=reacquire,
+    red=lost) labelled with that mode, plus the previous frame's bbox in grey
+    for comparison.
 
     associator may be None (association off): then only the face box and the
     hands are drawn, all hands in white since nothing selects among them.
+    assoc_step is the caller's AssociationTracker.last (an AssocStep), used
+    only to label the palm-track mode; pass None to skip the mode label.
     """
     h, w = frame.shape[:2]
 
@@ -96,3 +118,34 @@ def draw_debug(frame, raw_det, chosen, associator, face_bbox, face_ok) -> None:
             if is_chosen:
                 cv2.putText(frame, "OPERATOR", (pts[0][0] - 30, pts[0][1] + 22),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.55, GREEN, 2, cv2.LINE_AA)
+
+    if associator is not None:
+        prev_bbox = _prev_track_bbox.get(associator)
+        tr = associator._track
+        if prev_bbox is not None:
+            x1, y1, x2, y2 = prev_bbox.astype(int)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), GREY, 1)
+            cv2.putText(frame, "prev", (x1, max(y1 - 6, 12)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, GREY, 1, cv2.LINE_AA)
+
+        mode = None if assoc_step is None else assoc_step.mode
+        if tr is not None:
+            label = _TRACK_MODE_LABELS.get(mode, "tracking")
+            if label == "coasting":
+                label += f"({tr.missed})"
+        else:
+            label = "lost"
+        col = _TRACK_MODE_COLORS.get(label.split("(")[0], RED)
+
+        if tr is not None:
+            x1, y1, x2, y2 = tr.bbox.astype(int)
+            cv2.rectangle(frame, (x1, y1), (x2, y2), col, 2)
+            label_pos = (x1, max(y1 - 8, 14))
+        elif prev_bbox is not None:
+            label_pos = (int(prev_bbox[0]), max(int(prev_bbox[1]) - 8, 14))
+        else:
+            label_pos = (10, h - 30)
+        cv2.putText(frame, label.upper(), label_pos,
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.55, col, 2, cv2.LINE_AA)
+
+        _prev_track_bbox[associator] = None if tr is None else tr.bbox.copy()

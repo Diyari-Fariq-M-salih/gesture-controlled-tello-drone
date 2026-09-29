@@ -176,9 +176,11 @@ def main() -> int:
         assoc = AssociationTracker(HandAssociator(
             target_side=args.target_side, mirrored=args.flip,
             dist_thresh=acfg.assoc_dist_thresh, side_margin=acfg.assoc_side_margin,
-            face_frac_thresh=acfg.assoc_face_frac, min_iou=acfg.assoc_min_iou,
+            face_frac_thresh=acfg.assoc_face_frac,
             handedness_conf=acfg.assoc_handedness_conf, num_poses=acfg.assoc_num_poses,
-            require_arm_visible=not args.no_arm_check, arm_vis_thresh=acfg.assoc_arm_vis),
+            require_arm_visible= args.no_arm_check, arm_vis_thresh=acfg.assoc_arm_vis,
+            gate=acfg.assoc_gate, max_size_ratio=acfg.assoc_max_size_ratio,
+            max_coast=acfg.assoc_max_coast, amb_margin=acfg.assoc_amb_margin),
             every_n=0 if args.live_pose else acfg.assoc_every_n)
     rule = RuleBasedGesture(dir_thr=0.10, scale_thr=0.18, ema_alpha=0.35)
 
@@ -320,7 +322,8 @@ def main() -> int:
                 hand_detected = bool(hand_detected and assoc_det is not None)
                 if assoc_det is not None:
                     det = assoc_det
-                timer.mark("assoc_ms", ran=assoc.last.mode in ("pose", "iou", "reacquire"))
+                timer.mark("assoc_ms",
+                           ran=assoc.last.mode in ("pose", "track", "coast", "reacquire"))
 
             # Update timers (AUTHORIZED only)
             if face_detected:
@@ -456,10 +459,12 @@ def main() -> int:
             hud(f"FACE-ID: enrolled={'Y' if face_id.enrolled else 'N'}  enrolling={'Y' if face_id.enrolling else 'N'}  ({n}/{N})"
                 f"  score={face_id.last_score:.3f}  thr={face_id.cfg.cosine_thr:.2f}")
 
+            if debug_overlay:
+                draw_debug(frame, last_hand_det, assoc_det,
+                           None if assoc is None else assoc.associator,
+                           face.get_last_bbox(), face_detected,
+                           None if assoc is None else assoc.last)
             if assoc is not None:
-                if debug_overlay:
-                    draw_debug(frame, last_hand_det, assoc_det, assoc.associator,
-                               face.get_last_bbox(), face_detected)
                 a = assoc.last
                 d = "" if a.d_target is None else f" d={a.d_target:.2f}"
                 hud(f"ASSOC: {'OK' if a.ok else '--'} {a.mode or '-'}{d}  hands={a.n_hands}"
@@ -467,9 +472,9 @@ def main() -> int:
             hud(f"GESTURE: {gesture_name}")
             hud(f"CMD: {command_str}")
             hud("KEYS: p=enroll o=clear  1-7=trial  y=pass n=fail x=discard  q=quit")
-            if assoc is not None:
-                hud(f"DEBUG: v=landmarks {'ON' if debug_overlay else 'off'}   "
-                    f"b=live pose {'ON (every frame)' if assoc.every_n == 0 else 'off'}")
+            hud(f"DEBUG: v=landmarks {'ON' if debug_overlay else 'off'}"
+                + ("" if assoc is None else
+                   f"   b=live pose {'ON (every frame)' if assoc.every_n == 0 else 'off'}"))
 
             cv2.imshow("WEBCAM_DEMO", frame)
 

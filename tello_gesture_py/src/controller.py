@@ -262,9 +262,11 @@ class Controller:
             self.assoc = AssociationTracker(HandAssociator(
                 target_side=cfg.assoc_target_side, mirrored=cfg.assoc_mirrored,
                 dist_thresh=cfg.assoc_dist_thresh, side_margin=cfg.assoc_side_margin,
-                face_frac_thresh=cfg.assoc_face_frac, min_iou=cfg.assoc_min_iou,
+                face_frac_thresh=cfg.assoc_face_frac,
                 handedness_conf=cfg.assoc_handedness_conf, num_poses=cfg.assoc_num_poses,
-                require_arm_visible=cfg.assoc_require_arm, arm_vis_thresh=cfg.assoc_arm_vis),
+                require_arm_visible=cfg.assoc_require_arm, arm_vis_thresh=cfg.assoc_arm_vis,
+                gate=cfg.assoc_gate, max_size_ratio=cfg.assoc_max_size_ratio,
+                max_coast=cfg.assoc_max_coast, amb_margin=cfg.assoc_amb_margin),
                 every_n=0 if cfg.assoc_live_pose else cfg.assoc_every_n)
         self._debug_overlay = bool(cfg.debug_overlay)
         self._show_llm = bool(cfg.hud_show_llm)
@@ -685,7 +687,8 @@ class Controller:
                         hand_detected = bool(hand_detected and assoc_det is not None)
                         if assoc_det is not None:
                             det = assoc_det
-                        timer.mark("assoc_ms", ran=self.assoc.last.mode in ("pose", "iou", "reacquire"))
+                        timer.mark("assoc_ms",
+                                   ran=self.assoc.last.mode in ("pose", "track", "coast", "reacquire"))
 
                     # Update timers
                     if face_detected:
@@ -964,7 +967,8 @@ class Controller:
                     if self._debug_overlay:
                         draw_debug(frame, self._last_hand_det, self._assoc_det,
                                    None if self.assoc is None else self.assoc.associator,
-                                   self.face.get_last_bbox(), face_detected)
+                                   self.face.get_last_bbox(), face_detected,
+                                   None if self.assoc is None else self.assoc.last)
 
                     # --- Overlay (clean HUD) ---
                     draw_hud(

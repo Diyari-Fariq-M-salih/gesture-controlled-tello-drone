@@ -85,9 +85,10 @@ class FakeAssociator(HandAssociator):
         self.detect_calls = 0
         self._configure(kw.get('target_side', 'right'), kw.get('mirrored', False),
                         kw.get('dist_thresh', 0.5), kw.get('side_margin', 0.85),
-                        kw.get('face_frac_thresh', 0.6), kw.get('min_iou', 0.15),
-                        kw.get('handedness_conf', 0.9),
-                        kw.get('require_arm_visible', True), kw.get('arm_vis_thresh', 0.5))
+                        kw.get('face_frac_thresh', 0.6), kw.get('handedness_conf', 0.9),
+                        kw.get('require_arm_visible', True), kw.get('arm_vis_thresh', 0.5),
+                        kw.get('gate', 2.5), kw.get('max_size_ratio', 2.0),
+                        kw.get('max_coast', 4), kw.get('amb_margin', 0.05))
 
     def detect(self, bgr):
         self.detect_calls += 1
@@ -164,21 +165,26 @@ def test_face_gate_tolerates_tight_box_rejects_wrong_person():
     assert idx2 is None
 
 
-def test_iou_tracks_small_moves_and_drops_jumps():
+def test_track_follows_small_moves_and_coasts_on_jumps():
+    # The palm gate is in palm sizes: RIGHT's palm is ~21px here, the 0.005 shift
+    # moves the anchor 0.22 palm sizes, and the 0.2/0.2 hand is 25 palm sizes off.
     a = FakeAssociator(POSE)
-    prev = hd([RIGHT])
-    assert a.update_hand_from_previous(prev, [hd([RIGHT + np.array([0.005, 0, 0], np.float32)])])
-    assert a.update_hand_from_previous(prev, [hd([make_hand(0.2, 0.2)])]) is None
+    a.start_track(hd([RIGHT]), IMG_SHAPE)
+    got, status = a.update_hand_from_previous(
+        [hd([RIGHT + np.array([0.005, 0, 0], np.float32)])], IMG_SHAPE)
+    assert got is not None and status == "tracked", status
+    a.start_track(hd([RIGHT]), IMG_SHAPE)
+    got2, status2 = a.update_hand_from_previous([hd([make_hand(0.2, 0.2)])], IMG_SHAPE)
+    assert got2 is None and status2 == "coasting", status2
 
 
 def test_repeated_tracking_does_not_corrupt_state():
     a = FakeAssociator(POSE)
     state = a.associate_hand(FRAME, AUTH_BBOX, [BOTH])
+    a.start_track(state, IMG_SHAPE)
     for _ in range(5):
-        _ = state.landmarks
-        nxt = a.update_hand_from_previous(state, [BOTH])
-        if nxt is None:
-            break
+        nxt, status = a.update_hand_from_previous([BOTH], IMG_SHAPE)
+        assert status == "tracked", status
         state = nxt
     assert np.allclose(state.landmarks, RIGHT)
 
@@ -189,9 +195,10 @@ def test_degenerate_inputs_return_none():
     assert a.associate_hand(FRAME, None, [BOTH]) is None
     assert a.associate_hand(FRAME, AUTH_BBOX, []) is None
     assert a.associate_hand(FRAME, AUTH_BBOX, [HandDetection(False, None)]) is None
-    assert a.update_hand_from_previous(None, [BOTH]) is None
-    flat = make_hand(0.7, 0.55) * 0
-    assert a.update_hand_from_previous(hd([flat]), [hd([flat])]) is None
+    # never started, or seeded from nothing: there is no track to carry
+    assert a.update_hand_from_previous([BOTH], IMG_SHAPE) == (None, "lost")
+    a.start_track(HandDetection(False, None), IMG_SHAPE)
+    assert a.update_hand_from_previous([BOTH], IMG_SHAPE) == (None, "lost")
 
 
 # --- added with the port ------------------------------------------------------
@@ -216,14 +223,14 @@ def test_deployed_default_is_unmirrored_and_off():
     assert cfg.assoc_num_poses >= 2, "one pose lets a bystander crowd out the operator"
 
 
-def test_tracker_runs_pose_then_iou_then_reanchors():
+def test_tracker_runs_pose_then_tracks_then_reanchors():
     a = FakeAssociator(POSE)
     t = AssociationTracker(a, every_n=3)
     modes = []
     for _ in range(5):
         t.step(FRAME, BOTH, AUTH_BBOX, fresh=True)
         modes.append(t.last.mode)
-    assert modes == ["pose", "iou", "iou", "iou", "pose"], modes
+    assert modes == ["pose", "track", "track", "track", "pose"], modes
     assert t.last.ok
 
 
@@ -236,16 +243,36 @@ def test_tracker_holds_on_throttled_frames_without_pose():
     assert held is first and t.last.mode == "held" and a.detect_calls == calls
 
 
-def test_tracker_reacquires_immediately_when_iou_is_lost():
+def test_tracker_reacquires_immediately_when_the_track_is_ambiguous():
+    # Two candidates equally close to the track cannot be told apart by DIoU, so
+    # the tracker gives up at once and lets pose decide on the same frame.
     a = FakeAssociator(POSE)
     t = AssociationTracker(a, every_n=20)
     t.step(FRAME, hd([make_hand(0.05, 0.05)]), AUTH_BBOX, fresh=True)   # nobody's hand
     assert not t.last.ok
     t.step(FRAME, BOTH, AUTH_BBOX, fresh=True)
     assert t.last.mode == "pose" and t.last.ok
-    got = t.step(FRAME, hd([make_hand(0.2, 0.2), RIGHT + np.array([0.4, 0, 0], np.float32)]),
-                 AUTH_BBOX, fresh=True)
+    nudge = np.array([0.004, 0, 0], np.float32)
+    twins = hd([RIGHT + nudge, RIGHT - nudge])
+    got = t.step(FRAME, twins, AUTH_BBOX, fresh=True)
     assert t.last.mode == "reacquire", t.last
+    assert got is not None, "pose should still find the operator's hand"
+
+
+def test_tracker_coasts_before_reacquiring():
+    a = FakeAssociator(POSE)
+    t = AssociationTracker(a, every_n=20)
+    first = t.step(FRAME, BOTH, AUTH_BBOX, fresh=True)
+    assert t.last.mode == "pose" and first is not None
+    calls = a.detect_calls
+    away = hd([make_hand(0.2, 0.2)])                 # nothing near the tracked palm
+    for _ in range(a.max_coast):
+        got = t.step(FRAME, away, AUTH_BBOX, fresh=True)
+        assert t.last.mode == "coast" and t.last.reason == "coasting", t.last
+        assert got is first, "a coasting track holds the hand it had"
+    assert a.detect_calls == calls, "coasting must not pay for pose"
+    t.step(FRAME, away, AUTH_BBOX, fresh=True)
+    assert t.last.mode == "reacquire" and a.detect_calls == calls + 1, t.last
 
 
 def test_tracker_drops_state_when_face_or_hand_disappears():

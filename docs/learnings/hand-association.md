@@ -14,7 +14,12 @@ on 2026-09-23. **Off by default**: the paper's flights ran without it.
    points, and clearly nearer that arm than the other. A confident handedness
    label that contradicts the arm vetoes it.
 3. **Between pose runs** (every 20 fresh hand detections) the hand is carried by
-   bounding-box IoU; a lost track re-runs pose on the same frame.
+   a palm track: the wrist and four MCPs, in pixels. A candidate must stay within
+   `assoc_gate` palm sizes of the previous anchor and keep its palm size, and the
+   survivors are ranked by DIoU. With nothing acceptable in frame the track
+   *coasts*, holding the last hand for `assoc_max_coast` frames; only a track that
+   is genuinely lost — coasted out, or two candidates too close to call — re-runs
+   pose on the same frame.
 
 It fails closed: no qualifying hand means no gesture, and no gesture mode.
 

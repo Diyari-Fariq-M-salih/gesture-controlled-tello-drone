@@ -20,8 +20,8 @@ selection rules are unchanged here. Changes made in porting it to this tree:
     hand with no arm in shot match its own guessed arm.
 
 AssociationTracker holds the per-frame state (when to re-run pose, when to
-carry the hand by IoU) so the flight controller and the webcam harness run the
-same code.
+carry the hand by its palm track, when to coast) so the flight controller and
+the webcam harness run the same code.
 """
 import time
 from dataclasses import dataclass, field
@@ -38,6 +38,18 @@ from .hand_gesture import HandDetection
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_POSE_MODEL = PROJECT_ROOT / "models" / "mediapipe" / "pose_landmarker_full.task"
+
+
+PALM_IDX = (0, 5, 9, 13, 17)   # palm landmarks used for tracking: wrist + 4 MCPs
+
+
+@dataclass
+class _HandTrack:
+    """The tracked hand's palm, in full-frame pixels."""
+    anchor: np.ndarray   # mean of palm points, px
+    bbox: np.ndarray     # palm bbox [x1, y1, x2, y2], px
+    size: float          # palm size, px
+    missed: int = 0      # consecutive frames with no valid candidate
 
 
 def _candidates(det):
@@ -63,10 +75,12 @@ class HandAssociator:
 
     Two entry points, meant to alternate:
       - associate_hand(): full pose inference, anchors the hand to the authorized
-        skeleton. Accurate but expensive, so it runs only every N frames.
-      - update_hand_from_previous(): cheap IoU carry-over of the already-associated
-        hand across the frames in between. Returns None when the track is lost so
-        the caller falls back to a fresh associate_hand().
+        skeleton. Accurate but expensive, so it runs only every N frames. Follow a
+        successful call with start_track() to seed the cheap tracker.
+      - update_hand_from_previous(): cheap palm-track carry-over of the
+        already-associated hand across the frames in between. Reports "coasting"
+        when it sees no acceptable candidate but the track is still worth holding,
+        and "lost" when the caller must fall back to associate_hand().
     """
 
     def __init__(self,
@@ -75,12 +89,15 @@ class HandAssociator:
                  dist_thresh: float = 0.5,
                  side_margin: float = 0.85,
                  face_frac_thresh: float = 0.6,
-                 min_iou: float = 0.15,
                  handedness_conf: float = 0.9,
                  num_poses: int = 2,
                  model_path=None,
                  require_arm_visible: bool = True,
-                 arm_vis_thresh: float = 0.5):
+                 arm_vis_thresh: float = 0.5,
+                 gate: float = 2.5,
+                 max_size_ratio: float = 2.0,
+                 max_coast: int = 4,
+                 amb_margin: float = 0.05):
         """
         Args:
             target_side: which of the person's arms controls the drone, in
@@ -94,7 +111,6 @@ class HandAssociator:
                 Rejects ambiguous cases (hands clasped together) instead of guessing.
             face_frac_thresh: fraction of pose face landmarks that must fall inside
                 auth_bbox for a skeleton to be considered the authorized person's.
-            min_iou: below this, IoU tracking reports the track as lost.
             handedness_conf: only let a MediaPipe handedness label veto a candidate
                 when the label is at least this confident.
             num_poses: skeletons to detect per frame. Must be >1 for a bystander
@@ -105,6 +121,16 @@ class HandAssociator:
                 from the visible hand, so without this check a hand with no arm
                 in shot still "matches" its own guessed arm.
             arm_vis_thresh: minimum Pose visibility for that check.
+            gate: how far the palm anchor may move between frames, in palm sizes.
+                Scale-free, so it holds at any distance from the camera; it widens
+                while the track coasts, since the hand keeps moving unseen.
+            max_size_ratio: reject a candidate whose palm grew or shrank by more
+                than this factor. A hand does not change size in one frame; a
+                different hand usually does.
+            max_coast: frames to hold the track with no acceptable candidate
+                before declaring it lost.
+            amb_margin: DIoU gap below which the two best candidates are too close
+                to call, so pose re-association decides instead of the tracker.
         """
         path = Path(model_path) if model_path else DEFAULT_POSE_MODEL
         if not path.exists():
@@ -120,12 +146,14 @@ class HandAssociator:
         self.model_path = str(path)
         self.num_poses = int(num_poses)
         self._configure(target_side, mirrored, dist_thresh, side_margin,
-                        face_frac_thresh, min_iou, handedness_conf,
-                        require_arm_visible, arm_vis_thresh)
+                        face_frac_thresh, handedness_conf,
+                        require_arm_visible, arm_vis_thresh,
+                        gate, max_size_ratio, max_coast, amb_margin)
 
     def _configure(self, target_side, mirrored, dist_thresh, side_margin,
-                   face_frac_thresh, min_iou, handedness_conf,
-                   require_arm_visible=True, arm_vis_thresh=0.5):
+                   face_frac_thresh, handedness_conf,
+                   require_arm_visible=True, arm_vis_thresh=0.5,
+                   gate=2.5, max_size_ratio=2.0, max_coast=4, amb_margin=0.05):
         # 1-6 eyes, 9-10 mouth corners: the pose face points checked against the box
         self._face_landmarks = {1, 2, 3, 4, 5, 6, 9, 10}
         # 11 - left shoulder, 12 - right shoulder (the scale reference)
@@ -148,33 +176,58 @@ class HandAssociator:
         self.dist_thresh = dist_thresh
         self.side_margin = side_margin
         self.face_frac_thresh = face_frac_thresh
-        self.min_iou = min_iou
         self.handedness_conf = handedness_conf
+        self.gate = gate
+        self.max_size_ratio = max_size_ratio
+        self.max_coast = int(max_coast)
+        self.amb_margin = amb_margin
+        # the palm being carried between pose passes; see start_track()
+        self._track = None
         # Why the last associate_hand() call decided what it did, for the logs.
         self.last_info = {}
 
-    # ------------------------------------------------------------------ geometry
-    def _bbox_from_landmarks(self, landmarks: np.ndarray):
-        x1 = np.min(landmarks[:, 0])
-        y1 = np.min(landmarks[:, 1])
-        x2 = np.max(landmarks[:, 0])
-        y2 = np.max(landmarks[:, 1])
-        return (x1, y1, x2, y2)
+    # ------------------------------------------- tracker geometry (frame pixels)
+    @staticmethod
+    def _to_px(lm, img_shape):
+        H, W = img_shape[:2]
+        return np.asarray(lm, dtype=np.float32)[:, :2] * (W, H)   # (21, 2)
 
-    def _compute_iou(self, bbox1, bbox2):
-        x1 = max(bbox1[0], bbox2[0])
-        y1 = max(bbox1[1], bbox2[1])
-        x2 = min(bbox1[2], bbox2[2])
-        y2 = min(bbox1[3], bbox2[3])
+    @staticmethod
+    # Resulting anchor point for the hand, typically the palm center.
+    def _anchor(pts):
+        return pts[list(PALM_IDX)].mean(axis=0)
 
-        inter_area = max(0, x2 - x1) * max(0, y2 - y1)
-        bbox1_area = max(0.0, bbox1[2] - bbox1[0]) * max(0.0, bbox1[3] - bbox1[1])
-        bbox2_area = max(0.0, bbox2[2] - bbox2[0]) * max(0.0, bbox2[3] - bbox2[1])
-        # a zero-area box (a collapsed/degenerate hand) can never match
-        if bbox1_area <= 0 or bbox2_area <= 0:
-            return 0.0
-        union_area = bbox1_area + bbox2_area - inter_area
-        return inter_area / union_area if union_area > 0 else 0.0
+    @staticmethod
+    def _palm_bbox(pts):
+        """The hand's box from wrist + MCPs only: the part that does not deform
+        as the fingers move, so a gesture change does not look like a new hand."""
+        p = pts[list(PALM_IDX)]
+        return np.concatenate([p.min(axis=0), p.max(axis=0)])   # x1, y1, x2, y2
+
+    @staticmethod
+    def _palm_size(pts):
+        return max(float(np.linalg.norm(pts[0] - pts[9])),      # wrist -> middle MCP
+                   float(np.linalg.norm(pts[5] - pts[17])),     # index MCP -> pinky MCP
+                   1.0)
+
+    @staticmethod
+    # cost function for comparing two hand bounding boxes
+    def _diou(a, b):
+        """Distance-IoU: IoU penalised by centre separation, so it still ranks
+        boxes that do not overlap at all -- which plain IoU cannot."""
+        iw = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
+        ih = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+        inter = iw * ih
+        union = (a[2]-a[0])*(a[3]-a[1]) + (b[2]-b[0])*(b[3]-b[1]) - inter + 1e-9
+        iou = inter / union
+        # distance between the centers of the two boxes squared
+        d2 = (((a[0]+a[2]) - (b[0]+b[2])) / 2) ** 2 + (((a[1]+a[3]) - (b[1]+b[3])) / 2) ** 2
+        # diagonal of the smallest enclosing box squared (between top leftmost conrer and bottom rightmost corner)
+        c2 = (max(a[2], b[2]) - min(a[0], b[0])) ** 2 + (max(a[3], b[3]) - min(a[1], b[1])) ** 2 + 1e-9
+        return iou - d2 / c2
+
+    def _make_track(self, pts):
+        return _HandTrack(self._anchor(pts), self._palm_bbox(pts), self._palm_size(pts))
 
     def detect(self, bgr: np.ndarray):
         rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
@@ -312,7 +365,7 @@ class HandAssociator:
             (index_lm, group[f'{prefix}_index']),
             (pinky_lm, group[f'{prefix}_pinky']),
         )
-
+        # take the sum of normalized distances between hand and pose anchor points
         total = 0.0
         for hand_i, pose_i in pairs:
             p = pose_landmarks[pose_i]
@@ -338,7 +391,7 @@ class HandAssociator:
         return True, ""
 
     # ---------------------------------------------------------------- selection
-    def associate_hand(self, bgr, auth_bbox, hand_detections):
+    def associate_hand(self, bgr, auth_bbox, hand_detections) -> HandDetection | None:
         """Associates one hand, across all detections, with the authorized face.
 
         auth_bbox: (origin_x, origin_y, width, height) in pixels, the verified face.
@@ -395,40 +448,72 @@ class HandAssociator:
         info["reason"] = ";".join(reasons) if reasons else "no_hand"
         return None
 
-    def update_hand_from_previous(self, previous_hand_det, hand_detections):
-        """Carries the previously associated hand forward by best IoU match.
+    # ----------------------------------------------------------- track lifecycle
+    def start_track(self, hand_det, img_shape=None):
+        """Call right after associate_hand() (and whenever the association changes)."""
+        if hand_det is None or not hand_det.has_hand or hand_det.landmarks is None:
+            self.clear_track()
+            return
+        self._track = self._make_track(self._to_px(hand_det.landmarks, img_shape))
+
+    def clear_track(self):
+        self._track = None
+
+    def update_hand_from_previous(self, hand_detections, img_shape) -> tuple[HandDetection | None, str]:
+        """Match the tracked hand against current detections (gate, then DIoU rank).
 
         Returns:
-            A single-hand HandDetection, or None if the track is lost (best IoU
-            below min_iou). None is meaningful: it tells the caller to re-run
-            associate_hand() rather than carry on with a hand that may no longer
-            be the right one.
+            (hand, status), status in {"tracked", "coasting", "lost"}.
+            "tracked":  hand is a single-hand detection, use it.
+            "coasting": hand is None, hold gestures, do NOT re-associate yet.
+            "lost":     hand is None, call associate_hand() then start_track().
         """
-        if (previous_hand_det is None
-                or not previous_hand_det.has_hand
-                or previous_hand_det.landmarks is None):
-            return None
-
-        prev_bbox = self._bbox_from_landmarks(previous_hand_det.landmarks)
-
-        best_iou_score = 0.0
-        best = None
+        tr = self._track
+        if tr is None:
+            return None, "lost"
+        # gate for how far the hand can move relative to the previous track before being considered lost
+        # widen it while coasting
+        gate = self.gate * (1.0 + 0.5 * tr.missed)   
+        scored = []
         for det in hand_detections:
             for lm, label, conf in _candidates(det):
-                iou_score = self._compute_iou(prev_bbox, self._bbox_from_landmarks(lm))
-                if iou_score > best_iou_score:
-                    best_iou_score = iou_score
-                    best = (lm, label, conf)
+                pts = self._to_px(lm, img_shape)
+                anchor = self._anchor(pts)
+                size = self._palm_size(pts)
+                # skip candidates whose anchor point moved too far from the previous track
+                if np.linalg.norm(anchor - tr.anchor) / tr.size > gate:
+                    continue
+                ratio = size / tr.size
+                if not (1.0 / self.max_size_ratio <= ratio <= self.max_size_ratio):
+                    continue
 
-        if best is not None and best_iou_score >= self.min_iou:
-            return _single(*best)
-        return None
+                diou = self._diou(tr.bbox, self._palm_bbox(pts))
+                scored.append((diou, pts, (lm, label, conf)))
+
+        # no valid candidate: hold the previous state for a few frames
+        if not scored:
+            tr.missed += 1
+            if tr.missed > self.max_coast:
+                self.clear_track()
+                return None, "lost"
+            return None, "coasting"
+
+        scored.sort(key=lambda s: s[0], reverse=True)
+
+        # two candidates too close to call (ambiguous): let pose re-association decide
+        if len(scored) > 1 and scored[0][0] - scored[1][0] < self.amb_margin:
+            self.clear_track()
+            return None, "lost"
+
+        _, pts, best = scored[0]
+        self._track = self._make_track(pts)   # state = latest measurement, missed reset to 0
+        return _single(*best), "tracked"
 
 
 @dataclass
 class AssocStep:
     """What one tracker step decided, for the per-frame logs."""
-    mode: str = ""          # pose | iou | reacquire | held | "" (not attempted)
+    mode: str = ""          # pose | track | coast | reacquire | held | "" (not attempted)
     ok: bool = False
     reason: str = ""
     n_hands: int = 0
@@ -440,10 +525,11 @@ class AssociationTracker:
     """Per-frame association state shared by the controller and the webcam harness.
 
     Pose inference runs on the first sighting and then every `every_n` fresh hand
-    detections; between those, the hand is carried by IoU. A lost IoU track
-    re-runs pose on the same frame rather than waiting. On frames where the hand
-    detector did not run (it is throttled), the last result is held, so pose is
-    never compared against a stale hand.
+    detections; between those, the hand is carried by its palm track. A track with
+    nothing acceptable to match coasts, holding the last hand for up to
+    `max_coast` frames; only once it is lost does pose re-run on the same frame.
+    On frames where the hand detector did not run (it is throttled), the last
+    result is held, so pose is never compared against a stale hand.
     """
 
     def __init__(self, associator: HandAssociator, every_n: int = 20):
@@ -458,6 +544,7 @@ class AssociationTracker:
     def reset(self) -> None:
         self._prev = None
         self._since_pose = 0
+        self.associator.clear_track()
 
     def step(self, frame, det, auth_bbox, fresh: bool) -> Optional[HandDetection]:
         n_hands = len(_candidates(det))
@@ -473,21 +560,31 @@ class AssociationTracker:
             return self._prev
 
         a = self.associator
+        reason = None
+        # re-run pose association if there is no previous hand or the periodic interval has been reached
         if self._prev is None or self._since_pose >= self.every_n:
             got, mode = a.associate_hand(frame, auth_bbox, [det]), "pose"
+            a.start_track(got, frame.shape)   # clears the track when got is None
             self._since_pose = 0
         else:
-            got, mode = a.update_hand_from_previous(self._prev, [det]), "iou"
+            got, status = a.update_hand_from_previous([det], frame.shape)
             self._since_pose += 1
-            if got is None:
+            if status == "tracked":
+                mode = "track"
+            elif status == "coasting":
+                # the track is still alive: hold the last hand, do not pay for pose
+                got, mode, reason = self._prev, "coast", "coasting"
+            else:
                 got, mode = a.associate_hand(frame, auth_bbox, [det]), "reacquire"
+                a.start_track(got, frame.shape)
                 self._since_pose = 0
 
-        info = a.last_info if mode != "iou" else {}
+        info = a.last_info if mode in ("pose", "reacquire") else {}
         self._prev = got
+        if reason is None:
+            reason = "ok" if got is not None else info.get("reason", "lost")
         self.last = AssocStep(
-            mode=mode, ok=got is not None,
-            reason="ok" if got is not None else info.get("reason", "lost"),
+            mode=mode, ok=got is not None, reason=reason,
             n_hands=n_hands,
             skeleton_hits=int(info.get("skeleton_hits", 0)),
             d_target=info.get("d_target"))
